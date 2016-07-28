@@ -120,19 +120,19 @@
 <hr />
 <h3>然后是准备Pelican运行环境：</h3>
 <ul>
-<li>安装Python: Python的安装包很容易在Python的<a href="">官方网站</a>下载安装，不过我发现Python
+<li>安装Python: Python的安装包很容易在Python的<a href="https://www.python.org/downloads/">官方网站</a>下载安装，不过我发现Python
 3.5似乎和Pelican兼容不好，会导致无法生成HTML文件，因此不推荐使用。这里使用的是Python
 2.7.11版本，在安装时一定要勾选安装pip和添加目录到系统变量PATH中以便后续使用。在安装完毕后，进入cmd终端，在命令行里输入<code>python -V</code>， 如果安装配置正确，则会出现当前PATH下的python版本，我显示的版本是<code>Python 2.7.11</code>。</li>
 <li>安装Pelican包和Markdown包：前面安装了pip, pip是用于安装Python第三方包的脚本，有了它安装包十分方便，只需要在命令行里输入<code>pip install packagename</code>就可以了，这里要安装Pelican和Markdown,就输入<code>pip install pelican</code>， <code>pip install markdown</code>。pip会自动下载配置这两个包，十分简单。</li>
-<li>安装git for Windows:由于博客文件最终还是要推送到服务器上的，而github免费提供个人域名，因此安装一个推送和管理软件很重要。git for Windows能在github的<a href="">相关页面</a>找到下载。</li>
-<li>安装Make for Windows：Make是unix下常用的一个程序，可以按照一定规则构建文件，Pelican十分省心的编制了Makefile文件，能够直接使用make命令完成生成HTML页面、构建测试服务器、发布文章等常用博客维护功能，但是在一般的Windows环境里不集成Make,因此需要另外下载，安装文件可以在<a href="">这里</a>
+<li>安装git for Windows:由于博客文件最终还是要推送到服务器上的，而github免费提供个人域名，因此安装一个推送和管理软件很重要。git for Windows能在github的<a href="https://github.com/waylau/git-for-win">相关页面</a>找到下载。</li>
+<li>安装Make for Windows：Make是unix下常用的一个程序，可以按照一定规则构建文件，Pelican十分省心的编制了Makefile文件，能够直接使用make命令完成生成HTML页面、构建测试服务器、发布文章等常用博客维护功能，但是在一般的Windows环境里不集成Make,因此需要另外下载，安装文件可以在<a href="http://gnuwin32.sourceforge.net/packages/make.htm">这里</a>
 找到。安装完成后，一定要在PATH里配置make.exe所在的路径，要不然在cmd终端还是无法使用make。</li>
-<li>安装Markdownpad2: Markdown是一种简单的文本标记语法，用于在快速编写文章的同时排版文章段落格式，达到‘所想即所见’的效果，这篇文章就是用Markdown语法排版而成。Windows下常用的Markdown编辑器是Markdownpad2，能够即时预览文章，很方便。它可以在<a href="">官方网站</a>找到下载。</li>
+<li>安装Markdownpad2: Markdown是一种简单的文本标记语法，用于在快速编写文章的同时排版文章段落格式，达到‘所想即所见’的效果，这篇文章就是用Markdown语法排版而成。Windows下常用的Markdown编辑器是Markdownpad2，能够即时预览文章，很方便。它可以在<a href="http://markdownpad.com/">官方网站</a>找到下载。</li>
 </ul>
 <hr />
 <h3>运行环境终于准备妥当，可以开始搭建博客了：</h3>
 <ul>
-<li>首先需要再github上注册账号，并按照<a href="">指导</a>创建一个自己的仓库，这个仓库的名字是username.github.io，是以后博客的域名。</li>
+<li>首先需要再github上注册账号，并按照<a href="https://pages.github.com/">指导</a>创建一个自己的仓库，这个仓库的名字是username.github.io，是以后博客的域名。</li>
 <li>在cmd终端里输入命令：<code>pelican-quickstart</code>,按照提示回答一系列问题，回答完毕后pelican就会告诉你已经完成了博客框架搭建了。
 <img alt="pelicanstart" src="http://i.imgur.com/CqSsYiM.jpg" /></li>
 </ul>
@@ -141,7 +141,7 @@
 <p>其中<code>content</code>文件夹用来放置博客的内容，如文章和图片等，<code>output</code>则是输出html和css文件的地方。其他几个文件中，<code>publishconf.py</code>和<code>pelicanconf.py</code>是博客的设置文件，<code>Makefile</code>是pelican预先帮助你编写好的make规则文件，<code>fabfile.py</code>也是一种fab规则文件，不过既然有了make就没什么用了。最后<code>develop_server.sh</code>似乎是用来开启测试服务器的配置文件，我基本没有动过这个东西。</p>
 <ul>
 <li>
-<p>pelican支持套用别人做好的博客主题模板，对我这种对html和css一窍不通的人是最好不过了，在<a href="">这里</a>可以找到pelican的主题演示，找到合适的后进入相关的github页面，复制链接地址，进入git bash终端clone到本地，使用如下命令：<code>git clone https://github.com/gilsondev/pelican-clean-blog.git</code>来完成。</p>
+<p>pelican支持套用别人做好的博客主题模板，对我这种对html和css一窍不通的人是最好不过了，在<a href="http://www.pelicanthemes.com/">这里</a>可以找到pelican的主题演示，找到合适的后进入相关的github页面，复制链接地址，进入git bash终端clone到本地，使用如下命令：<code>git clone https://github.com/gilsondev/pelican-clean-blog.git</code>来完成。</p>
 </li>
 <li>
 <p>在clone到本地后可以在<code>pelicanconf.py</code>添加如下一行：<code>THEME = 'PATH'</code>就可以用上刚刚的下载的主题了。我由于是在Windows下，所以文件地址由左斜杠要改成右斜杠，就变成了这个样子<code>THEME = 'D:/git-R/blog/pelican-clean-blog'</code>。又看了看这个主题github页面的说明，嘿，居然支持自己定制封面和文章背景，于是赶紧再<code>pelicanconf.py</code>中加上这两行：
@@ -151,7 +151,7 @@
 <hr />
 <h3>博客的框架有了大概，下面就可以写博客了：</h3>
 <ul>
-<li>用Markdownpad2来写博文，可以看看这篇<a href="">教程</a>来掌握Markdown的语法，十分简单便捷</li>
+<li>用Markdownpad2来写博文，可以看看这篇<a href="http://www.jianshu.com/p/1e402922ee32/">教程</a>来掌握Markdown的语法，十分简单便捷</li>
 <li>pelican要求md文件必须按照一定格式填写filemeta，得按照如下格式来写</li>
 </ul>
 <blockquote>
