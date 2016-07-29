@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>一个用于判断同位素混合体系是否‘合理’的‘多边形’算法</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="我看到了一篇文章很有意思，于是仔细研究并改了改算法">
+
+        <meta name="author" content="rogerclarkgc">
+
+        <meta name="tags" content="R">
+        <meta name="tags" content="model">
+        <meta name="tags" content="isotope">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="DeusExMachina">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/rogerclarkgc.html">
+	<meta property="og:url" content="/isopolygon.html">
+	<meta property="og:title" content="一个用于判断同位素混合体系是否‘合理’的‘多边形’算法">
+	<meta property="article:published_time" content="2016-07-29 10:20:00+08:00">
+            <meta property="og:description" content="我看到了一篇文章很有意思，于是仔细研究并改了改算法">
+
+            <meta property="og:image" content="/images/posts/polygon.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">DeusExMachina</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/post1.html">About Me</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('images/posts/polygon.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>一个用于判断同位素混合体系是否‘合理’的‘多边形’算法</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/rogerclarkgc.html">rogerclarkgc</a>
+                             on 周五 29 七月 2016
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <p>由于自己的研究内容和稳定同位素生态相关，其中一个很重要的问题是解析同位素混合体系中各个同位素信号的来源问题，这个问题具体到实际情景中有很多应用，比如解析动物食谱，河流中污染物来源，鉴定酒品出产地等。</p>
+<p>解析这种混合体系目前基本都是建立在质量平衡假设上的，这个假设能用一组线性方程组来描述，对于一个双同位素的混合体系，那么这个方程组由两个方程式组成，因此数学上这个方程组只能得出小于等于2个变量的确定解，而实际中双同位素混合体系中来源不止2个，因此仅仅利用线性方程组来或得确定的来源组成是不可能的。</p>
+<hr />
+<p>为了解决这种问题，有几种大体的思路，目前最常见的是贝叶斯概率模型，这种模型的核心仍然是质量平衡假设，但是它把“源——混合物”这一过程看成一个概率过程，把源和混合物的同位素信号都看成特定的概率分布，如最有名的SIAR模型，把源看成正态分布，源的贡献率组成的向量看成Dirichlet分布。并通过随机抽样算法，随机选取Dirichlet分布中的贡献率向量，结合混合体系的拟然概率分布得出一个假设值，最后与质量平衡模型来比较，不断修正Dirichlet分布的参数来获得最优的贡献率向量，这样多次迭代出的结果就是每个源的贡献率的可能性分布，这种描述方式要比单一数值的贡献率要更令人信服，更重要的是，源的变异性如方差可以通过设定源的分布函数来描述，因此模型更加有统计学的说服力。</p>
+<p>我前一段时间花了点心思做了一个自己的同位素混合模型，由于自己数学不过关，一直无法实现SIAR模型中的Dirichlet分布以及拟然概率分布背后的数学机理，并且由于这种算法需要多次迭代，R中实现大量迭代效率太低, SIAR模型采用Rcpp来提高运行效率，C语言简直让人头大，因此我自己这个模型只是简单的假定源是正态分布，通过随机抽样来多次迭代计算各个源的贡献率，最后也能生成一个各个源的概率密度图像，算是一个简单的迭代算法。有想法的同学可以去我的<a href="https://github.com/rogerclarkgc">Github主页</a>中‘estableiso’项目里批评一下。</p>
+<hr />
+<p>直到半个月前，我看到一篇<a href="http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12048/abstract">文献</a>，这篇文献虽然没有直接解决多来源混合体系的解析问题，但提出了一个随机模拟算法来解决各个混合体系在来源信号已知情况下是否合理的问题。作者还给出了R实现的源代码，我拿来一看，嘿，还挺简单，没有Dirichlet，没有Rcpp，更没有S4S3之流，我赶紧偷过来把它改成了一个函数式的模块，希望能加入到我的estableiso中。</p>
+<p>整个模拟过程的思路很明了，可以用如下步骤说明：</p>
+<blockquote>
+<p>1.输入源、混合体系、修正因子的矩阵</p>
+<p>2.找到源的合适范围，一般为最大值和最小值附近，记录到变量里</p>
+<p>3.利用<code>outer()</code>生成一个矩阵m，这个矩阵实际上是一个包括整个源范围的同位素值的序列，后面的循环将会计算这个矩阵中每一个点是否在源组成的多边形内部。</p>
+<p>4.从预先输入的源矩阵中随机抽取一个同位素值，修正后作为用于一次循环的源</p>
+<p>5.由于一般研究双同位素体系，因此这个源相当于一个二维空间的点，多个源就组成一个多边形，一次循环可以生成一个多边形</p>
+<p>6.下面就是这个算法的核心思路，如果一个混合体系很可能由这个几个源组成，那么它会以很大概率落在这几个源组成的多边形空间中，这是很自然的推论，前面计算了包括同位素源最大和最小范围的m矩阵包括了这几个来源几乎所有的混合体系组成，因此只要计算这个m中每个点是否落在这个多变形里，在多次循环后就可以得到m中每个点有多上次落到了随机多边形里，落入的次数越多，说明这个点更有可能是由这几个源混合而成的</p>
+<p>7.我们也顺便计算刚刚输入的几个混合体系，也记录它们在每次循环中有几次落入了随机多边形中，这样，当循环结束后。我们可以做一个等高线图，它能直观展现出我们输入的混合体系在这么多循环中有多少次落入了随机多边形中。</p>
+</blockquote>
+<p>下面来看看模型的实际运行效果，我改了一下模型的参数，让它只输出几次循环的结果，可以更明显的看出这个模型是怎样工作的</p>
+<p><img alt="polydemo" src="http://i.imgur.com/DUrvWAO.gif" /></p>
+<p>上面的图就是这个模型经过8次循环得到的结果，可以看到每次循环都生成一个源的随机多边形，黑色点就是输入的混合体系，红色点是m矩阵的点，由于m矩阵是250*250方阵，记录62500个点，所以只能抽取一部分画出来，以免图像太密集。每次循环都会记录红色点和黑色点落入随机多边形的次数，当循环到一定程度时，随机多边形的面积会变的稳定，这时就终止循环，经过测试，进行1500次左右循环多边形就趋于稳定了。</p>
+<p>由于原作者提供的源码不够友好，我把它改成函数，并修改了确定m矩阵范围的代码，改后的函数在R中可以这样调用。</p>
+<div class="highlight"><pre><span></span>library(sp)
+library(splancs)
+iso.polygon(sources = sourcesdemo, mixture = mixturedemo, 
+TEF = correctiondemo, its = 1500)
+</pre></div>
+
+
+<p>这样使用这个随机模拟模型就简单多了。</p>
+<p>用SIAR模型提供的geese1demol来测试一下，在Rtudio中进行这个测试，测试过程如下所示</p>
+<div class="highlight"><pre><span></span>&gt; iso.polygon(sourcesdemo, geese1demo, correctionsdemo)
+iteration 10 
+iteration 20 
+iteration 30 
+iteration 40 
+iteration 50 
+iteration 60 
+iteration 70 
+iteration 80 
+iteration 90 
+iteration 100 
+iteration 110 
+iteration 120 
+iteration 130 
+iteration 140 
+iteration 150 
+iteration 160 
+...
+iteration 1480 
+iteration 1490 
+iteration 1500 
+Simulation is done! Drawing figure, press &lt;ENTER&gt; to continue
+
+Figure 1: variance of polygon during the simulation progress
+Press &lt;ENTER&gt; to continue
+
+Figure 2: proportion of iteration that inside the polygon
+Press &lt;ENTER&gt; to continue
+
+Figure 3 : mixing region hot map with colors
+Press &lt;ENTER&gt; to continue
+
+Figure 4 : mixing region hot map in white and black
+Press &lt;ENTER&gt; to continue
+
+Figure 4 : Bi-plot with single 95% contour line
+Press &lt;ENTER&gt; to continue
+
+Do you want to write simulation result to file?, Y/N: N
+Thanks for using, exit...
+</pre></div>
+
+
+<p>跑完这个模型会输出几张图来描述运行结果：</p>
+<ul>
+<li>
+<p>随机多边形面积方差变化折线图，可以看到1500次就趋于稳定了。
+<img alt="polyvar" src="http://i.imgur.com/2sipo4W.jpg" /></p>
+</li>
+<li>
+<p>落入随机多边形的频率直方图, 可以看到9个混合体系中8号在1500次循环中，有1500 * 0.8次落入随机多边形中，其他的点大概在1500 *　0.6次左右。
+<img alt="polyiter" src="http://i.imgur.com/10ZmJ1e.jpg" /></p>
+</li>
+<li>
+<p>显示运行结果的热值图，红色代表位于该区域的点有很大概率是有当前的混合体系生成的，直观好懂，可以看到有一个点在红色区域，就是前面说的8号，其他8个点再绿色区域，概率明显低了不少。前面费大力气计算m矩阵落入多边形的次数，就是为生成这样一个色彩梯度图准备每个点的热度数据。
+<img alt="hotmap" src="http://i.imgur.com/hBYmPov.jpg" /></p>
+</li>
+<li>
+<p>同样的图，只不过是黑白颜色的
+<img alt="hotmapbw" src="http://i.imgur.com/KtJRR9O.jpg" /></p>
+</li>
+<li>
+<p>0.05等高线的位置
+<img alt="hotmap0.05" src="http://i.imgur.com/UJbfcOl.jpg" /></p>
+</li>
+</ul>
+<p>这样通过这几张图，可以很直观的描述这8个混合体系是否是这四个源混合而成，我们能明确的知道，8号混合体系有80%以上的可能是由这四个源混合。</p>
+<p>虽然这个模型很简单，但威力不容小觑，尤其当碰到混合体系多时，一味用SIAR来解并不现实，因为SIAR没有内置检验混合体系是否合理的机制，它总是会拟合出一个结果，在用SIAR之前，用一下这个模型，看看哪些混合体系最有可能，再调整SIAR模型的参数来计算，才能好好发挥它的用处。</p>
+<hr />
+<p>后记：一直想用一些几何学的方法来解决同位素混合问题，这个算法算是一个解决方式，由于作者没有考虑m矩阵的取值问题，而是采用人为设定的方式，因此热值图的形成有较大的随意性，而热值图算是这个模型的核心，因此我采用先找到输入的源最大值和最小值，然后再用qnorm()函数取其0.99分位数的方法来确定，实际效果仍然不太满意，其生成的热值梯度有时候不会落到混合体系的点上，极大的影响了后续的判断。希望能找到更合适的取值方法。</p>
+<p>我把这个项目放到了我的<a href="">github</a>页面的isopolygon仓库里，欢迎批评。</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/r.html">R</a>, <a href="/tag/model.html">model</a>, <a href="/tag/isotope.html">isotope</a></p>
+        </div>
+
+<hr>
+<div class="sharing">
+</div>
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://github.com/rogerclarkgc">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://weibo.com/3090511091/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+<script type="text/javascript">
+    var disqus_shortname = 'rogerclarkgc';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+
+</html>
