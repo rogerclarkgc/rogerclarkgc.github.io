@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>奇异值分解实在太好玩了</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="有了它，发车更高端">
+
+        <meta name="author" content="rogerclarkgc">
+
+        <meta name="tags" content="R">
+        <meta name="tags" content="model">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="DeusExMachina">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/rogerclarkgc.html">
+	<meta property="og:url" content="/svd.html">
+	<meta property="og:title" content="奇异值分解实在太好玩了">
+	<meta property="article:published_time" content="2016-08-03 18:20:00+08:00">
+            <meta property="og:description" content="有了它，发车更高端">
+
+            <meta property="og:image" content="/images/posts/svd_cover.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">DeusExMachina</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/post1.html">About Me</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('images/posts/svd_cover.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>奇异值分解实在太好玩了</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/rogerclarkgc.html">rogerclarkgc</a>
+                             on 周三 03 八月 2016
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <p>最近有个师姐想找我帮她把一张Arcgis地图中的颜色处理一下，突然勾起了我探索一下R中图像处理的兴趣，在网上看了几个图像处理的包，有个帖子写了奇异值分解在数据降维中的应用，突然发现自己好像学过奇异值分解这个东西，但又忘了一干二净，于是索性找来资料看看，却发现自己线性代数的东西完全看不懂了，幸好R代码还是看的懂的，于是用R中的奇异值分解做了个小东西玩玩，还挺有意思。</p>
+<p>奇异值分解其实是对一个m*n矩阵进行的分解，对于任何一个这样的矩阵，它满足</p>
+<p><img alt="svdformula" src="http://i.imgur.com/7lC8qPp.png" /></p>
+<p>其中U是一个正交阵，Σ是一个对角阵，V也是一个正交阵。</p>
+<p>在图像中运用奇异值分解十分直观，图像本身就是一个矩阵，在R中raster数据类型就是一种图像的栅格数据，稍微做一下转化就能变成一个大型矩阵。因此直接对图像矩阵做奇异值分解是十分简单的。</p>
+<p>奇异值分解后形成的三个矩阵中，Σ对角线上的元素就是A的奇异值，对于Σ中的r个奇异值，满足如下关系：</p>
+<p><img alt="svd2" src="http://i.imgur.com/1tE1Trq.png" /></p>
+<p>很牛逼，只用r个奇异值就能大致还原一个矩阵，这么一来图像存储占的空间就少了许多，假如原图要500x500=250000的空间，奇异值分解后，用50个奇异值来存储，就只需要500x50+50x50+50x500=52500的空间了。实际上，我通过R模拟发现，大概50个左右的奇异值就能得到比较好的还原效果，真是神奇！</p>
+<hr />
+<p>多说无用，在R里用代码实际操作一下，就知道奇异值分解在数据降维中的威力了，R中自带了<code>svd()</code>函数专门用来做矩阵的奇异值分解，所以整个模拟十分简单，几行代码就可以搞定，代码如下：</p>
+<div class="highlight"><pre><span></span>    pic_svd <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>sourcename<span class="p">,</span> howmany<span class="p">){</span>
+    pic.ras <span class="o">&lt;-</span> raster<span class="p">(</span>sourcename<span class="p">)</span> <span class="c1">#获得raster数据</span>
+    n <span class="o">&lt;-</span> howmany
+    pic.flip <span class="o">&lt;-</span> flip<span class="p">(</span>pic.ras<span class="p">,</span> direction <span class="o">=</span> <span class="s">&quot;y&quot;</span><span class="p">)</span>
+    pic.m <span class="o">&lt;-</span> <span class="kp">t</span><span class="p">(</span><span class="kp">as.matrix</span><span class="p">(</span>pic.flip<span class="p">))</span>
+    pic.svd <span class="o">&lt;-</span> <span class="kp">svd</span><span class="p">(</span>pic.m<span class="p">)</span>
+    d <span class="o">&lt;-</span> <span class="kp">diag</span><span class="p">(</span>pic.svd<span class="o">$</span>d<span class="p">)</span>
+    v <span class="o">&lt;-</span> <span class="kp">as.matrix</span><span class="p">(</span>pic.svd<span class="o">$</span>v<span class="p">)</span>
+    u <span class="o">&lt;-</span> pic.svd<span class="o">$</span>u
+    u1 <span class="o">&lt;-</span> <span class="kp">as.matrix</span><span class="p">(</span>u<span class="p">[,</span> <span class="m">1</span><span class="o">:</span>n<span class="p">])</span>
+    d1 <span class="o">&lt;-</span> <span class="kp">as.matrix</span><span class="p">(</span>d<span class="p">[</span><span class="m">1</span><span class="o">:</span>n<span class="p">,</span> <span class="m">1</span><span class="o">:</span>n<span class="p">])</span>
+    v1 <span class="o">&lt;-</span> <span class="kp">as.matrix</span><span class="p">(</span>v<span class="p">[,</span> <span class="m">1</span><span class="o">:</span>n<span class="p">])</span>
+    pic_after <span class="o">&lt;-</span> u1 <span class="o">%*%</span> d1 <span class="o">%*%</span> <span class="kp">t</span><span class="p">(</span>v1<span class="p">)</span>
+    windows<span class="p">()</span>
+    image<span class="p">(</span>pic_after<span class="p">,</span> col <span class="o">=</span> grey<span class="p">(</span><span class="kp">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> length <span class="o">=</span> <span class="m">256</span><span class="p">)),</span> main <span class="o">=</span> n<span class="p">)</span> 
+    <span class="p">}</span>
+</pre></div>
+
+
+<p>这个<code>pic.svd(sourcename, howmany)</code>函数有两个参数，第一个是读取的图片的文件名字，第二个是使用的奇异值模拟的数值，这个数值不能大于图片的长宽。</p>
+<p>我用自己的github头像做了测试，分别选取了几个奇异值进行模拟，其运行结果在下图展现：</p>
+<p><img alt="result" src="http://i.imgur.com/2IK8zks.gif" /></p>
+<p>可以看到，一开始只有一个奇异值时，图像完全看不出是什么，到5个奇异值时，能大概看出一点东西，当到了50个奇异值时，图像的信息基本可以辨认，后面随着奇异值的变多，图像噪点变少，到400个奇异值时，基本和原图(460*460)一样了,为了更加直观，下面直接对比一下：</p>
+<p><img alt="original" src="http://i.imgur.com/bCzgy5U.jpg" /></p>
+<p>这是原图，当然经过灰度处理</p>
+<p><img alt="svd50" src="http://i.imgur.com/8BeZgoN.jpg" /></p>
+<p>这个取50个奇异值后的结果，形状清晰，但噪点多</p>
+<p><img alt="svd400" src="http://i.imgur.com/TRMlsA3.jpg" /></p>
+<p>这是400个奇异值的结果，可以看到和原图基本一样了。</p>
+<p>虽然还是不太懂奇异值分解的推导过程，毕竟大学毕业后就没摸过线性代数，但借着R的强大，还是好好体会了一把奇异值分解的奇妙之处，用某位长者的话来说:</p>
+<blockquote>
+<p>"你们给我搞的这个东西啊。。。excited！！！"</p>
+</blockquote>
+<p>看来需要再去复习一下线性代数了。</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/r.html">R</a>, <a href="/tag/model.html">model</a></p>
+        </div>
+
+<hr>
+<div class="sharing">
+</div>
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://github.com/rogerclarkgc">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://weibo.com/3090511091/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+<script type="text/javascript">
+    var disqus_shortname = 'rogerclarkgc';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+
+</html>
