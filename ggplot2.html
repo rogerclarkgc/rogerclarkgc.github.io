@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>ggplot2包学习笔记</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="确实很厉害的思路">
+
+        <meta name="author" content="rogerclarkgc">
+
+        <meta name="tags" content="R">
+        <meta name="tags" content="packages">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="DeusExMachina">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/rogerclarkgc.html">
+	<meta property="og:url" content="/ggplot2.html">
+	<meta property="og:title" content="ggplot2包学习笔记">
+	<meta property="article:published_time" content="2016-09-24 08:20:00+08:00">
+            <meta property="og:description" content="确实很厉害的思路">
+
+            <meta property="og:image" content="/images/posts/ggplot2_cover.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">DeusExMachina</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/post1.html">About Me</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('images/posts/ggplot2_cover.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>ggplot2包学习笔记</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/rogerclarkgc.html">rogerclarkgc</a>
+                             on 周六 24 九月 2016
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <h2>基本思想：</h2>
+<p>ggplot2包以将想要展现的数据以及数据中的变量对应到图形属性中的映射（mapping）这一过程作为自己的基本思路，其中有几个关键概念</p>
+<p>几何对象（geom）图像的点、线、面等基本元素；</p>
+<p>统计变换（stats）对数据的汇总、重塑的过程，如通过分组的方式建立直方图；</p>
+<p>标度（scale）将数据的值映射到图形空间的一种过程，如用颜色、符合形状、大小来描述不同的取值。绘制图例和坐标轴就对应着分组变量——图例形状以及数值变量——空间坐标的两种映射；</p>
+<p>坐标系（coord）常见的映射方式，描述了数据如何映射到空间的点的过程，同时还提供了坐标轴和网格线，笛卡尔坐标系是最常见的坐标系；</p>
+<p>分面（facet）将数据分为若干子集，分别对子集作图并以图形矩阵的形式展示在同一张图像上的方法。</p>
+<h2>qplot函数</h2>
+<ul>
+<li>
+<p>基本用法：</p>
+<p>qplot(x, y, data, geom)
+该函数是ggplot2包的快速绘图函数，参数<code>geom</code>是指图像的几何对象，几何对象有如下几种常用的值：</p>
+</li>
+</ul>
+<p><code>point</code>绘制散点图，当指定了x和y的参数时默认设置。还可以用<code>size</code>，<code>shape</code>，<code>colour</code>， <code>alpha</code>等图形属性来描述图形特征</p>
+<p><code>smooth</code>绘制一条光滑曲线，同时会展示曲线的标准误差</p>
+<p><code>boxplot</code>绘制一个箱线图， 可以用<code>fill</code>属性来描述方块填充颜色</p>
+<p><code>path</code>和<code>line</code>绘制折线图</p>
+<p>对于输入一维数据的情况，有这几种图像可以绘制</p>
+<p><code>histogram</code>绘制频数直方图
+<code>freqpoly</code>绘制频率多边形
+<code>density</code>绘制密度曲线
+<code>bar</code>绘制离线数据的条形图</p>
+<ul>
+<li>分面：</li>
+</ul>
+<p>qplot通过<code>facets</code>参数指定分面，用形如<code>row_var ~ col_var</code>的表达式来描述具体分面情况，如果只想指定一行或者一列，使用<code>row_var ~ .</code>的形式来指定单列图形或单行图形</p>
+<p>例子：</p>
+<div class="highlight"><pre><span></span>qplot(carat, data = diamonds, facets = color ~ ., geom = &quot;histogram&quot;, binwidth = 0.1, xlim = c(0, 3))
+
+qplot(carat, ..density.., data = diamonds, facets = color ~ ., geom = &quot;histogram&quot;, binwidth = 0.1, xlim = c(0, 3))
+</pre></div>
+
+
+<p><code>..density..</code>可以指定直方图一密度作为y轴而不是频数</p>
+<ul>
+<li>
+<p>其他选项</p>
+</li>
+<li>
+<p><code>xlim</code>, <code>ylim</code> 取值为一个长度为2的数值向量，用于指定坐标轴的区间</p>
+</li>
+<li><code>log</code>表明对坐标轴取对数，<code>log = "x"</code>表明对x轴取对数，<code>log = xy</code>表明对x轴和y轴都取对数</li>
+<li><code>main</code>图形的标题</li>
+<li><code>xlab</code>, <code>ylab</code>x轴或y轴的标签文字</li>
+</ul>
+<h2>ggplot()函数：用图层构建对象</h2>
+<p>ggplot()函数的两个主要参数：</p>
+<div class="highlight"><pre><span></span>ggplot（data, aes())
+</pre></div>
+
+
+<p>data用于加载数据，aes()描述映射关系</p>
+<div class="highlight"><pre><span></span>p <span class="o">&lt;-</span> ggplot<span class="p">(</span>data <span class="o">=</span> diamonds<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> carat<span class="p">,</span> y <span class="o">=</span> price<span class="p">,</span> colour <span class="o">=</span> <span class="kp">cut</span><span class="p">)</span>
+</pre></div>
+
+
+<p>这里用ggplot建立一个图层，使用diamonds作为数据，aes()中对应关系为：carat变量映射到x轴，price变量映射到y轴， cut变量映射的图像的颜色属性上。最后把这个实例赋值给对象p。</p>
+<ul>
+<li>添加图层：</li>
+</ul>
+<p>layer函数可以在ggplot对象上添加图层，函数形式如下</p>
+<div class="highlight"><pre><span></span>layer(geom = NULL, stat = NULL, data = NULL, 
+mapping = NULL,position = NULL, params = list(),
+inherit.aes = TRUE, subset = NULL,show.legend = NA)
+</pre></div>
+
+
+<p>geom为该图层展现的几何对象类型，stat为使用的统计变换，data如果不指定，就会从ggplot对象中继承，mapping为映射关系，默认情况下从aes()函数中继承，position为位置参数。stat参数和position参数必须要明文指定。</p>
+<div class="highlight"><pre><span></span>p <span class="o">&lt;-</span> p <span class="o">+</span> layer<span class="p">(</span>geom <span class="o">=</span> <span class="s">&quot;point&quot;</span><span class="p">,</span> stat <span class="o">=</span> <span class="s">&quot;identify&quot;</span><span class="p">,</span> 
+position <span class="o">=</span> <span class="s">&quot;</span><span class="err">identity)</span>
+</pre></div>
+
+
+<p>这里在原来的图像的基础上加上一个图层，使用点作为几何对象。</p>
+<p>更复杂一点的例子：</p>
+<div class="highlight"><pre><span></span>p <span class="o">&lt;-</span> ggplot<span class="p">(</span>diamonds<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> carat<span class="p">))</span>
+p <span class="o">&lt;-</span> p <span class="o">+</span> layer<span class="p">(</span>
+geom <span class="o">=</span> <span class="s">&quot;bar&quot;</span><span class="p">,</span>
+stat <span class="o">=</span> <span class="s">&quot;bin&quot;</span><span class="p">,</span>
+position <span class="o">=</span> <span class="s">&quot;identity&quot;</span><span class="p">,</span>
+params <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>fill <span class="o">=</span> <span class="s">&quot;steelblue&quot;</span><span class="p">,</span> binwidth <span class="o">=</span> <span class="m">0.2</span><span class="p">)</span>
+<span class="p">)</span>
+p
+</pre></div>
+
+
+<p>这里首先建立一个包含数据和映射的ggplot对象，然后添加了一个图层，这个图层的几何对象为直方图，并进行相应的统计变换，还指定了组距和填充颜色</p>
+<p>更为便捷的替代layer函数的方法是直接使用geom_XXX和stat_XXX类函数，如上面的可改为</p>
+<div class="highlight"><pre><span></span>p <span class="o">&lt;-</span> ggplot<span class="p">(</span>diamonds<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> carat<span class="p">))</span> <span class="o">+</span>
+geom_histogram<span class="p">(</span>binwidth <span class="o">=</span> <span class="m">0.2</span><span class="p">,</span> fill <span class="o">=</span> <span class="s">&quot;</span><span class="err">steelblue)</span>
+</pre></div>
+
+
+<p>等价的例子：</p>
+<div class="highlight"><pre><span></span>ggplot(msleep, aes(sleep_rem / sleep_total, awake)) + geom_point()
+##等价于
+qplot(sleep_rem / sleep_total, awake, data = msleep)
+***************************************************
+qplot(sleep_rem / sleep_total, awake, data = msleep,
+geom = c(&quot;point&quot;, &quot;smooth&quot;))
+###等价于
+qplot(sleep_rem / sleep_total, awake, data = msleep) + 
+geom_smooth()
+###或
+ggplot(msleep, aes(x = sleep_rem / sleep_total, awake)) +　geom_point() + geom_smooth()
+</pre></div>
+
+
+<p>图层本身也是个对象，可以赋值到任意变量上，这样可以重复利用这个图层的样式。</p>
+<div class="highlight"><pre><span></span>smoothfit <span class="o">&lt;-</span> geom_smooth<span class="p">(</span>method <span class="o">=</span> <span class="s">&quot;lm&quot;</span><span class="p">,</span> se <span class="o">=</span> <span class="bp">F</span><span class="p">,</span> colour <span class="o">=</span> alpha<span class="p">(</span><span class="s">&quot;steelblue&quot;</span><span class="p">,</span> <span class="m">0.5</span><span class="p">),</span> size <span class="o">=</span> <span class="m">2</span><span class="p">)</span>
+qplot<span class="p">(</span>sleep_rem<span class="p">,</span> sleep_total<span class="p">,</span> data <span class="o">=</span> msleep<span class="p">)</span> <span class="o">+</span> smoothfit
+</pre></div>
+
+
+<p>上面代码在一个散点图上建立一个浅蓝色的半透明的回归线</p>
+<ul>
+<li>设定和映射：</li>
+</ul>
+<p>有两种方式可以设定一个图层中元素的属性，如颜色属性：</p>
+<div class="highlight"><pre><span></span><span class="c1">##设定方式</span>
+p <span class="o">&lt;-</span> ggplot<span class="p">(</span>mtcars<span class="p">,</span> aes<span class="p">(</span>mpg<span class="p">,</span> wt<span class="p">))</span>
+p <span class="o">+</span> geom_point<span class="p">(</span>colour <span class="o">=</span> <span class="s">&quot;darkblue&quot;</span><span class="p">)</span>
+<span class="c1">##映射方式</span>
+p <span class="o">+</span> geom_point<span class="p">(</span>aes<span class="p">(</span>colour <span class="o">=</span> <span class="kp">I</span><span class="p">(</span><span class="s">&quot;darkblue&quot;</span><span class="p">))</span>
+</pre></div>
+
+
+<p>两种方式原理不同，设定方式直接更改geom_point对象的colour属性， 映射方式将colour这一属性与一个变量形成映射关系，如果不使用I()作标度转换，aes(colour = "darkblue")将进行默认的标度转换， “darkblue”作为一个单一的字符串变量与colour形成映射关系，默认的标度将按照这一个映射在色轮上等距取色，由于只有一个变量"darkblue"，因此就只有一个颜色，为粉红色。</p>
+<ul>
+<li>分组：</li>
+</ul>
+<p>通过将group映射到在不同组有不同取值的变量来在一张图像中绘制不同组的数据</p>
+<p>多个分组与单个图形</p>
+<div class="highlight"><pre><span></span>p <span class="o">&lt;-</span> ggplot<span class="p">(</span>Oxboys<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> age<span class="p">,</span> y <span class="o">=</span> height<span class="p">,</span> group <span class="o">=</span> Subject<span class="p">))</span> <span class="o">+</span>
+geom_line<span class="p">()</span>
+</pre></div>
+
+
+<p>指定Oxboys数据框中Subject映射到group中，将对么个Subject下的所有观测单独连线，绘制一条折线图。</p>
+<p>不同图层上的不同分组</p>
+<div class="highlight"><pre><span></span>p + geom_smooth(aes(group = 1), method = &quot;lm&quot;, se = F, size = 3)
+</pre></div>
+
+
+<p>让group = 1， 能基于所有数据点绘制一条回归直线，并且单独作为一个图层叠加到原来的图上</p>
+<div class="highlight"><pre><span></span>boybox <span class="o">&lt;-</span> ggplot<span class="p">(</span>Oxboys<span class="p">,</span> aes<span class="p">(</span>Ocasion<span class="p">,</span> height<span class="p">))</span> <span class="o">+</span> geom_boxplot<span class="p">(</span>fill <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">)</span>
+boybox <span class="o">+</span> geom_line<span class="p">(</span>aes<span class="p">(</span>group <span class="o">=</span> Subject<span class="p">),</span> colour <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>重新以Ocasion分组绘制height的箱线图，并加上了折线图层，设定了线的颜色</p>
+<h2>基本图形类型</h2>
+<p>常见的几种几何对象，它们都是二维的，并且都可有colour和size属性，填充型集合对象还可接受fill图形属性</p>
+<p><code>geom_area()</code>用于绘制面积图</p>
+<p><code>geom_bar(stat = "identity")</code>用于绘制条形图，stat = "identity"将直接对数据进行计数，而不进行统计变换</p>
+<p><code>geom_line()</code>用于绘制线条图，group属性决定哪些观测是相连的，</p>
+<p><code>geom_path()</code>与之类似，但它将线条按数据出现的顺序相连接。</p>
+<p><code>geom_point()</code>绘制散点图</p>
+<p><code>geom_polygon()</code>绘制多边形， 数据中的每一行代表多边形的一个顶点</p>
+<p><code>geom_text()</code>可在指定点处添加标签， 需要指定label参数，hjust和vjust属性控制文本横纵位置，angel控制文本的旋转</p>
+<p><code>geom_title()</code>绘制色深图或水平图</p>
+<p><code>geom_boxplot = stat_boxplot + geom_boxplot</code>绘制箱线图，在类别型变量时比较有用，对于连续变量，经过封箱处理后也可使用</p>
+<div class="highlight"><pre><span></span>library(plyr)
+qplot(carat, depth, data = diamonds, geom = &quot;boxplot&quot;, 
+group = round_any(carat, 0.1, floor), xlim = c(0, 3))
+</pre></div>
+
+
+<p><code>geom_density = stat_density + geom_area</code>:基于核密度得到的频率多边形</p>
+<p><code>geom_jitter = position_jitter + geom_point</code>通过添加随机噪声来避免点之间的相互遮盖的问题</p>
+<h2>解决遮盖问题</h2>
+<p>用更小的点来绘制散点图</p>
+<div class="highlight"><pre><span></span>df <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>x <span class="o">=</span> rnorm<span class="p">(</span><span class="m">2000</span><span class="p">),</span> y <span class="o">=</span> rnorm<span class="p">(</span><span class="m">2000</span><span class="p">))</span>
+norm <span class="o">&lt;-</span> ggplot<span class="p">(</span>df<span class="p">,</span> aes<span class="p">(</span>x<span class="p">,</span> y<span class="p">))</span>
+norm <span class="o">+</span> geom_point<span class="p">()</span>
+norm <span class="o">+</span> geom_point<span class="p">(</span>shape <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
+norm <span class="o">+</span> geom_point<span class="p">(</span>shape <span class="o">=</span> <span class="s">&quot;.&quot;</span><span class="p">)</span> <span class="c1">#用“.”来作为图中的点</span>
+</pre></div>
+
+
+<p>用透明度来表示重叠程度</p>
+<div class="highlight"><pre><span></span>norm + geom_point(colour = &quot;black&quot;, alpha = 1/3)
+norm + geom_point(colour = &quot;black&quot;, alpha = 1/5)
+norm + geom_point(colour = &quot;black&quot;, alpha = 1/10)
+</pre></div>
+
+
+<p>給数据添加扰动减少重叠</p>
+<div class="highlight"><pre><span></span>td <span class="o">&lt;-</span> ggplot<span class="p">(</span>diamonds<span class="p">,</span> aes<span class="p">(</span><span class="kp">table</span><span class="p">,</span> depth<span class="p">))</span> <span class="o">+</span> xlim<span class="p">(</span><span class="m">50</span><span class="p">,</span> <span class="m">70</span><span class="p">)</span> <span class="o">+</span> ylim<span class="p">(</span><span class="m">50</span><span class="p">,</span> <span class="m">70</span><span class="p">)</span>
+td <span class="o">+</span> geom_point<span class="p">()</span>
+td <span class="o">+</span> geom_jitter<span class="p">()</span> <span class="c1">#默认扰动</span>
+jit <span class="o">&lt;-</span> position_jitter<span class="p">(</span>width <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="c1">#添加横向扰动</span>
+td <span class="o">+</span> geom_jitter<span class="p">(</span>position <span class="o">=</span> jit<span class="p">)</span>
+td <span class="o">+</span> geom_jitter<span class="p">(</span>position <span class="o">=</span> jit<span class="p">,</span> colour <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">10</span><span class="p">)</span>
+</pre></div>
+
+
+<p>给数据封箱</p>
+<div class="highlight"><pre><span></span><span class="c1">#bins控制箱的数量， binwidth控制箱的大小</span>
+d <span class="o">&lt;-</span> ggplot<span class="p">(</span>diamonds<span class="p">,</span> aes<span class="p">(</span>carat<span class="p">,</span> price<span class="p">))</span> <span class="o">+</span> xlim<span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span> <span class="o">+</span> theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span>
+d <span class="o">+</span> stat_bin2d<span class="p">()</span>
+d <span class="o">+</span> stat_bin2d<span class="p">(</span>bins <span class="o">=</span> <span class="m">10</span><span class="p">)</span>
+d <span class="o">+</span> stat_bin2d<span class="p">(</span>binwidth <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.02</span><span class="p">,</span> <span class="m">200</span><span class="p">))</span>
+d <span class="o">+</span> stat_binhex<span class="p">(</span>bins <span class="o">=</span> <span class="m">10</span><span class="p">)</span>
+d <span class="o">+</span> stat_binhex<span class="p">(</span>binwidth <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.02</span><span class="p">,</span> <span class="m">200</span><span class="p">))</span>
+</pre></div>
+
+
+<p>使用stat_density2d作二维密度估计，并添加等高线</p>
+<div class="highlight"><pre><span></span>d <span class="o">&lt;-</span> ggplot<span class="p">(</span>diamonds<span class="p">,</span> aes<span class="p">(</span>carat<span class="p">,</span> price<span class="p">))</span> <span class="o">+</span> xlim<span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span> <span class="o">+</span> theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span>
+d <span class="o">+</span> geom_point<span class="p">()</span> <span class="o">+</span> geom_density2d<span class="p">()</span>
+d <span class="o">+</span> stat_density2d<span class="p">(</span>geom <span class="o">=</span> <span class="s">&quot;point&quot;</span><span class="p">,</span> aes<span class="p">(</span>size <span class="o">=</span> <span class="m">..</span>density..<span class="p">),</span> contour <span class="o">=</span> <span class="bp">F</span><span class="p">)</span> <span class="o">+</span> scale_size_area<span class="p">()</span>
+d <span class="o">+</span> stat_density2d<span class="p">(</span>geom <span class="o">=</span> <span class="s">&quot;tile&quot;</span><span class="p">,</span> aes<span class="p">(</span>fill <span class="o">=</span> <span class="m">..</span>density..<span class="p">),</span> contour <span class="o">=</span> <span class="bp">F</span><span class="p">)</span>
+last_plot<span class="p">()</span> <span class="o">+</span> scale_fill_gradient<span class="p">(</span>limits <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">1e-5</span><span class="p">,</span> <span class="m">8e-4</span><span class="p">))</span>
+</pre></div>
+
+
+<h2>添加图形注解</h2>
+<p><code>geom_text</code>添加文字叙述或为点添加标签</p>
+<p><code>geom_vline</code>，<code>geom_hline</code>添加垂直和水平线</p>
+<p><code>geom_abline</code>添加任意斜率和截距的线</p>
+<p><code>geom_react</code>强调图形中感兴趣区域</p>
+<p><code>geom_line</code>，<code>geom_path</code>，<code>geom_segment</code>添加直线，都有一个arrow参数，可以在线上放置一个箭头</p>
+<p>*实例</p>
+<div class="highlight"><pre><span></span>unemp <span class="o">&lt;-</span> qplot<span class="p">(</span><span class="kp">date</span><span class="p">,</span> unemploy<span class="p">,</span> data <span class="o">=</span> economics<span class="p">,</span> geom 
+<span class="o">=</span> <span class="s">&quot;line&quot;</span><span class="p">,</span> xlab <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span> ylab <span class="o">=</span> <span class="s">&quot;No.unemployed(1000s))&quot;</span>
+presidentia <span class="o">&lt;-</span> presidential<span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">),</span> <span class="p">]</span>
+yrng <span class="o">&lt;-</span> <span class="kp">range</span><span class="p">(</span>economics<span class="o">$</span>unemploy<span class="p">)</span>
+xrng <span class="o">&lt;-</span> <span class="kp">range</span>（economics<span class="o">$</span><span class="kp">date</span><span class="p">)</span>
+unemp <span class="o">+</span>geom_vline<span class="p">(</span>aes<span class="p">(</span>xintercept <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>start<span class="p">)),</span> data <span class="o">=</span> presidential<span class="p">)</span> <span class="c1">#添加垂直线，各个总统任期起始年</span>
+<span class="kn">library</span><span class="p">(</span><span class="kp">scale</span><span class="p">)</span>
+unemp <span class="o">+</span> geom_rect<span class="p">(</span>aes<span class="p">(</span><span class="kc">NULL</span><span class="p">,</span> <span class="kc">NULL</span><span class="p">,</span> xmin <span class="o">=</span> start<span class="p">,</span> xmax <span class="o">=</span> end<span class="p">,</span> fill <span class="o">=</span> party<span class="p">),</span> ymin <span class="o">=</span> yrng<span class="p">[</span><span class="m">1</span><span class="p">],</span> ymax <span class="o">=</span> yrng<span class="p">[</span><span class="m">2</span><span class="p">],</span>
+data <span class="o">=</span> presidential<span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.2</span><span class="p">)</span> <span class="o">+</span> scale_fill_manule<span class="p">(</span>values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span><span class="p">)</span> <span class="c1">#强调感兴趣的区间，用蓝色红色交替显示</span>
+last_plot<span class="p">()</span> <span class="o">+</span> geom_text<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> start<span class="p">,</span> y <span class="o">=</span> yrng<span class="p">[</span><span class="m">1</span><span class="p">],</span> label <span class="o">=</span> name<span class="p">),</span> data <span class="o">=</span> presidential<span class="p">,</span> size <span class="o">=</span> <span class="m">3</span><span class="p">)</span><span class="c1">#添加文字标签</span>
+</pre></div>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/r.html">R</a>, <a href="/tag/packages.html">packages</a></p>
+        </div>
+
+<hr>
+<div class="sharing">
+</div>
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://github.com/rogerclarkgc">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://weibo.com/3090511091/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+<script type="text/javascript">
+    var disqus_shortname = 'rogerclarkgc';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+
+</html>
