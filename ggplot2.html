@@ -342,6 +342,59 @@ unemp <span class="o">+</span> geom_rect<span class="p">(</span>aes<span class="
 data <span class="o">=</span> presidential<span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.2</span><span class="p">)</span> <span class="o">+</span> scale_fill_manule<span class="p">(</span>values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span><span class="p">)</span> <span class="c1">#强调感兴趣的区间，用蓝色红色交替显示</span>
 last_plot<span class="p">()</span> <span class="o">+</span> geom_text<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> start<span class="p">,</span> y <span class="o">=</span> yrng<span class="p">[</span><span class="m">1</span><span class="p">],</span> label <span class="o">=</span> name<span class="p">),</span> data <span class="o">=</span> presidential<span class="p">,</span> size <span class="o">=</span> <span class="m">3</span><span class="p">)</span><span class="c1">#添加文字标签</span>
 </pre></div>
+
+
+<h2>含权数据</h2>
+<p>用点的大小来表示权重，即size属性
+实例：</p>
+<div class="highlight"><pre><span></span>qplot(percwhite, percbelowpoverty, data = midwest)
+#用人口数量做权重
+qplot(percwhite, percbelowpoverty, data = midwest, 
+size = poptotal / 1e6) + scale_size_area(&quot;Population\n(millions)&quot;, breaks = c(0.5, 1, 2, 4))
+#用面积做权重
+qplot(percwhite, percbelowpoverty, data = midwest, 
+size = area) + scale_size_area()
+</pre></div>
+
+
+<p>考虑权重作为拟合结果</p>
+<div class="highlight"><pre><span></span>lm_smooth <span class="o">&lt;-</span> geom_smooth<span class="p">(</span>method <span class="o">=</span> lm<span class="p">,</span> size <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
+<span class="c1">#不考虑人口密度作为权重</span>
+qplot<span class="p">(</span>percwhite<span class="p">,</span> percbelowpoverty<span class="p">,</span> data <span class="o">=</span> midwest<span class="p">)</span> <span class="o">+</span> lm_smooth
+<span class="c1">#考虑人口密度作为权重</span>
+qplot<span class="p">(</span>percwhite<span class="p">,</span> percbelowpoverty<span class="p">,</span> data <span class="o">=</span> midwest<span class="p">,</span> weight <span class="o">=</span> popdensity<span class="p">,</span> 
+size <span class="o">=</span> popdensity<span class="p">)</span> <span class="o">+</span> lm_smooth
+</pre></div>
+
+
+<h2>标度</h2>
+<p>标度（scale）：控制了数据到图形的映射，可以把标度看成从数据空间的某个区域（函数的定义域）映射到属性空间的某个区域（函数的值域）的一个函数</p>
+<ul>
+<li>标度详解</li>
+</ul>
+<p>标度可分为四种</p>
+<p>位置标度：将连续型、离散型、日期-时间变量映射到绘图区域并构造坐标轴。</p>
+<p>颜色标度：将连续型和离散型变量映射到颜色</p>
+<p>手动标度：将离散型变量映射到我们选择的符号大小、线条类型、形状或颜色以及创建对应的图例</p>
+<p>同一型标度：用于直接将变量值绘制为图形属性，而不去映射它们。如将某个变量映射成符号的颜色，而该变量本身就是颜色值组成的向量， 那么我们无须将其映射为其他颜色，直接进行渲染</p>
+<ul>
+<li>通用参数</li>
+</ul>
+<p>标度通用的参数</p>
+<p><code>name</code>设置坐标轴或者图例上出现的标签</p>
+<p>例子：</p>
+<div class="highlight"><pre><span></span>p <span class="o">&lt;-</span> qplot<span class="p">(</span>cty<span class="p">,</span> hwy<span class="p">,</span> data <span class="o">=</span> mpg<span class="p">,</span> colour <span class="o">=</span> displ<span class="p">)</span>
+p
+p <span class="o">+</span> scale_x_continuous<span class="p">(</span>name <span class="o">=</span> <span class="s">&quot;City mpg&quot;</span><span class="p">)</span>
+p <span class="o">+</span> xlab<span class="p">(</span><span class="s">&quot;City mpg&quot;</span><span class="p">)</span> <span class="c1">#用xlab()更便捷</span>
+p <span class="o">+</span> ylab<span class="p">(</span><span class="s">&quot;Highyway mpg&quot;</span><span class="p">)</span>
+p <span class="o">+</span> labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&quot;City mpg&quot;</span><span class="p">,</span> y <span class="o">=</span> <span class="s">&quot;Highway&quot;</span><span class="p">,</span> colour <span class="o">=</span> <span class="s">&quot;Displacement&quot;</span><span class="p">)</span>
+p <span class="o">+</span> xlab<span class="p">(</span><span class="kp">expression</span><span class="p">(</span>frac<span class="p">(</span>miles<span class="p">,</span> gallon<span class="p">)))</span>
+</pre></div>
+
+
+<p><code>limits</code>固定标度的定义域。连续型标度接受一个长度为2的数值型向量；离散型标度接受一个字符型向量。</p>
+<p><code>breaks</code>和<code>labels</code>前者控制坐标轴或图例上的值，后者指定了应在断点处显示的标签。若设置了labels，必须同时指定了breaks</p>
     </article>
 
         <div class="tags">

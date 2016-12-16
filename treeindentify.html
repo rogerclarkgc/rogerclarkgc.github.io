@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>用python的opencv写了个找绿色的东西</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="没人比我更能找绿色的东西">
+
+        <meta name="author" content="rogerclarkgc">
+
+        <meta name="tags" content="python">
+        <meta name="tags" content="opencv">
+        <meta name="tags" content="machine-learning">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="DeusExMachina">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/rogerclarkgc.html">
+	<meta property="og:url" content="/treeindentify.html">
+	<meta property="og:title" content="用python的opencv写了个找绿色的东西">
+	<meta property="article:published_time" content="2016-12-16 19:20:00+08:00">
+            <meta property="og:description" content="没人比我更能找绿色的东西">
+
+            <meta property="og:image" content="/images/posts/treeindentify.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">DeusExMachina</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/post1.html">About Me</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('images/posts/treeindentify.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>用python的opencv写了个找绿色的东西</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/rogerclarkgc.html">rogerclarkgc</a>
+                             on 周五 16 十二月 2016
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <p>一直想用python或者R来实现一个辨识颜色的程序，最近研究确实也需要这么一个东西，于是动了opencv的脑筋，发现这个库实在强大，我用python拼凑一番，把里面的有用的东西写成了一个类，专门用来找绿色的东西，其实就是找图片中的绿色。</p>
+<p>写来写去，发现代码从一开始的几十行，到几百行，类里面的方法、属性也越来越多，估计过了一周，我自己都会忘了这个类怎么用，所以写一发blog,趁自己脑子清楚时至少把使用方法记录下来。</p>
+<h2>treeArea 类属性方法表：</h2>
+<p>该类有如下方法和属性</p>
+<div class="highlight"><pre><span></span>[&#39;__doc__&#39;, &#39;__init__&#39;, &#39;__module__&#39;, &#39;afterList&#39;,
+
+&#39;calcGreenArea&#39;, &#39;calcMask&#39;, &#39;fileList&#39;, &#39;knnMask&#39;,
+
+&#39;lower&#39;, &#39;maskList&#39;, &#39;readFiles&#39;, &#39;result&#39;, &#39;run&#39;,
+
+&#39;savePic&#39;, &#39;showPic&#39;, &#39;svmMask&#39;, &#39;type&#39;, &#39;upper&#39;]
+</pre></div>
+
+
+<h3>方法参数表：</h3>
+<div class="highlight"><pre><span></span>__init__(self, lower, upper, pictype)
+</pre></div>
+
+
+<p><code>lower</code>:颜色分量下限值，用于简单分类器</p>
+<p><code>upper</code>:颜色分量上限值，用于简单分类器</p>
+<p><code>pictype</code>:记录载入图像类型的变量</p>
+<p>__init__方法内部还初始化了：</p>
+<p><code>self.fileList</code>,
+<code>self.maskList</code>,
+<code>self.afterList</code>,
+<code>self.result</code>,</p>
+<p>四个空List对象用于存储读入的文件、处理的遮罩、处理后图像、计数结果。</p>
+<div class="highlight"><pre><span></span>readFiles(self, fileName， bgr2hsv = 1):
+</pre></div>
+
+
+<p><code>fileName</code>:列表对象，读入的文件名</p>
+<p><code>bgr2hsv</code>:转换颜色空间，有时会使分类效果更好</p>
+<p>该方法读入文件，并转换文件色域至HSV空间</p>
+<div class="highlight"><pre><span></span>showPic(self, fileName, select = &quot;pic&quot;)
+</pre></div>
+
+
+<p><code>fileName</code>:需要显示的文件名字</p>
+<p><code>select</code>:需要显示的图像类型，"pic"原图，"mask"遮罩，"res"应用遮罩的图像</p>
+<div class="highlight"><pre><span></span>savePic(self, fileName, select = &quot;mask&quot;)
+</pre></div>
+
+
+<p>与<code>showPic()</code>类似，存储图像</p>
+<div class="highlight"><pre><span></span>calcMask(self, paraset = [0, 1, 0])
+</pre></div>
+
+
+<p><code>paraset</code>:参数列表，第一个参数控制<code>cv2.medianBlur()</code>函数是否应用到遮罩，第二个参数控制<code>cv2.morphologyEx()</code>函数是否应用到遮罩，第三个参数控制是否计算应用遮罩后的图像。</p>
+<p>该方法为简单分类器，通过输入的颜色上限和下限对图像中颜色进行二分类，
+默认开启<code>cv2.morphologyEx()</code>对遮罩进行开运算去除噪点，<code>cv2.medianBlur()</code>也用于去除噪点，但效果不如前者</p>
+<div class="highlight"><pre><span></span>knnMask(self, knnClassifier)
+</pre></div>
+
+
+<p><code>knnClassifier</code>：训练好的一个KNN分类器</p>
+<p>该方法基于openCV的K近邻机器学习方法来分辨图像中绿色植被区域，准确率较高，但耗时较长（训练集合越大，耗时越久)。对绿色水体误识别较高</p>
+<p>默认开启中值滤波来消除噪点，平滑边缘。</p>
+<div class="highlight"><pre><span></span>svmMask(self, svmClassifier)
+</pre></div>
+
+
+<p><code>svmClassifier</code>:一个训练好的SVM分类器</p>
+<p>该函数方法基于openCV的支持向量机机器学习方法来分辨图像中绿色植被，准确率稍低，但运行速度快，对绿色水体、阴影、绿色操场误识别较高。</p>
+<p>默认开启中值滤波</p>
+<div class="highlight"><pre><span></span>calcGreenArea(self, shape = &quot;rectangle&quot;)
+</pre></div>
+
+
+<p><code>shape</code>:研究区域的形状，默认为矩形，'circle'为圆形</p>
+<p>该函数方法利用已经计算好的遮罩文件，对遮罩中大于零的像素点记数（标记为绿色植被）,最后除以总像素数，得到植被覆盖比例。</p>
+<div class="highlight"><pre><span></span>run(self, fileName, typeof = 0, classifier = 0)
+</pre></div>
+
+
+<p><code>fileName</code>:读取的文件名</p>
+<p><code>typeof</code>:选择分类器，"bitwise"简单分类器，"knn"knn分类器，"svm"svm分类器</p>
+<p><code>classifier</code>:当使用knn或svm时，需要传入对应的分类器</p>
+<p>该函数方法用于快捷的计算图像中的绿色植被区域，整合读取、计算遮罩、统计绿色植被区域几个函数的功能</p>
+<h2>knnClassifier 类属性方法表：</h2>
+<p>该类有如下属性和方法：</p>
+<div class="highlight"><pre><span></span>[&#39;__doc__&#39;, &#39;__init__&#39;, &#39;__module__&#39;, &#39;autoSelect&#39;,
+
+&#39;knn&#39;, &#39;readFile&#39;, &#39;save&#39;, &#39;test&#39;, &#39;testData&#39;,
+
+&#39;testName&#39;, &#39;train&#39;, &#39;trainData&#39;, &#39;trainName&#39;]
+</pre></div>
+
+
+<h3>方法参数表</h3>
+<div class="highlight"><pre><span></span>__init__(self, trainName, testName, save = 0)
+</pre></div>
+
+
+<p><code>trainName</code>:用于训练的文件列表</p>
+<p><code>testName</code>:用于测试的文件列表</p>
+<p><code>save</code>：暂时没用，计划用于存储训练数据和测试数据</p>
+<p>该方法内部还有
+<code>self.testData</code>
+<code>self.trainData</code>
+<code>self.knn</code>
+三个对象，分别是训练数据和测试数据空列表（均为0行3列），初始化的knn分类器</p>
+<div class="highlight"><pre><span></span>autoSelect(self, datatype = 1, bgr2hsv = 1)
+</pre></div>
+
+
+<p><code>datatype</code>:选择数据类型，1为训练数据，2为测试数据</p>
+<p><code>bgr2hsv</code>:转换颜色空间</p>
+<p>使用kmeans方法精简训练集和测试集，每个样本集（图片）提取30个不同的颜色特征。</p>
+<div class="highlight"><pre><span></span>readFile(self, datatype = 1, bgr2hsv = 1)
+</pre></div>
+
+
+<p><code>datatype</code>:选择数据类型，1为训练数据，2为测试数据</p>
+<p><code>bgr2hsv</code>:转换颜色空间，默认开启</p>
+<p>该函数用于为knn分类器读入训练数据和测试数据，训练数据和测试数据都是12*12pixel的图片（可大可小，边长同的偶数），并且要求一半阳性样本一半阴性样本</p>
+<div class="highlight"><pre><span></span>train(self)
+</pre></div>
+
+
+<p>训练分类器，内含一个trainLabels对象，为训练数据的行数*1列的np.array对象，一半1一半0</p>
+<div class="highlight"><pre><span></span>test(self)
+</pre></div>
+
+
+<p>测试分类器，使用训练好的knn分类器对测试数据进行测试，在测试中会利用tqdm模块的进度条显示实时进度和测试时间，最后显示测试准确率。</p>
+<p>svmClassifier 类基本与knnClassifier类一致，使用方法无区别</p>
+<h2>开发中的功能：</h2>
+<p>计划增加一个分类器类，logistic分类器，类似SVM，产生一个决策边界来划分类别，比knn应该更快速，目前开发完成的函数方法：</p>
+<div class="highlight"><pre><span></span>sigmoid(x)
+</pre></div>
+
+
+<p>sigmoid函数，分类器的核心</p>
+<div class="highlight"><pre><span></span>mapFeature(X1, X2, X3, degree = 1)
+</pre></div>
+
+
+<p>特征映射函数，将3维的特征向量按照多项式映射到更高维的空间，以加大各个训练数据之间的间隔</p>
+<div class="highlight"><pre><span></span>costFunctionReg(theta, X, labels, lamd)
+</pre></div>
+
+
+<p>计算logistic分类器对应的代价函数，lamd为正则项，用于防止过拟合</p>
+<div class="highlight"><pre><span></span>costFunctionReg(theta, X, labels, lamd)
+</pre></div>
+
+
+<p>计算代价函数在各个特征分量的上的梯度，用于后续寻找代价函数的最小值</p>
+<div class="highlight"><pre><span></span>predict(theta, X)
+</pre></div>
+
+
+<p>根据theta(描述决策边界的向量）来预测分类。</p>
+<div class="highlight"><pre><span></span>kmeanColor(img, K=30, save = 0)
+</pre></div>
+
+
+<p>利用kmeans分类输出图像中主要颜色，可视化结果，将输出包含K种颜色的彩色条带到屏幕</p>
+<p>目前问题：利用scipy.optimize中fmin_bfgs()函数来帮助求取代价函数最小值出现WARNING：log() encounter by zero错误，可能出现了意外的精度损失，但仍然有结果，其结果准确度在88%，与SVM相当。</p>
+<h2>一个例子</h2>
+<p>原始图片：</p>
+<p><img alt="origin" src="http://i.imgur.com/GZJPT1E.jpg" /></p>
+<p>可以先看看有哪些主要颜色：</p>
+<div class="highlight"><pre><span></span>    <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">treeindentify</span> <span class="kn">import</span> <span class="n">kmeanColor</span>
+    <span class="o">&gt;&gt;&gt;</span> <span class="n">kmeanColor</span><span class="p">(</span><span class="s1">&#39;1.jpg&#39;</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">array</span><span class="p">([[</span><span class="mi">179</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span>  <span class="mi">75</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">181</span><span class="p">,</span> <span class="mi">155</span><span class="p">,</span> <span class="mi">119</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">142</span><span class="p">,</span> <span class="mi">116</span><span class="p">,</span>  <span class="mi">94</span><span class="p">],</span>
+   <span class="p">[</span>  <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">253</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">58</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span>  <span class="mi">84</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">201</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mi">207</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">49</span><span class="p">,</span>  <span class="mi">59</span><span class="p">,</span>  <span class="mi">53</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">46</span><span class="p">,</span>  <span class="mi">96</span><span class="p">,</span>  <span class="mi">66</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">151</span><span class="p">,</span> <span class="mi">163</span><span class="p">,</span> <span class="mi">157</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">148</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">173</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">116</span><span class="p">,</span> <span class="mi">118</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">171</span><span class="p">,</span> <span class="mi">184</span><span class="p">,</span> <span class="mi">182</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">102</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">139</span><span class="p">,</span> <span class="mi">154</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">24</span><span class="p">,</span>  <span class="mi">70</span><span class="p">,</span>  <span class="mi">37</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">130</span><span class="p">,</span> <span class="mi">146</span><span class="p">,</span> <span class="mi">142</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">117</span><span class="p">,</span> <span class="mi">132</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">60</span><span class="p">,</span>  <span class="mi">78</span><span class="p">,</span>  <span class="mi">74</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">127</span><span class="p">,</span> <span class="mi">139</span><span class="p">,</span> <span class="mi">133</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">110</span><span class="p">,</span> <span class="mi">137</span><span class="p">,</span> <span class="mi">145</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">93</span><span class="p">,</span> <span class="mi">107</span><span class="p">,</span> <span class="mi">101</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">79</span><span class="p">,</span>  <span class="mi">92</span><span class="p">,</span>  <span class="mi">86</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">81</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">148</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">36</span><span class="p">,</span>  <span class="mi">53</span><span class="p">,</span>  <span class="mi">44</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">127</span><span class="p">,</span> <span class="mi">154</span><span class="p">,</span> <span class="mi">162</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">39</span><span class="p">,</span>  <span class="mi">74</span><span class="p">,</span>  <span class="mi">56</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">117</span><span class="p">,</span> <span class="mi">112</span><span class="p">],</span>
+   <span class="p">[</span> <span class="mi">33</span><span class="p">,</span>  <span class="mi">94</span><span class="p">,</span>  <span class="mi">49</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">102</span><span class="p">,</span>  <span class="mi">82</span><span class="p">,</span>  <span class="mi">64</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">106</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">125</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">uint8</span><span class="p">)</span>
+</pre></div>
+
+
+<p>得到的kmean分类颜色表</p>
+<p><img alt="kmean" src="http://i.imgur.com/B2CpgnK.jpg" /></p>
+<p>使用treeindentify.py的所有功能需要做这些事情：</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">treeindentify</span> <span class="kn">import</span> <span class="n">treeArea</span>
+<span class="kn">from</span> <span class="nn">treeindentify</span> <span class="kn">import</span> <span class="n">knnClassifier</span>
+<span class="kn">from</span> <span class="nn">treeindentify</span> <span class="kn">import</span> <span class="n">svmClassifier</span>
+<span class="kn">from</span> <span class="nn">treeindentify</span> <span class="kn">import</span> <span class="n">mapFeature</span>
+<span class="kn">from</span> <span class="nn">treeindentify</span> <span class="kn">import</span> <span class="n">sigmoid</span><span class="p">,</span> <span class="n">costFunctionReg</span><span class="p">,</span> <span class="n">costFunctionGrad</span><span class="p">,</span> <span class="n">kmeanColor</span>
+</pre></div>
+
+
+<p>下面进行一个完整的分析流程：</p>
+<div class="highlight"><pre><span></span>##读取数据，用于训练分类器
+#训练用数据
+fileName = [&quot;green&quot;+ str(x) + &quot;.jpg&quot; for x in range(1, 7)]
+#测试用数据
+testName = [&quot;test&quot; + str(y) +　&quot;.jpg&quot; for x in range(1, 11)]
+#初始化knn分类器
+knn = knnClassifier(fileName, testName, save = 0)
+#用autoSelect方法精简训练集，减少特征空间，加快速度
+knn.autoSelect(datatype = 1, bgr2hsv = 0)
+#读取测试集
+knn.readFile(datatype = 0, bgr2hsv = 0)
+#进行训练和测试
+knn.train()
+knn.test()
+#svm分类器用法和knn分类器一样
+svm = svmClassifier(fileName, testName, save = 0)
+svm.autoSelect(datatype = 1, bgr2hsv = 0)
+svm.readFile(datatype = 1, bgr2hsv = 0)
+svm.train()
+svm.test()
+
+##开始分析
+#初始化treeArea类
+lower_tree = np.array([30, 105, 35])
+upper_tree = np.array([60, 205, 100])
+test = treeArea(lower_tree, upper_tree, pictype)
+#准备读入和存储的文件名
+pictype = &quot;.jpg&quot;
+fileName = [str(x) + pictype for x in range(1, 28)]
+saveName = [str(x) + &quot;_svm_knnbj&quot; + &quot;.jpg&quot; for x in range(1, 28)]
+#treeArea的run方法一次性完成数据读入，载入训练器，进行分类的工作
+#用svm分类器分类
+test.run(fileName, typeof = &#39;svm&#39;, classifier = svm)
+#用knn分类器分类
+test.run(fileName, typeof = &#39;knn&#39;, classifier = knn)
+#用treeArea自带的简单分类器分类
+test.run(fileName, typeof = &#39;bitwise&#39;)
+#存储分类结果
+test.savePic(saveName, select = &#39;mask&#39;)
+</pre></div>
+
+
+<p>最终将得到一个包含每张图片绿地比例的列表，以及输出的遮罩图片，如下：</p>
+<p><img alt="knnkmean" src="http://i.imgur.com/hMoYHzC.jpg" /></p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/python.html">python</a>, <a href="/tag/opencv.html">opencv</a>, <a href="/tag/machine-learning.html">machine-learning</a></p>
+        </div>
+
+<hr>
+<div class="sharing">
+</div>
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://github.com/rogerclarkgc">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://weibo.com/3090511091/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+<script type="text/javascript">
+    var disqus_shortname = 'rogerclarkgc';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+
+</html>

@@ -49,7 +49,7 @@
 	<meta property="article:published_time" content="2016-08-05 16:50:00+08:00">
             <meta property="og:description" content="用它记录自己出错的地方">
 
-            <meta property="og:image" content="/images/posts/pythonnote_cover.jpg">
+            <meta property="og:image" content="/images/posts/pythonnote.jpg">
 </head>
 
 <body>
@@ -81,7 +81,7 @@
     </nav>
 
     <!-- Page Header -->
-        <header class="intro-header" style="background-image: url('images/posts/pythonnote_cover.jpg')">
+        <header class="intro-header" style="background-image: url('images/posts/pythonnote.jpg')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -150,6 +150,88 @@
 
 <p>这样可以直接调用<code>socket()</code>函数，不用担心出错了。</p>
 <p>总结：在调用包含重名函数的模块，自己编写的模块时，最好采用<code>from ... import ...</code>的形式。对于自己编写的模块，<code>from</code>后面跟随的是.py文件的文件名。</p>
+<p>注:另外一种解释是，采用<code>from...import...</code>形式的引用会直接将import后面的模块引用到本地命名空间，python会优先搜索本地命名空间中的模块，所以，如果对于常用的模块可以采用<code>from...import...</code>的调用方式</p>
+<h2>2016-12-15</h2>
+<h3>python中的编码问题</h3>
+<p>在处理文本数据，爬取网页数据，处理json请求时，编码是经常碰到又让人头疼的问题， 因此在这里记录几个常见错误</p>
+<ul>
+<li>
+<p>python IDLE的编码方式：
+在2系列的版本中，IDLE采用ascii的编码方式，而3系列的采用utf-8的方式编码，要查看当前系统编码方式，可以有如下方法：</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">sys</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sys</span><span class="o">.</span><span class="n">getdefaultencoding</span><span class="p">()</span>
+<span class="s1">&#39;ascii&#39;</span>
+</pre></div>
+
+
+</li>
+<li>
+<p>在头部声明编码：
+如果不使用：<code>#coding:....</code>声明编码方式，那么在代码中出现的字符将由默认的编码方式编码，当需要使用英文以外的字符时，经常会出现编码转换错误，最常见的错误是这种：</p>
+<div class="highlight"><pre><span></span>UnicodeEncodeError: &#39;ascii&#39; codec can&#39;t encode 
+characters in position 0-3: ordinal not in range(128)
+</pre></div>
+
+
+</li>
+</ul>
+<p>另外，不指定编码方式，也会出现.py文件无法保存的现象。</p>
+<ul>
+<li>编码识别：
+可以借助chardet包来帮助判断字符串的编码方式，但是碰到中文字符不太准确。<div class="highlight"><pre><span></span>&gt;&gt;&gt; a = &quot;中文&quot;
+&gt;&gt;&gt; a
+&#39;\xd6\xd0\xce\xc4&#39;
+&gt;&gt;&gt; detect(a)
+{&#39;confidence&#39;: 0.682639754276994, &#39;encoding&#39;: &#39;KOI8-R&#39;}
+&gt;&gt;&gt; a = &#39;ccc&#39;
+&gt;&gt;&gt; detect(a)
+{&#39;confidence&#39;: 1.0, &#39;encoding&#39;: &#39;ascii&#39;}
+</pre></div>
+
+
+</li>
+</ul>
+<p>可以看到，在中文编码识别上，只有68%自信，而ascii则有100%</p>
+<p>其实还有一种简单方法，直接：</p>
+<div class="highlight"><pre><span></span>    &gt;&gt;&gt; print a.decode(&#39;GB2312&#39;)
+    中文
+    print a.decode(&#39;KOI8-R&#39;)
+    жпнд
+</pre></div>
+
+
+<p>说明GB2312是pythonIDLE处理中文的编码（貌似gbk也可以？？神秘）</p>
+<ul>
+<li>
+<p>编码转换：
+对于字符串，python提供了<code>decode()</code>和<code>encode()</code>两种方法来进行编码转换，用法如下：</p>
+<div class="highlight"><pre><span></span>#decode()能将其他编码转化为Unicode编码
+&gt;&gt;&gt; a = &quot;中文&quot;
+&gt;&gt;&gt; a
+&#39;\xd6\xd0\xce\xc4&#39;
+&gt;&gt;&gt; a.decode(&#39;GB2312&#39;)
+u&#39;\u4e2d\u6587&#39;     
+#encode()能将unicode编码转化为其他编码
+&gt;&gt;&gt; a = &quot;中文&quot;
+&gt;&gt;&gt; a
+&#39;\xd6\xd0\xce\xc4&#39;
+&gt;&gt;&gt; a = a.decode(&#39;GB2312&#39;)
+&gt;&gt;&gt; a
+u&#39;\u4e2d\u6587&#39;
+&gt;&gt;&gt; a.encode(&#39;utf-8&#39;)
+&#39;\xe4\xb8\xad\xe6\x96\x87&#39;
+</pre></div>
+
+
+</li>
+<li>
+<p>注意事项：</p>
+<ol>
+<li>如果从其他途径获取的数据编码格式和自己代码编码格式不同，有必要在代码头部进行编码声明或者用<code>decode()</code>和<code>encode()</code>来统一编码。</li>
+<li>可以先用<code>decode()</code>统一编码成unicode格式来处理</li>
+</ol>
+</li>
+</ul>
     </article>
 
         <div class="tags">
