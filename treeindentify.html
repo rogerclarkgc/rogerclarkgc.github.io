@@ -336,7 +336,7 @@ knn.test()
 #svm分类器用法和knn分类器一样
 svm = svmClassifier(fileName, testName, save = 0)
 svm.autoSelect(datatype = 1, bgr2hsv = 0)
-svm.readFile(datatype = 1, bgr2hsv = 0)
+svm.readFile(datatype = 0, bgr2hsv = 0)
 svm.train()
 svm.test()
 
