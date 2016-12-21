@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>一个利用API自动下载空气污染数据的脚本</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="解放双手，当属爬虫">
+
+        <meta name="author" content="rogerclarkgc">
+
+        <meta name="tags" content="python">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="DeusExMachina">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/rogerclarkgc.html">
+	<meta property="og:url" content="/no2api.html">
+	<meta property="og:title" content="一个利用API自动下载空气污染数据的脚本">
+	<meta property="article:published_time" content="2016-12-21 19:20:00+08:00">
+            <meta property="og:description" content="解放双手，当属爬虫">
+
+            <meta property="og:image" content="/images/posts/no2api.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">DeusExMachina</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/post1.html">About Me</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('images/posts/no2api.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>一个利用API自动下载空气污染数据的脚本</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/rogerclarkgc.html">rogerclarkgc</a>
+                             on 周三 21 十二月 2016
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <h2>怎么来的</h2>
+<p>最近北京的天气简直和活在寂静岭里一样，天天pm2.5爆炸，我已经关注北京空气质量有一定时间了，非常神秘的是，不仅pm2.5爆炸，北京大气中No2的水平也达到了黄色污染水平，基本超过了100微克每立方米，按照平常的情况，北京一二环内才有可能达到这个数值，并且仅仅在一天中的晚间出现，而现在北京市基本所有的空气检测点都超过了100微克每立方米。看看北京市环境监测中心的数据点：</p>
+<p><img alt="no2points" src="http://i.imgur.com/DZbICTC.jpg" /></p>
+<p>可以看到，北京城区除了海淀区植物园是绿色的外，其他都是黄色的。</p>
+<p>讲道理，虽然空气污染这么严重，但我还是有点开心的，因为我的研究和空气中的No2息息相关，如果空气很干净,No2天天在20个ppb的本底值附近徘徊，那我的研究恐怕进行不下去了。。。</p>
+<h2>怎么做的</h2>
+<p>以上的都算是题外话，为了方便我对No2浓度数据的持续获取，我写了个小脚本用来持续爬取网上的监测数据来保存到本地硬盘。</p>
+<p>这里要感谢PM25.in这个网站，这个网站免费提供了一个封装过的API，可以很容易的通过构造一个json请求来获取他们收集的全国各地的No2监测站的数据，关键是免费的！</p>
+<p>我把这个API的帮助文档看了一下，它接受一个json请求，返回的对象也是一个json列表，而python的基础库json能够完成python对象和json对象的转换，因此两者理论上是完美兼容的。</p>
+<p>解决了json对象的解析，最关键也最烦人的就是编码问题，由于返回的json对象中含有中文，而中文在各个编码集中编码并不通用，所以需要弄清楚两个问题：</p>
+<ul>
+<li>我获取到的原生json列表是什么编码的？</li>
+<li>在python环境下我采用什么编码来显示、读写这些数据？</li>
+</ul>
+<p>第一个问题我在<a href="http://pm25.in/api_doc" title="PM25.in">PM25.in</a>的api帮助文档中找到了答案，返回的原始数据是由utf-8编码集编码，这样，知道了这一个信息，我就能够在python环境中用<code>decode()</code>方法将编码转化为unicode。</p>
+<p>实际上，后续发现，json库中的json.load()方法能够直接转化基于ascii的编码集，这包括了utf-8，因此可以直接用这个方法读入返回的json对象。</p>
+<p>第二个问题在经过几次尝试后找到了解决办法，先将json列表转化为python中的list对象，然后统一用<code>decode('utf-8')</code>方法转化为unicode编码，最后由于含有中文，在写入文件时，采用了<code>encode('gbk')</code>方法，将所有字符转化为国标扩展字符集。</p>
+<p>这样，解决了最关键的机制问题，这个业务的流程变成这样：</p>
+<ol>
+<li>构造、发起、读取请求：利用urllib2库的<code>urllib2.Request()</code>方法构造一个GET类请求，用<code>urllib2.urlopen()</code>发起和读取请求</li>
+<li>利用json库解析返回结果，编码转换：utf-8 → unicode</li>
+<li>利用sys库写入txt文件：编码转换 unicode → gbk</li>
+<li>定时的运行上面三步，每小时请求一次，获取No2的小时变化数据</li>
+</ol>
+<h2>做的什么样子</h2>
+<p>老样子，为了防止自己忘记怎么用这个脚本，我把它写成一个类，并且在这里记下这个类的一些情况：</p>
+<h3>No2API类方法属性表：</h3>
+<p>这个类比较简单，包括如下东西：</p>
+<div class="highlight"><pre><span></span>[&#39;__doc__&#39;, &#39;__init__&#39;, &#39;__module__&#39;, &#39;city&#39;,
+
+&#39;pullData&#39;, &#39;runspy&#39;, &#39;saveDataLog&#39;, &#39;saveNO2Data&#39;,
+
+&#39;startRequest&#39;, &#39;timeformat&#39;, &#39;token&#39;, &#39;url&#39;, &#39;url_all&#39;]
+</pre></div>
+
+
+<p>前三个没什么好说...</p>
+<p><code>city</code>、<code>token</code>是构造json请求的两个元素，前者是要获取的城市名，后者是API的token相当于身份标示，由于没有申请到一个token，只好用PM25.in官方的公共token了，好在运行了一周，没有发现因为提交次数过多而被封禁的问题。</p>
+<p><code>self.url</code>、<code>self.url_all</code>用来构造完整的json请求，其实就是一个url</p>
+<p><code>self.timeformat</code>是规定的时间格式，在后面写入文件时要给每次爬取打上时间戳</p>
+<p><code>self.pullData</code>是一个空的列表，用于存储爬取数据</p>
+<p><code>self.startReques()</code>用来爬取数据的方法，把数据转换为列表对象存贮在<code>self.pullData</code>中</p>
+<p><code>self.saveDataLog()</code>是用来存储数据的方法，是按行写入txt文件的</p>
+<p><code>self.NO2Data()</code>是用来存储No2数据的，前面的<code>self.saveDataLog()</code>其实是返回的原始数据，内容太繁复，因此这个方法只挑选感兴趣的No2浓度数据来存贮。</p>
+<p><code>self.runspy()</code>这个方法就是一次业务流程写在了一起，方便在其他脚本中调用的。</p>
+<p>在No2API模块中，我还单独写了一个runtask()函数，用来定时运行程序，其实就是一个不断进行的while循环，不断判断时间是否到达下一个任务点，如果是，就执行任务。</p>
+<h3>例子</h3>
+<p>要使用它很简单</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">NO2pull</span> <span class="kn">import</span> <span class="n">No2API</span>
+<span class="kn">from</span> <span class="nn">NO2pull</span> <span class="kn">import</span> <span class="n">runtask</span>
+
+<span class="n">pull</span> <span class="o">=</span> <span class="n">No2API</span><span class="p">()</span>
+<span class="n">runtask</span><span class="p">(</span><span class="n">pull</span><span class="o">.</span><span class="n">runspy</span><span class="p">,</span> <span class="n">day</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">hour</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">minute</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> 
+<span class="n">second</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+
+<p>这样，每三十分钟就会发起一次请求，数据能自动存储，真是方便不少啊</p>
+<h2>后记</h2>
+<p>在连续运行了一周后，确实收获了大量数据，但由于我的运行间隔设置成了每30分钟运行一次，所以出现了许多重复观测，给我在R里分析数据造成了小小的麻烦，在去除了重复观测后，我用R做出了13个监测点的周变化和日变化图，并进行了多重比较，感觉这个脚本有长期使用的价值（只要pm25.in还开放api接口，并且这个公共token一直可以用，不然我只能老老实实分析网页写正则表达式了），对这个API，以及带来的更多的需求和问题，我有如下展望：</p>
+<ul>
+<li>完善功能，加入自动生成每日浓度变化的脚本（这个基本完成，将在后续blog中记录上）</li>
+<li>学习一下R和python中的多重比较，基本掌握操作，熟悉背后的数学原理。</li>
+<li>继续懒无止境，用python写一个自动分析脚本，自动分析每日爬取的数据，做显著检验，多重比较，岂不是美滋滋？</li>
+<li>我把代码同步到了我的<a href="https://github.com/rogerclarkgc/no2pull">github</a>上，方便后续的开发。</li>
+</ul>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/python.html">python</a></p>
+        </div>
+
+<hr>
+<div class="sharing">
+</div>
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://github.com/rogerclarkgc">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://weibo.com/3090511091/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+<script type="text/javascript">
+    var disqus_shortname = 'rogerclarkgc';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+
+</html>
