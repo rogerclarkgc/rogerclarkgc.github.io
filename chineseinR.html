@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>R的中文字符输出：探究以及解决方案</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="很重要的问题">
+
+        <meta name="author" content="rogerclarkgc">
+
+        <meta name="tags" content="R">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="DeusExMachina">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/rogerclarkgc.html">
+	<meta property="og:url" content="/chineseinR.html">
+	<meta property="og:title" content="R的中文字符输出：探究以及解决方案">
+	<meta property="article:published_time" content="2016-12-22 20:33:00+08:00">
+            <meta property="og:description" content="很重要的问题">
+
+            <meta property="og:image" content="/images/posts/fontsinr.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">DeusExMachina</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/post1.html">About Me</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('images/posts/fontsinr.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>R的中文字符输出：探究以及解决方案</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/rogerclarkgc.html">rogerclarkgc</a>
+                             on 周四 22 十二月 2016
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <h2>问题</h2>
+<p>在R中画图编程有一段时间了，在遇到输出图片的情景时，总会碰到中文字符无法正常输出的问题，只要图片中有中文字符，那么输出的pdf必然无法正常显示中文，下面来看这个简单的例子：</p>
+<div class="highlight"><pre><span></span>#R中默认没有显式设定字体的类型
+pdf(&quot;nonefamily.pdf&quot;)
+plot(1:10, 1:10, type = &quot;b&quot;, main = &quot;测试&quot;, 
+xlab = &quot;x轴&quot;, ylab = &quot;y轴&quot;, col = &quot;red&quot;)
+dev.off()
+</pre></div>
+
+
+<p>这个例子输出了一张折线图到pdf文件中，使用R中默认的字体，输出的pdf会变成这个样子：</p>
+<p><img alt="nonefamily" src="http://i.imgur.com/DxtZ17U.jpg" /></p>
+<p>图片的标题，横纵坐标轴标签的中文都无法显示，实际上，在运行这段代码后，R还给出如下warnings():</p>
+<div class="highlight"><pre><span></span>&gt; warnings()
+警告信息：
+1: In title(...) : &#39;mbcsToSbcs&#39;里转换&#39;娴嬭瘯&#39;出错：&lt;e6&gt;代替了dot
+2: In title(...) : &#39;mbcsToSbcs&#39;里转换&#39;娴嬭瘯&#39;出错：&lt;b5&gt;代替了dot
+3: In title(...) : &#39;mbcsToSbcs&#39;里转换&#39;娴嬭瘯&#39;出错：&lt;8b&gt;代替了dot
+4: In title(...) : &#39;mbcsToSbcs&#39;里转换&#39;娴嬭瘯&#39;出错：&lt;e8&gt;代替了dot
+5: In title(...) : &#39;mbcsToSbcs&#39;里转换&#39;娴嬭瘯&#39;出错：&lt;af&gt;代替了dot
+</pre></div>
+
+
+<p>似乎在生成pdf时，R不能正确编码这些中文。</p>
+<h2>探究</h2>
+<p>在仔细看了帮助文档后，发现这个很现实的问题似乎在R中埋有很深的机理，我尽量些写下自己的理解。</p>
+<h3>par()控制输出到屏幕的图形设备</h3>
+<p>在R中，输出的图像，不论是pdf还是png，都是一种图形设备，当输出到屏幕时，图形设备的参数由<code>par()</code>中的一系列参数控制，而与字体有关的主要是这些参数：</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> mypar <span class="o">&lt;-</span> par<span class="p">()</span>
+<span class="o">&gt;</span> mypar<span class="o">$</span>family
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="s">&quot;&quot;</span>
+<span class="o">&gt;</span> mypar<span class="o">$</span>font
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+<span class="o">&gt;</span> mypar<span class="o">$</span>font.lab
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+<span class="o">&gt;</span> mypar<span class="o">$</span>font.axis
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+<span class="o">&gt;</span> mypar<span class="o">$</span>font.main
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">2</span>
+<span class="o">&gt;</span> mypar<span class="o">$</span>font.sub
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+</pre></div>
+
+
+<p>这些参数中，<code>family</code>控制图像中的字体族，而<code>font</code>系列则控制字体，<code>font</code>有如下几个取值</p>
+<ul>
+<li><code>font = 1</code>正常的字体</li>
+<li><code>font = 2</code>加粗的字体</li>
+<li><code>font = 3</code>斜体</li>
+<li><code>font = 4</code>加粗和斜体</li>
+<li><code>font = 5</code>使用Adobe Symbol字体</li>
+</ul>
+<p>要改变输出到屏幕的图像的字体比较简单，可以通过下面的函数来自定义自己的字体：</p>
+<div class="highlight"><pre><span></span>&gt; windowsFonts(caiyun = windowsFont(&quot;STCAIYUN&quot;))
+&gt; par(family = &quot;caiyun&quot;)
+&gt; par(&quot;family&quot;)
+[1] &quot;caiyun&quot;
+</pre></div>
+
+
+<p><code>windowsFonts()</code>和<code>windowsFont()</code>函数可以在一个字符串和windows字体建立映射，这样设置的字体可以在<code>par()</code>中以映射的字符串中指定。要查看windows字体库，可以在控制面板中的字体选项卡查看。</p>
+<div class="highlight"><pre><span></span>&gt; plot(1:10, 1:10, main = &quot;测试&quot;)
+</pre></div>
+
+
+<p>在Rstudio环境下，右下角的图片栏中的显示确实已经改成了华文彩云的字体：</p>
+<p><img alt="caiyun" src="http://i.imgur.com/Doeb8D4.jpg" /></p>
+<p>如果此时，通过Rstudio中自带的转换pdf的程序，可以输出正常显示的pdf，但是字体不是我们指定的字体，而是宋体：</p>
+<p><img alt="songti" src="http://i.imgur.com/WAYsjBt.jpg" /></p>
+<p>这个间接说明了R的pdf图形设备参数应该是通过另外的函数控制的。</p>
+<h3>R中的pdf图形设备</h3>
+<p>我们一般使用<code>pdf()</code>来打开一个pdf图形设备来作图，在作图完毕后使用<code>dev.off()</code>来关闭当前活动的图形设备，而<code>pdf()</code>的参数列表如下</p>
+<div class="highlight"><pre><span></span>pdf(file = ifelse(onefile, &quot;Rplots.pdf&quot;, &quot;Rplot%03d.pdf&quot;),
+width, height, onefile, family, title, fonts, version,
+paper, encoding, bg, fg, pointsize, pagecentre, colormodel,
+useDingbats, useKerning, fillOddEven, compress)
+</pre></div>
+
+
+<p>这几个参数中<code>family</code>是直接控制输出pdf的字体族的，而它的缺省设置是"Helvetica"，这个字体族是英文字体族，没有对中文进行编码，所以我们在输出含有中文的pdf时，会出现无法正常显示的情况。</p>
+<p>然而要想在pdf中指定自己的字体没有那么简单，R中的pdf图形设备的字体参数之间有一个比较复杂的映射关系，因此在实际操作中很容易让人疑惑不解。</p>
+<p>首先，<code>pdf(family=)</code>接收的是一个字符串，这个字符串要求已经与一个字体族（文件）建立了映射关系，前面提到的缺省设置就是一个已经映射好的字符串，它对应的字体族是'sans serif'，在R中，系统已经默认设置好了一批映射关系，但是没有几个是对应了中文字符。要查看已建立的映射，可以通过如下方式：</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;</span>fontlist <span class="o">&lt;-</span> postscriptFonts<span class="p">()</span>
+<span class="c1">#或fontlist &lt;- pdfFonts()</span>
+<span class="o">&gt;</span> <span class="kp">names</span><span class="p">(</span>fontlist<span class="p">)</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="s">&quot;serif&quot;</span>                <span class="s">&quot;sans&quot;</span>                 <span class="s">&quot;mono&quot;</span>                 <span class="s">&quot;AvantGarde&quot;</span>           <span class="s">&quot;Bookman&quot;</span>              <span class="s">&quot;Courier&quot;</span>             
+<span class="p">[</span><span class="m">7</span><span class="p">]</span> <span class="s">&quot;Helvetica&quot;</span>            <span class="s">&quot;Helvetica-Narrow&quot;</span>     <span class="s">&quot;NewCenturySchoolbook&quot;</span> <span class="s">&quot;Palatino&quot;</span>             <span class="s">&quot;Times&quot;</span>                <span class="s">&quot;URWGothic&quot;</span>           
+<span class="p">[</span><span class="m">13</span><span class="p">]</span> <span class="s">&quot;URWBookman&quot;</span>           <span class="s">&quot;NimbusMon&quot;</span>            <span class="s">&quot;NimbusSan&quot;</span>            <span class="s">&quot;URWHelvetica&quot;</span>         <span class="s">&quot;NimbusSanCond&quot;</span>        <span class="s">&quot;CenturySch&quot;</span>          
+<span class="p">[</span><span class="m">19</span><span class="p">]</span> <span class="s">&quot;URWPalladio&quot;</span>          <span class="s">&quot;NimbusRom&quot;</span>            <span class="s">&quot;URWTimes&quot;</span>             <span class="s">&quot;ArialMT&quot;</span>              <span class="s">&quot;ComputerModern&quot;</span>       <span class="s">&quot;ComputerModernItalic&quot;</span>
+<span class="p">[</span><span class="m">25</span><span class="p">]</span> <span class="s">&quot;Japan1&quot;</span>               <span class="s">&quot;Japan1HeiMin&quot;</span>         <span class="s">&quot;Japan1GothicBBB&quot;</span>      <span class="s">&quot;Japan1Ryumin&quot;</span>         <span class="s">&quot;Korea1&quot;</span>               <span class="s">&quot;Korea1deb&quot;</span>           
+<span class="p">[</span><span class="m">31</span><span class="p">]</span> <span class="s">&quot;CNS1&quot;</span>                 <span class="s">&quot;GB1&quot;</span>
+</pre></div>
+
+
+<p>可以看到R中已经建立32个字体映射，但是只有两种中文字体，都是宋体类型的，其中"CNS1"是繁体中文的字体族，而"GB1"是简体中文的字体族，这两种字体中只有"GB1"能同时兼容简体和繁体。</p>
+<p>知道了这一点，在生成pdf文件时，可以在函数中事先声明要采用的字体族，但只能从"GB1"和"CNS1"中选择：</p>
+<div class="highlight"><pre><span></span>&gt;pdf(&quot;cns1.pdf&quot;, family = &quot;CNS1&quot;)
+#或者pdf(&quot;gb1.pdf&quot;, family = &quot;GB1&quot;)
+&gt; plot(1:10, 1:10, main = &quot;測試&quot;)
+&gt; dev.off()
+</pre></div>
+
+
+<p>这样生成的pdf能正常显示出中文字符，并且字体也是我们指定的字体。</p>
+<p><img alt="cns1" src="http://i.imgur.com/GFPbFM5.jpg" /></p>
+<p>但是这还不够，我们的目标是能够自己指定字体，因此还需要更进一步的了解R中的pdf图形设备中字体设置的原理。</p>
+<p>利用<code>pdfFonts()</code>或者<code>postscriptFonts()</code>获取的是一个记录了每个字体族信息的列表，它详细记录了这些字体族的映射信息，对于英文的字体族：</p>
+<div class="highlight"><pre><span></span><span class="x">&gt; fontlist[1]</span>
+<span class="p">$</span><span class="nv">serif</span><span class="x"></span>
+<span class="p">$</span><span class="nv">family</span><span class="x"></span>
+<span class="x">[1] &quot;Times&quot;</span>
+
+<span class="p">$</span><span class="nv">metrics</span><span class="x"></span>
+<span class="x">[1] &quot;Times-Roman.afm&quot;      &quot;Times-Bold.afm&quot;       </span>
+<span class="x">&quot;Times-Italic.afm&quot;     &quot;Times-BoldItalic.afm&quot; </span>
+<span class="x">&quot;Symbol.afm&quot;</span>
+
+<span class="p">$</span><span class="nv">encoding</span><span class="x"></span>
+<span class="x">[1] &quot;default&quot;</span>
+
+<span class="x">attr(,&quot;class&quot;)</span>
+<span class="x">[1] &quot;Type1Font&quot;</span>
+</pre></div>
+
+
+<p>这个叫做<code>serif</code>的字体族一共有5个属性来描述，这几个属性的作用如下：</p>
+<ul>
+<li><code>name</code>:该字体族映射的名字（字符串），在R中用"serif"代表</li>
+<li><code>family</code>:该字体族的名字，是用户自己指定的，并且每个字体唯一对应一个名字</li>
+<li><code>metrics</code>:字体族文件的文件名，这些文件都在<code>R_HOME/library/grDevices/afm</code>下，它们都是Adobe字体族。</li>
+<li><code>endoding</code>:编码文件，默认是"WinAnsi.enc"，编码文件位于<code>R_HOME/library/grDevices/enc</code>目录下。</li>
+<li><code>attr(, "class")</code>:这是一个类名表识，表明这是Type1Font类字体</li>
+</ul>
+<p>对于非西文的字体族，也有类似的列表存储了映射信息：</p>
+<div class="highlight"><pre><span></span><span class="x">&gt; fontlist[29]</span>
+<span class="p">$</span><span class="nv">CNS1</span><span class="x"></span>
+<span class="p">$</span><span class="nv">family</span><span class="x"></span>
+<span class="x">[1] &quot;MSungStd-Light-Acro&quot;</span>
+
+<span class="p">$</span><span class="nv">metrics</span><span class="x"></span>
+<span class="x">[1] &quot;&quot;           &quot;&quot;           &quot;&quot;           &quot;&quot;           &quot;Symbol.afm&quot;</span>
+
+<span class="p">$</span><span class="nv">cmap</span><span class="x"></span>
+<span class="x">[1] &quot;B5pc-H&quot;</span>
+
+<span class="p">$</span><span class="nv">cmapEncoding</span><span class="x"></span>
+<span class="x">[1] &quot;CP950&quot;</span>
+
+<span class="p">$</span><span class="nv">pdfresource</span><span class="x"></span>
+<span class="x">[1] &quot;/FontDescriptor\n      &lt;&lt;\n        /Type /FontDescriptor\n        /</span>
+<span class="x">CapHeight 662 /Ascent 1071 /Descent -249 /StemV 66\n        /FontBBox </span>
+<span class="x">[-160 -249 1015 1071]\n        /ItalicAngle 0 /Flags 6 /XHeight 400\n    </span>
+<span class="x">/Style &lt;&lt; /Panose &lt;000001000600000000000000&gt; &gt;&gt;\n      &gt;&gt;\n      </span>
+<span class="x">/CIDSystemInfo &lt;&lt; /Registry(Adobe) /Ordering(CNS1) /Supplement  0 &gt;&gt;\n      </span>
+<span class="x">/DW 1000\n      /W [\n           1 33 500\n           </span>
+<span class="x">34 [749 673 679 679 685 671 738 736 333 494 739 696 902 720 </span>
+<span class="x">750 674 746 672 627 769 707 777 887 709 616]\n           60 65 500\n           </span>
+<span class="x">66 [500 511 502 549 494 356 516 550 321 321 510 317 738 533 535 545 533 </span>
+<span class="x">376 443 261 529 742 534 576 439]\n           92 95 500\n           </span>
+<span class="x">13648 13742 500\n           17603 [500]\n      ]\n&quot;</span>
+
+<span class="x">attr(,&quot;class&quot;)</span>
+<span class="x">[1] &quot;CIDFont&quot;</span>
+</pre></div>
+
+
+<ul>
+<li><code>family</code>:字体族的名字</li>
+<li><code>metrics</code>:中文字体没有西文的斜体，所以默认没有这些映射</li>
+<li><code>cmap</code>:对应的中文字体的文件名</li>
+<li><code>cmapEncoding</code>:编码方式</li>
+<li><code>pdfresource</code>:用于指定pdf中CID字型信息的代码</li>
+<li><code>attr(, "class")</code>:表示这个字体为"CIDFont"</li>
+</ul>
+<p>可以看到，R中对西文和中文字体处理方式不大相同，英文使用Type1Font类字体，而中文使用CIDFont，并且两种字体的映射关系也有差别，这使得要自定义字体变得比较麻烦，要想手动注册字体比较费时费力，而且容易出错。</p>
+<p>要添加自己的英文字体，可以把要加入的.afm字形文件加入到<code>R_HOME/library/grDevices/afm</code>下，然后用<code>Type1Font()</code>函数建立字体映射关系，最后用<code>pdfFonts()</code>或者<code>postscriptFonts()</code>注册新字体</p>
+<div class="highlight"><pre><span></span><span class="c1">#已经把字体文件放到了R_HOME/library/grDevices/afm下</span>
+<span class="o">&gt;</span>utopia <span class="o">&lt;-</span> Type1Font<span class="p">(</span><span class="s">&quot;utopia&quot;</span><span class="p">,</span> 
+<span class="kt">c</span><span class="p">(</span><span class="s">&quot;putb8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putbi8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putr8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putri8a.afm&quot;</span><span class="p">))</span>
+<span class="o">&gt;</span> pdfFonts<span class="p">(</span>utopia <span class="o">=</span> utopia<span class="p">)</span>
+</pre></div>
+
+
+<p>如果参数都正确，注册的字体能够被<code>pdf()</code>中<code>family</code>作为参数接受：</p>
+<div class="highlight"><pre><span></span>&gt; pdf(&quot;utopia.pdf&quot;, family = &quot;utopia&quot;)
+&gt; plot(1:10, main = &quot;test utopia&quot;)
+&gt; dev.off()
+null device 
+      1
+</pre></div>
+
+
+<p>成功输出pdf，字体也改变了：</p>
+<p><img alt="utopia" src="http://i.imgur.com/zSZ9bay.jpg" /></p>
+<p>由于目前对中文字体的了解不够多，因此没有找到手动添加中文字体的方法。</p>
+<h3>R对pdf图形设备的处理</h3>
+<p>R在生成pdf图形设备时，似乎不是真正的在绘制pdf上的文字，而是采用声明的方式，它只是在pdf中写入了文字的字体、字形信息，如果用户的操作系统没有pdf中声明的字体，而pdf中的一些文字没有被采用系统缺省的字体正确描述，那么就会出现前面的无法正常显示的问题。R的这种较为“偷懒”的处理方式正是导致中文字符无法正常显示的根源。</p>
+<h2>解决办法</h2>
+<p>在探究问题原因的过程中，其实已经出现了一些解决方案，这里把我从网上收集到的解决办法和我自己的理解写在一起。</p>
+<h3>屏幕输出或图片输出</h3>
+<p>这种问题不涉及到pdf图形设备，因此是最好解决的，我们只需要预先在R中声明当前图形设备的字体，再更改图形设备的绘图参数就可以达到改变字体的目的：</p>
+<div class="highlight"><pre><span></span>&gt;windowsFonts(lishu = windowsFont(&quot;STLITI&quot;))
+&gt;plot(1:10, main = &quot;测试&quot;, family = &quot;lishu&quot;)
+</pre></div>
+
+
+<p><img alt="lishu" src="http://i.imgur.com/PKTECsA.jpg" /></p>
+<h3>pdf输出</h3>
+<p>前面已经提到，pdf图形设备比较复杂，因此解决方法也更多，在不使用其他包的情况下，我只能自己指定英文字体，但也不是一步到位：</p>
+<div class="highlight"><pre><span></span><span class="c1">#已经把字体文件放到了R_HOME/library/grDevices/afm下</span>
+<span class="o">&gt;</span>utopia <span class="o">&lt;-</span> Type1Font<span class="p">(</span><span class="s">&quot;utopia&quot;</span><span class="p">,</span> 
+<span class="kt">c</span><span class="p">(</span><span class="s">&quot;putb8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putbi8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putr8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putri8a.afm&quot;</span><span class="p">))</span>
+<span class="o">&gt;</span> pdfFonts<span class="p">(</span>utopia <span class="o">=</span> utopia<span class="p">)</span>
+<span class="o">&gt;</span> pdf<span class="p">(</span><span class="s">&quot;utopia.pdf&quot;</span><span class="p">,</span> family <span class="o">=</span> <span class="s">&quot;utopia&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span> plot<span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;test utopia&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span> dev.off<span class="p">()</span>
+null device 
+      <span class="m">1</span>
+</pre></div>
+
+
+<p>因此，要想更好解决，必须借助别的手段了。</p>
+<h4>直接生成</h4>
+<p>这是目前我发现的最简单的方法，输出效果也是最不好的，先把图片输出到屏幕(必须先指定字体)，再利用Rstudio中的"save as pdf"，就可以获得正常显示的pdf，但是只能使用宋体，排版也不尽人意，而且pdf还是不能被AI正常显示。</p>
+<h4>利用福昕pdf打印机</h4>
+<p>这里利用了福昕pdf浏览器的pdf打印功能，同样先输出到屏幕，再进行打印</p>
+<div class="highlight"><pre><span></span>&gt;dev.new()
+&gt;plot(1:10, main = &quot;测试&quot;, family = &quot;lishu&quot;)
+</pre></div>
+
+
+<p>生成的pdf能被pdf浏览器正确打开，也能被AI打开，可能是我的AI缺少字体，文字显示为缺省字体。</p>
+<h4>利用extrafont包</h4>
+<p>extrafont包是<a href="https://github.com/wch/extrafont">Winston Chang</a>编写的一个用于解决在R中使用windows字体库的包，根据作者主页上的信息这个包主要做了这几件事情：</p>
+<ol>
+<li>搜索Windows/Fonts下所有字体</li>
+<li>提取字体名字，将字体转换成.afm格式</li>
+<li>将所有.afm字体的信息保存到一张表里</li>
+<li>建立文件<code>Fontmap</code>， 用于将字体嵌入pdf</li>
+<li>在R中注册刚刚建立表格中的所有字体（使用pdfFonts()）函数</li>
+</ol>
+<p>在Rstudio环境下运行：</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;</span>install.packages<span class="p">(</span><span class="s">&quot;extrafont&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span>font_import<span class="p">()</span> <span class="c1">#导入字体，根据字体多少决定时间，只需要运行一次</span>
+<span class="o">&gt;</span>loadfonts<span class="p">()</span> <span class="c1">#注册字体，只需运行一次</span>
+<span class="o">&gt;</span>fontlist <span class="o">&lt;-</span> pdfFonts<span class="p">()</span>
+<span class="o">&gt;</span><span class="kp">length</span><span class="p">(</span>fontlist<span class="p">)</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">425</span>
+</pre></div>
+
+
+<p>在完成这几步后，我们已经可以使用新的字体了。</p>
+<p>但是，经过测试，我发现extrafont包对中文支持不好，仍然出现无法正常使用字体的问题：</p>
+<div class="highlight"><pre><span></span>&gt; pdf(&quot;youyuan.pdf&quot;, family = &quot;YouYuan&quot;)
+&gt; plot(1:10, main = &quot;test 测试&quot;)
+There were 50 or more warnings (use warnings() to see the first 50)
+&gt; warnings()
+警告信息：
+1: In axis(side = side, at = at, labels = labels, ...) :
+字符0x6d不带字体宽度这样的设置
+2: In axis(side = side, at = at, labels = labels, ...) :
+字符0x32不带字体宽度这样的设置
+3: In axis(side = side, at = at, labels = labels, ...) :
+字符0x32不带字体宽度这样的设置
+4: In axis(side = side, at = at, labels = labels, ...) : 字符0x4d不带字体度量
+#省略部分报警信息
+&gt; dev.off()
+null device 
+      1
+</pre></div>
+
+
+<p><img alt="youyuan" src="http://i.imgur.com/aKruPxF.jpg" /></p>
+<p>(无法正常显示，但图片上的字符和AI打开后看到的字符一样，AI能识别这种pdf的字体，但可能编码有误）</p>
+<p>估计是extraFont包在转换.afm文件和注册字体中出了问题，因为前面提到R对构造非西文字体映射采用了<code>CIDFont()</code>，而构造映射西文的.afm字体采用<code>Type1Font()</code>， 两者之间的映射关系不相同。</p>
+<h4>利用showtext包</h4>
+<p>这个包是由最早的中文R社区“统计之都”的大神<a href="https://github.com/yixuan">yixuan</a>制作的，它能够将R图形设备中的文字符号直接“绘制”到pdf上，因此不需要考虑系统字库问题，因为此时的字体已经相当于一个图像了。
+可以在showtext的<a href="https://github.com/yixuan/showtext">github主页</a>上看到更详细的信息。</p>
+<p>安装好showtext后，使用十分简单：</p>
+<div class="highlight"><pre><span></span>&gt; font.add(&quot;lishu&quot;, &quot;SIMLI.TTF&quot;)
+&gt; pdf(&quot;lishu2.pdf&quot;)
+&gt; showtext.begin()
+&gt; plot(1:10, cex = 1.5, col = &quot;red&quot;)
+&gt; text(5, 5, &quot;测试 隶书&quot;, family = &quot;lishu&quot;, col = &quot;blue&quot;)
+&gt; showtext.end()
+&gt; dev.off()
+RStudioGD 
+    2
+</pre></div>
+
+
+<p>利用<code>font.add()</code>先添加字体，这个字体是来自windows字库中的字体，第一个参数是自己指定的字体名字，后一个是字体文件名,在打开pdf图形设备后，必须出现<code>showtext.begin()</code>才能正确应用字体，在绘图结束后，必须出现<code>showtext.end()</code>， 这样，经过这几步，可以轻松得到正确字体的pdf文件：</p>
+<p><img alt="lishuceshi" src="http://i.imgur.com/rprpNQn.jpg" /></p>
+<p>由于showtext包其实自己定义了pdf图形设备的生成方式，它把所有字符都当做了多边形处理，所以不论什么系统都可以正常显示，也可以在AI中编辑：</p>
+<p><img alt="inai" src="http://i.imgur.com/yT6k4Vp.jpg" /></p>
+<h2>后记</h2>
+<p>写这篇经验总结花费了不少功夫，查找了网上的很多资料，在有一点原创性的基础上拼凑了一番，虽然花了一天半时间研究这些R中不太让人注意的细节，但还是感到收货颇多，再次叹服R的复杂精妙之处，也体会到了R的一点不为人知（少数的）之处吧。</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/r.html">R</a></p>
+        </div>
+
+<hr>
+<div class="sharing">
+</div>
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://github.com/rogerclarkgc">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://weibo.com/3090511091/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+<script type="text/javascript">
+    var disqus_shortname = 'rogerclarkgc';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+
+</html>
