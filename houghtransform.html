@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>Hough变换的理解</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="hough直线变换">
+
+        <meta name="author" content="rogerclarkgc">
+
+        <meta name="tags" content="model">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="DeusExMachina">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/rogerclarkgc.html">
+	<meta property="og:url" content="/houghtransform.html">
+	<meta property="og:title" content="Hough变换的理解">
+	<meta property="article:published_time" content="2016-04-05 20:50:00+08:00">
+            <meta property="og:description" content="hough直线变换">
+
+            <meta property="og:image" content="/images/posts/hough.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">DeusExMachina</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/post1.html">About Me</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('images/posts/hough.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Hough变换的理解</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/rogerclarkgc.html">rogerclarkgc</a>
+                             on 周二 05 四月 2016
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <h2>我对霍夫变换（Hough transform）的理解</h2>
+<p>霍夫变换是图像处理识别领域用于识别几何形状的方法，这种方法和我前一段时间使用的机器学习方法有很大不同，它从几何图形的解析方程出发，通过一种类似于穷举的方法来寻找解析方程中决定形状的参数。</p>
+<h3>霍夫直线变换原理</h3>
+<p>霍夫直线变换是最常见的应用，用于寻找图像中的直线，它十分巧妙的把一个空间问题转换成了一个纯“数数字”的过程。</p>
+<p>一般来说直线在直角坐标系下的方程是这样的：</p>
+<p><img src="http://chart.googleapis.com/chart?cht=tx&chl=y=mx%2Bc " style="border:none;"></p>
+<p>其中m,c决定了直接斜率和截距，霍夫直线变换的目的就是通过一种转换，把这个m和c找出来。</p>
+<p>稍微转换一下思路，在x轴和y轴组成的空间下：<img src="http://chart.googleapis.com/chart?cht=tx&chl=y=mx%2Bc " style="border:none;">是一条直线，如果我们把方程稍加改写成如下形式：</p>
+<p><img src="http://chart.googleapis.com/chart?cht=tx&chl=c=-xm%2By " style="border:none;"></p>
+<p>坐标系换成m轴和y轴组成的指教坐标系，那么这条直接相当于空间中的(m, c)一个点。更进一步想，对于<img src="http://chart.googleapis.com/chart?cht=tx&chl=y=mx%2Bc " style="border:none;">上的所有点，他们都满足这个方程下，我们从这条直线上去一个已知点(x, y)带入到：</p>
+<p><img src="http://chart.googleapis.com/chart?cht=tx&chl=c=-xm%2By " style="border:none;"></p>
+<p>此时(x,y)作为该直线的斜率和截距使用，这样我们就能得到一条新的直线，直线肯定能通过(m,c)点，我们继续取一个点(x2, y2)，继续做第二条直线，这第二条直线也一定通过(m,c)点...反复这样操作，我们会发现只要我们取的点位于：</p>
+<p><img src="http://chart.googleapis.com/chart?cht=tx&chl=y=mx%2Bc " style="border:none;"></p>
+<p>上，那么在mc坐标系中的直线一定通过(m,c)点。理论上，一条直线上有无数个点，但实际图像上一条直线可能只有有限个像素点，假设一条直线长为一百个像素，那么一定有100条直线通过了同一个点，这个点在mc空间的坐标就是我们要辨别的直线。</p>
+<p>以一个实际例子来更进一步说明，我们假设有一条直线的为：</p>
+<p><img src="http://chart.googleapis.com/chart?cht=tx&chl=y=-x%2B2 " style="border:none;"></p>
+<p>随意取了四个点，如下图所示：</p>
+<p><img alt="recline" src="http://i.imgur.com/af4hSXX.jpg" /></p>
+<p>以这四个点的坐标为mc空间中直线的参数分别画出四条直线：</p>
+<p><img alt="mcline" src="http://i.imgur.com/4aGvwE4.jpg" /></p>
+<p>可以看到这四条直线都能够相交于同一点，这个点的坐标（-1, 2)就是我们要找的直线的截距和斜率。</p>
+<p>在具体实现这个算法上，一般不会采用mc空间，因为m和c的取值范围无限，计算代价太大，而是将直线换成另外一种表达方式，其形式类似于极坐标系。</p>
+<p><img alt="hspace" src="http://i.imgur.com/ulN5ywA.jpg" /></p>
+<p>除了斜率和截距可以唯一确定一条直线外，如上图，从原点到直线的垂线的长度r以及这条垂线与x轴大于零方向的夹角可以唯一确定一条直线，即(ρ, θ）可以唯一确定一条直线,对于ρ和θ的关系，可以这样描述：</p>
+<p><img src="http://chart.googleapis.com/chart?cht=tx&chl=\rho=x\cos\theta%2By\sin\theta " style="border:none;"></p>
+<p>由于ρ不会大于垂线长度，θ也在（0， π）之间，所以整个ρθ空间的搜索范围有限，极大减少计算量。</p>
+<p>只要x,y在我们要找的直线上，那么它一定是满足：
+<img src="http://chart.googleapis.com/chart?cht=tx&chl=\rho=x\cos\theta%2By\sin\theta " style="border:none;"></p>
+<p>同样的，我们取一个直线上的点(x1, y1)，带入上式中，让θ从0变动到π，得到对应的ρ，这样的图像是一条曲线，由于这个点在我们要找的直线上，所以它是一定通过唯一确定一条直线的点(ρ, θ)的，重复这一步骤会得到相交于同一点的很多曲线。</p>
+<p>仍然用上面的例子：</p>
+<p><img alt="dd" src="http://i.imgur.com/uqhibbQ.jpg" /></p>
+<p>还是</p>
+<p><img src="http://chart.googleapis.com/chart?cht=tx&chl=y=-x%2B2 " style="border:none;"></p>
+<p>它对应的(ρ, θ)=(sqrt(2),0.25π)，取的四个点坐标依次为：</p>
+<p>1:(1,-1),2:(2,0),3:(3,-1),4:(4,-2)</p>
+<p>把他们带入到<img src="http://chart.googleapis.com/chart?cht=tx&chl=\rho=x\cos\theta%2By\sin\theta " style="border:none;">中，得到下面四个关系：</p>
+<p><img src="http://chart.googleapis.com/chart?cht=tx&chl=1:\rho=\cos\theta-\sin\theta " style="border:none;"></p>
+<p><img src="http://chart.googleapis.com/chart?cht=tx&chl=2:\rho=2\cos\theta" style="border:none;"></p>
+<p><img src="http://chart.googleapis.com/chart?cht=tx&chl=3:\rho=3\cos\theta-\sin\theta " style="border:none;"></p>
+<p><img src="http://chart.googleapis.com/chart?cht=tx&chl=4:\rho=4\cos\theta-2\sin\theta " style="border:none;"></p>
+<p>把它们在(ρ, θ)空间中表示出来：</p>
+<p><img alt="hough" src="http://i.imgur.com/ioOGbcF.jpg" /></p>
+<p>的确，这些曲线都相交于同一个点，这个点的坐标就是我们要找的直线(sqrt(2),0.25π)</p>
+<h3>霍夫直线变换实现思路：</h3>
+<p>在</p>
+<p><img src="http://chart.googleapis.com/chart?cht=tx&chl=\rho=x\cos\theta%2By\sin\theta " style="border:none;"></p>
+<p>形式下的直线，可以用一个(ρ, θ)空间来存储所有的可能的直线参数取值，
+在程序语言中就是一个二维的表，其中ρ作为行，θ为列，对于一张图片，这张图片中可能的直线最大长度不超过这张图的对角线长度，θ在[0,π]之间，所以这张表格的维度就是对角线长度*θ列数，θ列数越多，表明角度划分越小，就角度的估计约精确。在初始化这种表格后，可以采取如下步骤：</p>
+<ol>
+<li>二值化图像</li>
+<li>初始化(ρ, θ)表，所有值为0</li>
+<li>选取一个点(x,y)，带入<img src="http://chart.googleapis.com/chart?cht=tx&chl=\rho=x\cos\theta%2By\sin\theta " style="border:none;">中，对所有θ列计算，得到一系列(ρ, θ)，把二维表中对应位置加1</li>
+<li>遍历所有像素，执行2中操作</li>
+<li>确定一个阈值T，对表中的每个元素，如果大于T就说明这个元素对于的行号和列号（即ρ和θ的值）是一条直线</li>
+<li>根据ρ, θ值，输出结果</li>
+</ol>
+<p>以上就是一个完整的霍夫直线变换检测流程，一张图片中也许有很多直线，对于一张100*100的图片，如果有长100，80,20像素的直线，那么二维表中的一定会有数值为100， 80， 20的元素存在，如果我们设置的阈值小于20，那么所有的直线都会检测出来。</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/model.html">model</a></p>
+        </div>
+
+<hr>
+<div class="sharing">
+</div>
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://github.com/rogerclarkgc">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://weibo.com/3090511091/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+<script type="text/javascript">
+    var disqus_shortname = 'rogerclarkgc';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+
+</html>
