@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>python+mongodb+celery = 亦可赛艇</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="用这些搭建了爬虫，很不错">
+
+        <meta name="author" content="rogerclarkgc">
+
+        <meta name="tags" content="python">
+        <meta name="tags" content="scrapy">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="DeusExMachina">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/rogerclarkgc.html">
+	<meta property="og:url" content="/scrapcelery.html">
+	<meta property="og:title" content="python+mongodb+celery = 亦可赛艇">
+	<meta property="article:published_time" content="2017-06-12 20:13:00+08:00">
+            <meta property="og:description" content="用这些搭建了爬虫，很不错">
+
+            <meta property="og:image" content="/images/posts/celery.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">DeusExMachina</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/post1.html">About Me</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('images/posts/celery.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>python+mongodb+celery = 亦可赛艇</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/rogerclarkgc.html">rogerclarkgc</a>
+                             on 周一 12 六月 2017
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <p>自从听了知乎董老师的一个关于python爬虫的讲座后，感觉学到了不少新姿势，手头运行着一个去年编写的爬取PM25.in的爬虫，从去年10月多一直不间断运行到现在，稳定性尚可，但由于编写时没有仔细考虑数据存储的问题，只是草草的把数据写入一个文本文件中，这几个月过去，文本文件的大小也近10mb，里面冗余的数据也十分之多了，这么下去用R脚本处理起来也十分慢，因此，我觉得是时候按照一个公司的业务标准来写一个真正方便管理和拓展的Python爬虫了（虽然写完后发现这个爬虫很不业务，但至少比前一个好管理了许多），写下这篇博文，做个经验和技术上的总结</p>
+<h2>总结</h2>
+<p>上了董老师的讲座后，我觉得，其实爬虫都是下几个步骤：</p>
+<ol>
+<li>爬取网页</li>
+<li>过滤数据</li>
+<li>存储数据</li>
+<li>复用爬虫</li>
+</ol>
+<p>爬取网页常用的库是requests和urllib2，由于我没用过requests，所以直接使用了最开始学的urllib2，不过据董老师讲，requests库是最佳选择，因此我觉得应该在以后的实践中用上这个库。在爬大型网站时，爬取工作还涉及到爬取深度、爬取频度的问题，由于我目前这个项目很简单，就没有考虑这些后续问题了</p>
+<p>过滤数据就是从爬取的网页上选择所需的数据，最原始的是正则表达式，高级的有lxml，xpath selecter,还有BeautifulSoup,其中BeautifulSoup的用法类似python中对象的引用方式，是最简单的，我原本打算用BeautifulSoup过滤数据，但仔细看了网页源码发现了很大的突破，于是直接使用了最原始的正则表达式，虽然读写费事情点，但用起来效率很高，还是美滋滋。</p>
+<p>存储数据也是爬虫面对的一个大问题，我这回没用原始的写文本的方式，这种方式一是无法查找冗余，而是读取和写的效率太低，其他程序脚本也不好用，我因此我直接用pandas+Mongodb，这下可牛逼了，pandas自带的DataFrame对象和R的数据框用法几乎一样，并且索引功能强大无比，而且实际上他就是Python中的字典的一种更好的封装，而Mongodb对数据的管理是以数据库-集合-文档的形式，每个文档就是一个字典，这两者结合在一起简直十分合适，在写数据时，我可以先把数据组织成DataFrame，再逐行写入Mongodb。而在读数据时，我可以写去除包含数据的字典集合，稍加转化就能组织成一个DataFrame，十分方便。</p>
+<p>复用爬虫是很关键的，许多爬虫不是只是运行一次，而是长期的周期的运行，因此就需要一个很好的机制来复用它们，我在上一个爬虫中只是使用了一个简单的循环体来定时运行，感觉用起来束手束脚，想修改也较麻烦，这次直接用上了Celery, Celery是个异步的任务管理模型，用在网页后端的多，我用它来调度我的爬虫，运行定时任务，真有点大炮打蚊子的味道，不过多学点东西，哪怕只是一小部分又奈何？</p>
+<h2>过程</h2>
+<h3>分析网页</h3>
+<p>写这个爬虫花了我大概5天业余时间，其中大部分时间主要花在分析网页源代码上和调教Celery上面，下面是我事后分析。</p>
+<p>我要爬取的目标网页是北京市环境监测中心的空气检测数据发布网页，这个网页是这样的：</p>
+<p><img alt="bjmemc" src="http://i.imgur.com/Ld7ij9Q.jpg" /></p>
+<p>这个网页总的来说层次很简单，要爬取的数据就是地图上那些点的环境监测数据，但是数据不是直接显示在页面上的，而是需要用户点击地图上的点才会出现，因此这个网页很可能是在用户端动态渲染的，想从网页源代码上抓取数据可能有点难。</p>
+<p>其实从这里开始我的思路就是进入了一个误区，在下载了网页源码后，我发现网页几乎没有html标签，而是大段大段的js代码以及相关的函数定义，因此我就以为网页的数据都是这些js代码定义的函数实时渲染的，转而开始思考如何用模拟浏览器的方式渲染网页然后提取数据。</p>
+<p>诚然，模拟浏览器渲染是一个方法，Selenium是一个解决方案，但是这种方法效率也不高，而且我本身从未用过这个库，这样一来写这个爬虫花的时间成本也太高了。因此我开始思考别的办法，在迷茫了几日后，想到也许回到本来的地方也许不错，由于网页源码有几千行，我都是随便扫了扫，没有仔细看，如果我仔细关注一些点，也许回有重大发现。</p>
+<p>在我仔细看了几个源码中的js定义后，发现这个网页的地图是调用了某个公司的API加载的因此这部分关系没必要关注，而关键的数据部分似乎是在几个函数之间参数传递，好在源码上有不少注释，变量名也比较好懂，我循着函数的层层引用往上寻找，最终发现了关键的这段</p>
+<div class="highlight"><pre><span></span>var wfelkfbnx = eval(&quot;(&quot;+b.decode(&#39;W3siZGF0Z...&#39;)&quot;)&quot;)
+</pre></div>
+
+
+<p>我首先发现许多函数的调用最终指向了这个变量，而这些函数的名字和功能看起来都和用户点击有关，根据中文注释还有函数的功能我猜测这很可能就时我要找的数据，作为多年的老司机，我认为decode里包裹的字符串很可能是基于base64编码的，因此我把它丢到base64解码下一看，果然直觉没有错，这串字符就时用的base64编码的各个位点的空气检测数据！它在解译后是这样的</p>
+<div class="highlight"><pre><span></span>[{&quot;date_f&quot;:&quot;1493024400&quot;,&quot;id&quot;:1,&quot;aqi&quot;:53,&quot;so2&quot;:3,&quot;first&quot;:&quot;3&quot;,&quot;grade&quot;:2,&quot;pm10&quot;:5,...},{...}]
+</pre></div>
+
+
+<p>这不就是python里的一个列表么，列表的每个元素是一个字典，一个字典应该对应一个监测站点，而字典的键值就是空气监测数据了！
+下面的目标就是搞懂字典里各个键值的意思了。</p>
+<p>再次看看网页源码，发现所有和疑似地名的键值"id"有关的调用都指向一个函数：<code>xz_station(item.id)</code>。而这个函数的定义却没有在源文件里，因此我再次用Chrome的开发者工具尝试监听网页加载过程，看看是不是漏掉了什么东西，果不其然，这个网页除了会加载一个用于交互的源网页外，还加载了一个控制页面响应的js文件，这个文件由于URL和源网页不一样，在使用爬虫下载页面时不会被下载到：</p>
+<p><img alt="publicjs" src="http://i.imgur.com/89znjy4.png" /></p>
+<p>顺利拿到这个<code>public_controller.js</code>文件后，十分顺利的找到了这个<code>xz_station(item.id)</code>的定义，在这个函数定义的上方也找到了地名和键值id的对应关系，这样一来，键值中最重要的地名是弄明白了。有了这一进展，后续的工作也简单多了，我很快弄清了字典中其他键值代表的含义。</p>
+<p>在弄明白了要获取的数据在哪里后，就可以开始有针对性的抓取数据了</p>
+<h3>过滤数据</h3>
+<p>由于这个网页属于实时渲染的交互式网页，所以我一开始使用的BeautifulSoup来抓取数据的思路无法实现，在分析网页、弄明白数据来源后，我觉得这种政府网页应该会比较稳定，其核心运行机制应该不会在短时间内大修改，因此我认为直接使用正则表达式是个不错的选择。虽然正则表达式难写难读，但由于本次的任务抓取量不大，但却特异性很高，所以用正则表达式更好。</p>
+<p>我认为正则表达式最适合的是那些具有一定<strong>特异性</strong>以及<strong>规律性</strong>和<strong>重复性</strong>的数据，特异性是指要抓取的数据往往和一些特别的字段联系在一起，这样我们找到的数据量会较少，比较方便分析。而规律性和重复性是指数据往往在网页中有一个固定的模式反复出现，一般的HTML网页是基于标签的标记语言，标题、段落和表单都有特殊的标签，因此有特殊性，而同类数据的标签也是一样的，这也满足了规律性和重复性。</p>
+<p>而本次的任务中，没有多少HTML标签可供使用，我面对的实际上是从一大段js编码中提取数据，好在我发现一开始的就找到的base64源数据编码的变量名是<code>wfelkfbnx</code>，这么复杂的变量名只在源文件中出现了一次，这样就有很高的特异性，我很容易用正则表达式筛选到这个代码段。</p>
+<p>在获取了base64编码后，经过解码，我得到了一个长度为50的列表字符串，这时我有两个选择：</p>
+<ol>
+<li>使用<code>eval()</code>直接转换字符串为列表对象</li>
+<li>继续使用正则表达式提取字符串中信息</li>
+</ol>
+<p>使用第一种方法很简单，能够直接获得一个能够操作的python列表对象，每一个元素就是一个站点的数据，但我觉得数据应该先按照各个空气污染物指标划分而不是站点，这样在后续使用pandas时会更方便。因此我觉得使用第二个方法更好，并且每个空气污染物的键值都是唯一对应的，只要设计好正则表达式，一次提取能获得一个空气污染物参数的列表，只要多提取几次就能获得所有的指标列表了。这些列表长度都是50，每个元素就是一个站点的对应的数据，再把这些列表按照他们在原始文件中的键值组装成字典，很容易就能生成一个<code>pandas.DataFrame</code>对象，有了<code>DataFrame</code>对象，后续操作数据也不应该太麻烦。</p>
+<h3>存储数据</h3>
+<p>这次我在写这个爬虫时就思考应该用一种数据库来存储和管理爬取的数据，刚好，mongodb是目前最流行的数据库之一，它也有丰富的接口供python调用，于是决定就是用它了！</p>
+<p>安装mongodb时没碰到什么麻烦，这个数据库对win有支持，直接下载了.msi文件安装即可，安装后会自动注册路径到PATH变量中。</p>
+<p>mongodb是一种非关系型数据库，数据以“文档”的形式存储，“文档”的更上一层是“集合”，它是多个文档组成的结构，而最上层的就是数据库，这个关系类似于数据表，表格是一个集合，而每一行就是一个文档，多个表格组合在一起，形成我们的数据库。</p>
+<p>mongodb中最基本的概率是“文档”，文档十分类似与python中的字典，一个文档是这个样子的：</p>
+<div class="highlight"><pre><span></span>{&quot;siteName&quot;:&quot;永定门&quot;, &quot;id&quot;:&quot;1&quot;, &quot;pm25aqi&quot;:200}
+</pre></div>
+
+
+<p>这样的定义方式和字典一模一样，这时选择<code>pandas.DataFrame</code>作为数据的中间存储对象就十分好用了，首先<code>DataFrame</code>本身就是字典的一种高级封装，而pandas对<code>DataFrame</code>对象到字典直接的方法可供调用，能够非常把一行数据输出成一个字典，而字典也能直接作为文档存入到mongodb中，因此我们的思路如下：</p>
+<p>原始数据→组装成<code>DataFrame</code>→逐行转换成<code>dict</code>→逐行存入mongodb</p>
+<p>由于mongodb识别数据唯一性的标识是自动生成的键值<code>_id</code>，每一次插入操作会自动生成一个<code>_id</code>，mongodb会检查有没有重复<code>_id</code>的记录，如果有则会拒绝这次插入操作，因此即使我们的数据内容相同，但在插入时生成的<code>_id</code>是不同的，所以我们需要自己设计一个机制来监测数据内容本身是不是重复的。</p>
+<p>好在我们的抓取的网站每小时更新一次数据，因此只要看看数据库中有没有当前时间的记录就好了，如果有这个记录，说明我们要插入的数据是重复的，不执行插入，反之，我们执行插入操作。于是整个流程就变成这样:</p>
+<p>原始数据→组装成<code>DataFrame</code>→逐行转换成<code>dict</code>→查询mongodb是否有当前时间的记录→有记录，放弃插入\无记录，执行插入</p>
+<p>有了思路后，实现起来也很快，mongodb在python的接口通过pymongo库来实现，这安装起来也很简单</p>
+<div class="highlight"><pre><span></span>&gt;pip install pymongo
+</pre></div>
+
+
+<p>要使用mongodb，需要先启动mongodb服务，这在win下是这样实现的：
+首先需要建立好我们的数据库文件夹，在建立好后输入如下命令行：</p>
+<div class="highlight"><pre><span></span>&gt;mongod.exe --dbpath E:\mongodata\airstation\db
+</pre></div>
+
+
+<p>这样会开启一个一直运行的mongodb服务，由于数据库存储在本地，因此mongodb会默认开启本地的端口来访问数据库。如果关闭了这个命令窗口，mongodb也无法使用了</p>
+<p>在启用服务后，可以看看mongodb的原生shell，进入到mongodb的bin目录下启动：</p>
+<div class="highlight"><pre><span></span>PS D:\Program Files (x86)\mongodb\bin&gt; .\mongo.exe
+</pre></div>
+
+
+<p>启动成功后如下面：</p>
+<div class="highlight"><pre><span></span>PS D:\Program Files (x86)\mongodb\bin&gt; .\mongo.exe
+MongoDB shell version v3.4.4
+connecting to: mongodb://127.0.0.1:27017
+MongoDB server version: 3.4.4
+Server has startup warnings:
+2017-05-02T18:56:55.320+0800 I CONTROL  [initandlisten]
+2017-05-02T18:56:55.321+0800 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2017-05-02T18:56:55.321+0800 I CONTROL  [initandlisten] **          Read and write access to data and configuration is u
+nrestricted.
+2017-05-02T18:56:55.321+0800 I CONTROL  [initandlisten]
+2017-05-02T18:56:55.321+0800 I CONTROL  [initandlisten]
+2017-05-02T18:56:55.321+0800 I CONTROL  [initandlisten] ** WARNING: You are running on a NUMA machine.
+2017-05-02T18:56:55.321+0800 I CONTROL  [initandlisten] **          We suggest disabling NUMA in the machine BIOS
+2017-05-02T18:56:55.322+0800 I CONTROL  [initandlisten] **          by enabling interleaving to avoid performance proble
+ms.
+2017-05-02T18:56:55.322+0800 I CONTROL  [initandlisten] **          See your BIOS documentation for more information.
+2017-05-02T18:56:55.322+0800 I CONTROL  [initandlisten] Hotfix KB2731284 or later update is not installed, will zero-out
+data files.
+2017-05-02T18:56:55.322+0800 I CONTROL  [initandlisten]
+&gt;
+</pre></div>
+
+
+<p>由于我使用的是一台NUMA架构的工作站，所以会有如上警告，但似乎不影响运行。
+python下的mongodb操作基本和mongodb提供的原生shell无差别，用起来也不复杂,由于中间层的数据是用的<code>pandas.DataFrame</code>对象存储，转化成一个符合mongodb规范的文档页十分简单;先用<code>pandas.DataFrame.iterrows()</code>方法构造一个可按照行来迭代的迭代器，逐行使用<code>pandas.DataFrame.to_dict()</code>方法转换成字典，这个字典就可以作为文档直接插入到我们的数据库了。</p>
+<h3>复用爬虫</h3>
+<p>这一部分花的时间是最多的，利用成熟的队列系统来规划任务是我头一次接触到的东西，里面涉及到的知识面十分底层和广泛，因此我走了不少弯路，网上的教程也多是在linux下实现的，所以完成这个部分最感到无助和困难</p>
+<p>我在这里使用的是目前很流行的Celery任务队列管理系统，这个系统是以异步处理性能优异而闻名的，许多大型的网站的后端都用它来调度任务，由于我的爬虫每个小时只会执行2次，并且每次执行时间不超过2秒，因此不会碰到阻塞的情况，所以Celery的异步功能也用不上了，只所以用Celery，一是为了学习高级一点的技巧，二是Celery提供了Celery beat 这一定时任务模块，这对我来说十分合适，这一点后面再表。</p>
+<p>初次接触Celery感觉十分陌生，这个系统虽然是纯python编写，但想要运行它还要搭建一些运行环境，这里就和Celery的原理有关了：</p>
+<p>Celery的核心是任务队列的调度处理，这里的任务就是所谓的"Worker"，中文名译作职程，这个任务说白了就是我们自己编写的模块，Celery会有序的调度这些模块来组织一个高效的任务队列。
+由于任务队列中不同任务的完成进度、消耗的时间都不同，所以需要一个机制来传递这些信息，Celery本身不会传递这些消息，它只负责下发任务队列，而衔接每个职程和Celery之间的就是所谓的“broker”，中文名作“消息中间人”，消息中间人常常是第三方的服务，一个Celery可以同多个消息中间人通信，这种相对分离的设计模式使得Celery灵活也易于扩展，但带来的代价就是学习它更难了，尤其对我这种菜鸟。</p>
+<p>Celery最常用的消息中间人是RabbitMQ, Redis和数据库，我先开始使用RabbitMQ，但RabbitMQ对win支持不好，因此只好使用Redis，好在Redis能在win上运行，这样磕磕碰碰算是把Celery的运行环境搭建好了。</p>
+<p>我主要使用的是Celery的<code>Celery beat</code>模块，这个模块专门处理定时任务，它里面的crontab函数提供了一个定制任务执行时间的功能，十分灵活，最小的时间间隔单位是1分钟。</p>
+<p>Celery支持多种定制任务的方式，我在这里采用的是把定制任务写到一个文件的方式，一般来说这个文件的名字都是<code>celeryconfig.py</code>，在<a href="http://docs.jinkan.org/docs/celery/configuration.html">官方文档</a>中有针对各个参数的详细说明，这里我们用到参数主要是如下几个：</p>
+<p><code>CELERY_TIMEZONE</code>：用于设定时间区域，这个很重要，由于本项目是定时爬虫，空气检测数据和时间有很强的相关性，因此时间记录一定要准确</p>
+<p><code>CELERY_IMPORTS</code>：用于导入职程模块的参数，一般我们把职程单独写到一个文件（模块）里，这里就是这个文件的文件名了（不需要后缀）</p>
+<p><code>BROKER_URL</code>:用于设定消息中间人，我们使用运行在本地的redis服务，因此就写<code>'redis://localhost'</code></p>
+<p><code>CELERY_RESULT_BACKEND</code>：用于设定存储职程运行结果的参数，这个参数默认是不开启的</p>
+<p><code>CELERYBEAT_SCHEDULE</code>：用于设置<code>celery beat</code>模块的运行参数，我们这里是这样设置的：</p>
+<div class="highlight"><pre><span></span>    CELERYBEAT_SCHEDULE = {
+    &#39;add-every-1min&#39;:{
+        &#39;task&#39;:&#39;test_celery.run&#39;,
+        &#39;schedule&#39;: crontab(minute = &#39;*/1&#39;),
+        &#39;args&#39;:()
+    }
+}
+</pre></div>
+
+
+<p>这里设置的任务名字为<code>add-every-1min</code>， 要执行的任务用键值<code>task</code>制定，这里我们运行了职程模块<code>test_celery</code>下的<code>run</code>子模块， <code>schedule</code>指定任务间隔时间，我们用<code>crontab</code>函数来告诉celery beat要1分钟发起一个任务，
+<code>args</code>是用于输入<code>test_celery.run</code>的参数，由于我们写的<code>run</code>没有参数，所以留空</p>
+<p>在设定完celery beat模块后，我们开始设定我们的职程模块，我把职程单独写了一个文件<code>test_celery.py</code>中，由于我的爬虫模块写成了一个类，所以再职程中调用十分简单</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">celery</span> <span class="kn">import</span> <span class="n">Celery</span>
+
+<span class="kn">from</span> <span class="nn">Crawlerbjmemc</span> <span class="kn">import</span> <span class="n">bjmemc</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Celery</span><span class="p">(</span><span class="s1">&#39;test_celery&#39;</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config_from_object</span><span class="p">(</span><span class="s1">&#39;celeryconfig&#39;</span><span class="p">,</span> <span class="n">force</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+
+<span class="nd">@app.task</span>
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">bjmemc</span><span class="p">()</span>
+    <span class="n">errorlist</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">runOnetask</span><span class="p">()</span>
+    <span class="n">idlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">errorlist</span><span class="p">]</span>
+    <span class="k">print</span> <span class="n">idlist</span>
+</pre></div>
+
+
+<p>以上就是职程的全部内容，首先初始化一个Celery对象，对象的初始化参数即职程的文件名，随后我们导入刚刚写的配置文件，一般把这个文件放在同一目录下，所以不需要绝对路径，接着我们利用装饰器<code>@app.task</code>声明一个叫做<code>run()</code>的函数，这个函数所执行的我们要做的爬取空气检测数据的工作，我把前面讲的爬虫的下载网页，过滤数据，加入数据库的工作都整合到一个接口<code>bjmemc.runOnetask</code>中，这样可以更方便的调用爬虫。</p>
+<h3>启动爬虫</h3>
+<p>在搭建好环境后，首先启动redis和mongodb服务，启动爬虫也变得如此简单，只需要在shell或者命令行中输入如下</p>
+<div class="highlight"><pre><span></span># start redis
+D:\env\redis\&gt;redis-server
+# start mongodb
+D:\env\mongodb\bin\&gt;mongod.exe --dbpath E:\mongodata\airstation\db
+# start celery worker
+D:\&gt;celery -A test_celery worker --loglevel=info
+# start celery beat
+D:\&gt;celery beat
+</pre></div>
+
+
+<h2>后记</h2>
+<p>这个爬虫在我自己的机器运行了接近半个月后，天气越来越热，我担心一直开机对机器损耗太大，于是我寻思租一台VPS来远程运行爬虫，刚好发现Github提供学生账号的一些免费服务，其中就包括了DigitalOcean的50刀学生券，于是我赶紧租借了一台512M，20g的debian系统的VPS，把我的爬虫迁移到了上面，果然python是通用的语言，我基本没有做修改就成功的在这台VPS上运行了</p>
+<p>后来为了可视化我的数据结果，我还增加了新的绘图功能，能够从mongodb中读取任何一个时间段的数据绘制折线图，由于mongodb支持远程仓库，所以我的机器只需要每天连接一下VPS上的mongodb，绘制一下数据结果就行了</p>
+<p>既然有了VPS，我也顺便在这台VPS上搭建了btsync服务和shadowsocks服务，这样，我就用了自己的文件中转服务器和科学爬梯服务器了，简直美滋滋。</p>
+<h2>更新日记</h2>
+<p>5-11：</p>
+<p>好景不长，在过完五一后，我就发现我的爬虫返回的数据就有点问题，总是和网页数据对不上，我怀疑是服务端的维护工程师发现了我的爬虫行为，给我传回了假数据，后来事实是我想多了，原因是，在4月末到5月初这段时间内，我爬取的网站的数据更新频率突然增大，从以前的30分钟一次到几分钟一次更新，所以我爬取的数据总是和原来网页对不上，我修改了频率，又开始正常运行了</p>
+<p>5-19：</p>
+<p>让我担心的事情最终还是发生了，我原来以为作为政府网站，维护的频率应该很低才对，我在每日例行日常检查爬虫时发现celery发生错误，职程完全阻塞了，我看了错误日志，发现源网页的日期编码由base64改成了明文，这样爬虫就无法正确过滤数据，还好这是个小问题，我花半个小时重新修改代码，爬虫又重新上线了</p>
+<p>5-25：</p>
+<p>真是悲剧，似乎这个网页的工程师在有意玩我，他又更改了监测数据的编码方式，这次他没采用base64编码了，而是采用了一种新的加密方式，这下我的爬虫完全死掉了，我只好暂时停止爬取了。</p>
+<p>5-31：</p>
+<p>我阅读了一些资料，发现了数据加密方式用的是DES加密，加密模式采用的是ECB，而且我还发现了加密用的密钥和加密的参数配置，因此我可以根据这个来解密了。</p>
+<p>6-1：</p>
+<p>我成功解密了数据，如我所料，数据的组织形式仍然没有变化，还是熟悉的字典，但是我没法用Python复现这一解密过程，解密的出的总是一堆乱码，真是头疼</p>
+<p>6-2：</p>
+<p>网页的编码方式又变了，这次没有加密了，直接采用了明文，但我也醉了，因为这个网页工程师修改数据传输方式就是几行代码的事情，而我为了过滤和解密数据却要花费好几倍的时间，爬虫维护的成本太高了，因此我觉得我也许需要重新考虑一个过滤策略了，使用Selenium模拟浏览器是个好策略，但是如果要在CLI界面的VPS上运行，需要图形界面的Selenium就不行了。也有完全运行在文字界面下的工具，但却是用的java。。。目前我的爬虫项目完全停滞了，想到这算是自己目前写的最大的一个项目，就这么停下，十分不甘心，是时候想想别的办法了。</p>
+<p>6-8:</p>
+<p>我发现使用Selenium加上PhantomJS是个可行的解决方案，PhantomJS是个独立的JS解析库，能解析大多数JS网页，也无须图形界面支持，我使用它模拟浏览器，应该可以在CLI界面运行</p>
+<p>6-10:</p>
+<p>我决定暂时停止更新这个爬虫项目，决定采用PhantomJS重新写一个，希望能够顺利。</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/python.html">python</a>, <a href="/tag/scrapy.html">scrapy</a></p>
+        </div>
+
+<hr>
+<div class="sharing">
+</div>
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://github.com/rogerclarkgc">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://weibo.com/3090511091/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+<script type="text/javascript">
+    var disqus_shortname = 'rogerclarkgc';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+
+</html>
