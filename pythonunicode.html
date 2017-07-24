@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>再来研究一下python中的字符编码</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="3.x与2.x的不同之处">
+
+        <meta name="author" content="rogerclarkgc">
+
+        <meta name="tags" content="python">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="DeusExMachina">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/rogerclarkgc.html">
+	<meta property="og:url" content="/pythonunicode.html">
+	<meta property="og:title" content="再来研究一下python中的字符编码">
+	<meta property="article:published_time" content="2017-07-23 12:13:00+08:00">
+            <meta property="og:description" content="3.x与2.x的不同之处">
+
+            <meta property="og:image" content="/images/posts/unicode.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">DeusExMachina</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/post1.html">About Me</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('images/posts/unicode.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>再来研究一下python中的字符编码</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/rogerclarkgc.html">rogerclarkgc</a>
+                             on 周日 23 七月 2017
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <p>Python2.x和Python3.x处理字符串的方式有了较大的改变，最近开始用Python3.6写项目，碰到了与2.x不同的编码问题，需要记下来注意一下</p>
+<h2>Python中的字符编码模型</h2>
+<p>2.x中采用的默认编码方式是ASCII，这种标准只定义了0~127的字符代码，每个代码映射一个字符，在内存中，这些字符代码能存储在一个8位的字节里，对于西欧地区，往往128个字符代码不够使用，所以又额外定义了128~255的字符代码（8位字节能表示0~255的值），这个增补的字符代码加上原来的128个代码构成的编码标准为<em>Latin-1</em>。对于一些字母表很多的语言或者非音标的语言，如汉语，仅仅一个8位字节不够编码所有字母或字符，因此，诞生了Unicode来使用多个字节来表示字符，这种用Unicode编码的文本通常叫“宽字符”字符串，许多亚洲或欧洲字符集用Unicode在计算机中进行编码。</p>
+<p>计算机用编码和解码两种操作来完成字符和原始字符代码（字节码）之间的互相转化，这里是这两种操作的定义：</p>
+<ul>
+<li>编码是根据一个想要的编码规则（如ASCII），把一个字符串翻译为原始字节码</li>
+<li>解码是根据已知的编码规则，把一个原始的字节码翻译成字符串的形式</li>
+</ul>
+<p>对于只是用26个英文字符的语言，这一过程在许多计算机中都能正确的执行，我们往往能在屏幕上，或者写入的文件中看到正确的结果，因为ASCII是许多编码规则的子集，所以在转换中是能够正确识别的，但对于汉字或其他语言的文本，它们要不是非单字节编码集所编码的，要不是非0~127字符代码编码的，因此在读写操作时，往往会由于系统默认的编码集与文本的实际编码集不兼容而导致常见的乱码错误。</p>
+<h2>Python中的字符串类型</h2>
+<p>2.x系列和3.x系列有不同的字符串类型，这里分开讲述：</p>
+<p>对于2.x系列，有两种类型来表示字符</p>
+<ul>
+<li>str表示8位的文本和二进制数据</li>
+<li>unicode表示宽字符Unicode文本</li>
+</ul>
+<p>可以看到，这种分类方式也是让人疑惑的起源，首先str类既能表示类似ASCII编码下的8位文本，又能表示二进制的字节码，而unicode类只用来表示宽字符文本，这样许多文本操作对于两类来说是通用的，然而str类表示的二进制字节码却和unicode类和8字节的str类不同，它们都是未经过解码的原生字节码，这种一个类型却有两种截然不同的数据对象的封装是让人费解的。</p>
+<p>在3.x系列中，明确了二进制数据了字符串文本之间的区别，并将它们分开封装，一共有三种类型来表示：</p>
+<ul>
+<li>str文本表示Unicode文本（8位和宽字符）</li>
+<li>bytes表示二进制的字节码数据</li>
+<li>bytearray，一种可变的bytes类型</li>
+</ul>
+<p>这种新的类型就解决了2.x系列中存在已久的疑惑，原来的unicode类整合进str类了，并且原来属于str类的二进制数据被单独分开成bytes类，这样确实更加符合使用的逻辑，本来二进制数据和字符串就不是两种数据，并且ASCII和其他8位文本本身就应该是一种简单的Unicode。</p>
+<p>要在python3.x中使用新的bytes类型，可以用b''显式指定一个二进制的字节码常量：</p>
+<div class="highlight"><pre><span></span>&gt;&gt;&gt;b = b&#39;bytes&#39;
+&gt;&gt;&gt;s = &#39;string&#39;
+&gt;&gt;&gt;type(b), type(s)
+(&lt;class &#39;bytes&#39;&gt;, &lt;class &#39;str&#39;&gt;)
+</pre></div>
+
+
+<p>bytes对象和str对象一样都是不可变的，但是它都支持列表的索引操作，但是bytes实际上是一个存储了字节码的整数列表：</p>
+<div class="highlight"><pre><span></span>&gt;&gt;&gt; type(b), type(s)
+(&lt;class &#39;bytes&#39;&gt;, &lt;class &#39;str&#39;&gt;)
+&gt;&gt;&gt; b[0],s[0]
+(98, &#39;s&#39;)
+&gt;&gt;&gt; b[0:2], s[0:2]
+(b&#39;by&#39;, &#39;st&#39;)
+&gt;&gt;&gt; list(b), list(s)
+([98, 121, 116, 101, 115], [&#39;s&#39;, &#39;t&#39;, &#39;r&#39;, &#39;i&#39;, &#39;n&#39;, &#39;g&#39;])
+</pre></div>
+
+
+<h2>encode()和decode()</h2>
+<p>Python3.x中由于明确了bytes和str的类型，其<code>encode()</code>和<code>decode()</code>方法与2.x中有了很大的不同。</p>
+<h3>2.x的编码转换</h3>
+<p>在2.x中，由于str是8位字符或字节码，unicode类是宽字符，所以str类能使用<code>encode()</code>和<code>decode()</code>方法：</p>
+<div class="highlight"><pre><span></span>&gt;&gt;&gt; a = &#39;中文&#39;
+&gt;&gt;&gt; a, type(a)
+(&#39;\xd6\xd0\xce\xc4&#39;, &lt;type &#39;str&#39;&gt;)
+&gt;&gt;&gt; a.decode(&#39;gbk&#39;), type(a.decode(&#39;gbk&#39;))
+(u&#39;\u4e2d\u6587&#39;, &lt;type &#39;unicode&#39;&gt;)
+</pre></div>
+
+
+<p>使用<code>decode()</code>方法能将str转化成unicode类，在转化前需要指定当前字符采用的编码集。</p>
+<div class="highlight"><pre><span></span>&gt;&gt;&gt; c = a.decode(&#39;gbk&#39;).encode(&#39;utf-8&#39;)
+&gt;&gt;&gt; c
+&#39;\xe4\xb8\xad\xe6\x96\x87&#39;
+&gt;&gt;&gt; print(c)
+中文
+&gt;&gt;&gt; c, type(c)
+(&#39;\xe4\xb8\xad\xe6\x96\x87&#39;, &lt;type &#39;str&#39;&gt;)
+</pre></div>
+
+
+<p>使用<code>encode()</code>方法能够将unicode类转化成指定编码下的str类，上面先将字符串依照gbk编码集转化成unicode再重新编码成utf-8编码下的字符串。</p>
+<p>总得来说，2.x下的编码转化仅仅在str和unicode之间进行，不涉及字节码。</p>
+<h3>3.x的编码转换</h3>
+<p>在3.x中的编码转换更加符合逻辑上的定义，即：</p>
+<p>str类--&gt;<code>encode()</code>--&gt;bytes类</p>
+<p>bytes类--&gt;<code>decode()</code>--&gt;str类</p>
+<p>由于明确了字节码与字符串的区别，现在str类只能使用encode方法进行编码，转换成bytes类字节码，而反过来，bytes类通过decode方法进行解码，转换成字符串str类。</p>
+<div class="highlight"><pre><span></span>&gt;&gt;&gt; c
+&#39;字节码&#39;
+&gt;&gt;&gt; c.encode(&#39;gbk&#39;)
+b&#39;\xd7\xd6\xbd\xda\xc2\xeb&#39;
+&gt;&gt;&gt; c.encode(&#39;utf-8&#39;)
+b&#39;\xe5\xad\x97\xe8\x8a\x82\xe7\xa0\x81&#39;
+&gt;&gt;&gt; c, type(c)
+(&#39;字节码&#39;, &lt;class &#39;str&#39;&gt;)
+&gt;&gt;&gt; c.encode(&#39;gbk&#39;), c.encode(&#39;utf-8&#39;), type(c.encode(&#39;utf-8&#39;))
+(b&#39;\xd7\xd6\xbd\xda\xc2\xeb&#39;, b&#39;\xe5\xad\x97\xe8\x8a\x82\xe7\xa0\x81&#39;, &lt;class &#39;bytes&#39;&gt;)
+&gt;&gt;&gt; list(c.encode(&#39;utf-8&#39;)), list(c.encode(&#39;utf-8&#39;))
+([229, 173, 151, 232, 138, 130, 231, 160, 129], [229, 173, 151, 232, 138, 130, 231, 160, 129])
+</pre></div>
+
+
+<p>使用encode方法时，默认会转换成当前环境的编码方式，可以手动指定一个编码方式。</p>
+<div class="highlight"><pre><span></span>&gt;&gt;&gt; b = c.encode(&#39;gbk&#39;)
+&gt;&gt;&gt; b
+b&#39;\xd7\xd6\xbd\xda\xc2\xeb&#39;
+&gt;&gt;&gt; b.decode()
+Traceback (most recent call last):File &quot;&lt;pyshell#22&gt;&quot;, line 1, in &lt;module&gt;
+b.decode()
+UnicodeDecodeError: &#39;utf-8&#39; codec can&#39;t decode byte 0xd7 in position 0: invalid continuation byte
+&gt;&gt;&gt; b.decode(&#39;gbk&#39;)
+&#39;字节码&#39;
+</pre></div>
+
+
+<p>对字节码bytes对象使用decode()方法时，如果没有指定对应的字符集，那么会按照环境默认的字符集解码，这里我们先用gbk编码了字符串，但由于系统默认采用utf-8编码，所以再解码时无法对字节码进行解码，出现<code>UnicodeDecodeError</code>。在指定了正确的字符集后，能够正确执行。</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/python.html">python</a></p>
+        </div>
+
+<hr>
+<div class="sharing">
+</div>
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://github.com/rogerclarkgc">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://weibo.com/3090511091/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+<script type="text/javascript">
+    var disqus_shortname = 'rogerclarkgc';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+
+</html>
