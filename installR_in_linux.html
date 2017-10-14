@@ -2,12 +2,12 @@
 <html lang="ch">
 
 <head>
-        <meta charset="utf-8">
+            <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-        <title>DeusExMachina - Categories</title>
+        <title>Ubuntu下编译R运行环境</title>
 
         <!-- Bootstrap Core CSS -->
         <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
@@ -31,8 +31,27 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-                <meta property="og:locale" content="">
+
+
+        <meta name="description" content="编译过程小记">
+
+        <meta name="author" content="rogerclarkgc">
+
+        <meta name="tags" content="Linux">
+        <meta name="tags" content="R">
+        <meta name="tags" content="method">
+
+	                <meta property="og:locale" content="">
 		<meta property="og:site_name" content="DeusExMachina">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/rogerclarkgc.html">
+	<meta property="og:url" content="/installR_in_linux.html">
+	<meta property="og:title" content="Ubuntu下编译R运行环境">
+	<meta property="article:published_time" content="2017-10-14 13:20:00+08:00">
+            <meta property="og:description" content="编译过程小记">
+
+            <meta property="og:image" content="/images/posts/processing.jpg">
 </head>
 
 <body>
@@ -64,12 +83,17 @@
     </nav>
 
     <!-- Page Header -->
-        <header class="intro-header" style="background-image: url('/theme/images/home-bg.jpg')">
+        <header class="intro-header" style="background-image: url('images/posts/processing.jpg')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>DeusExMachina - Categories</h1>
+                        <h1>Ubuntu下编译R运行环境</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/rogerclarkgc.html">rogerclarkgc</a>
+                             on 周六 14 十月 2017
+                        </span>
+                        
                     </div>
                 </div>
             </div>
@@ -80,16 +104,71 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-    <ul>
-        <li><a href="/category/botany.html">botany</a></li>
-        <li><a href="/category/linux.html">Linux</a></li>
-        <li><a href="/category/model.html">model</a></li>
-        <li><a href="/category/processing.html">Processing</a></li>
-        <li><a href="/category/processing-r.html">Processing, R</a></li>
-        <li><a href="/category/python.html">python</a></li>
-        <li><a href="/category/r.html">R</a></li>
-        <li><a href="/category/self.html">self</a></li>
-    </ul>
+    <!-- Post Content -->
+    <article>
+        <h2>Ubuntu下编译R运行环境</h2>
+<p>最近终于把Ubuntu在自己的工作机上安装好了，准备逐渐开始习惯在Linux下完成自己的代码工作，因此首先就是要搭建工作环境了。</p>
+<p>我最常用的语言就是R与Python，Ubuntu自己有Python支持，所以暂时不用担心，只用安装R运行环境。由于我在安装Ubuntu时使用的是不连网的安装方式，因此许多支持的库根本没有安装好，要自行编译R，那少不了许多编译用的库。</p>
+<p>首先当然是<code>build-essential</code>,这个库几乎所有通过编译安装的软件都要使用：</p>
+<div class="highlight"><pre><span></span>sudo apt-get install build-essential
+</pre></div>
+
+
+<p>接着就是到R<a href="https://mirrors.tuna.tsinghua.edu.cn/CRAN/">官方</a>网站下载对应的打包文件</p>
+<div class="highlight"><pre><span></span>wget https://mirrors.tuna.tsinghua.edu.cn/CRAN/src/base/R-3/R-3.4.2.tar.gz
+</pre></div>
+
+
+<p>在下载完后将文件解压缩到一个已知的位置，我在<code>~</code>下新建一个<code>RHOME</code>文件夹来放置解压后文件：</p>
+<div class="highlight"><pre><span></span>mkdir ~/R_HOME
+tar -zxvf ~/下载/R-3.4.2.tar.gz
+</pre></div>
+
+
+<p>这里放置的时未经过编译的R源文件，需要执行后续的编译步骤才能生成能运行的bin</p>
+<p>现在开始编译，现在目录下解压缩生成的文件夹<code>R-3.4.2</code>内运行配置脚本：</p>
+<div class="highlight"><pre><span></span>./configure
+</pre></div>
+
+
+<p>这个脚本会逐个检查R的运行环境所需的组件，根据官网上的要求，我一共安装了如下组件：</p>
+<ol>
+<li>显示图像设备：X11，安装名：<code>xorg-dev</code></li>
+<li>命令行下自动完成功能：readline，安装名：<code>libreadline-dev</code></li>
+<li>zlib支持：安装名：<code>libbz2-dev</code></li>
+<li>libcurl: 安装名：<code>libcurl4-openssl-dev</code></li>
+<li>fortran 编译器：安装名：<code>gfortran</code></li>
+<li>liblzma: 安装名：<code>liblzma-dev</code></li>
+<li>perl库：安装名：<code>libpcre3-dev</code></li>
+<li>Latex用于生成PDF：安装名：<code>textlive-latex-base</code></li>
+<li>JAVA编译器和运行环境：在使用<code>apt-cache</code>检索java后，安装了<code>default-jdk</code>和<code>default-jre</code></li>
+</ol>
+<p>以上的库都可以通过<code>apt-get</code>来获取。</p>
+<p>在完成编译环境依赖库安装后，可以直接运行<code>make</code>和<code>make test</code>来进行编译和编译后的测试。</p>
+<p>完成以上的步骤后，<code>R-3.4.2</code>的目录发生了改变，已经多出了bin等文件夹，进入bin后可以运行R，但安装还没有完成，再运行<code>make install</code>来把R安装到默认的目录<code>/usr/local/lib/</code>下。此时，可以在shell中直接输入R来运行R3.4.2</p>
+<p>在编译时，可以使用：</p>
+<div class="highlight"><pre><span></span>`./configure --prefix /where/you/want/to/install/R`
+</pre></div>
+
+
+<p>来制定make install的安装路径</p>
+<p>在后续安装Rstudio时，出现了如下错误：</p>
+<div class="highlight"><pre><span></span>R shared library (/usr/local/lib/R/lib/libR.so) not found
+</pre></div>
+
+
+<p>在查找原因时发现是编译时没有使用 <code>--enable-R-shilib</code>导致的，在执行了<code>make uninstall</code>卸载了R，并删除了整个编译文件夹后，我重新使用<code>./configure --enable-R-shlib</code>来重新编译R。这样就能使用Rstudio了。</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/linux.html">Linux</a>, <a href="/tag/r.html">R</a>, <a href="/tag/method.html">method</a></p>
+        </div>
+
+<hr>
+<div class="sharing">
+</div>
+    <hr>
+
             </div>
         </div>
     </div>
