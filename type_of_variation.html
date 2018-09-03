@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>方差分析的类型</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="对一型、二型、三型方差分析的总结">
+
+        <meta name="author" content="rogerclarkgc">
+
+        <meta name="tags" content="R">
+        <meta name="tags" content="math">
+        <meta name="tags" content="note">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="DeusExMachina">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/rogerclarkgc.html">
+	<meta property="og:url" content="/type_of_variation.html">
+	<meta property="og:title" content="方差分析的类型">
+	<meta property="article:published_time" content="2018-09-03 20:20:00+08:00">
+            <meta property="og:description" content="对一型、二型、三型方差分析的总结">
+
+            <meta property="og:image" content="/images/posts/ggplot2_cover.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">DeusExMachina</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/post1.html">About Me</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('images/posts/ggplot2_cover.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>方差分析的类型</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/rogerclarkgc.html">rogerclarkgc</a>
+                             on 周一 03 九月 2018
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <p>在实际使用方差分析时，会发现许多软件都提供三种方差分析，分别称为“Type-i”，“Type-ii”和“Type-iii”。这里简称为“一型”、“二型”和“三型”方差分析。在R语言里，stat包里anova函数采用的是一型的方差分析，如果要使用后面两种，需要额外加载car包并使用里面的Anova函数。这三种方差分析，尤其是一型与其他两种之间，有较大的不同，下面就来介绍这三种方差分析的不同之处。</p>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+<h2>一型方差分析</h2>
+<p>一型方差分析是有顺序性的，如果对于一个两个因子\(A\)和\(B\)的方差模型：</p>
+<p>\(y_{ij}=a_i + b_j + c_{ij} + e_{ij}\)</p>
+<p>用\(SS_A,SS_B, SS_{AB},SS_{A,B}\)分别代表因子\(A\)，因子\(B\)，交互效应和总体模型的方差，一型方差分析会按照如下顺序计算：</p>
+<ul>
+<li>首先计算\(SS_A\)</li>
+<li>去除因子\(A\)的效应来计算\(SS_{B}\)</li>
+<li>去除因子\(A\)和\(B\)的效应计算交互项\(SS_{AB}\)</li>
+</ul>
+<p>一型方差分析是根据模型里因子的顺序来计算方差的，对于非均衡的因子层次，这种计算方式会因为计算顺序不同而导致结果差异，进而产生功效不足的问题。（对均衡设计的实验，这三种方差分析结果是相同的）</p>
+<p>以<code>mtcars</code>数据集为例，这个数据集有多个因子对因变量\(mpg\)产生影响，现只考虑变量\(vs\)和\(gear\)，这时数据的层次如下</p>
+<div class="highlight"><pre><span></span>    &gt;library(car)
+    &gt;with(mtcars, table(vs, gear))
+
+          gear
+    vs   3  4  5
+    0    12  2  4
+    1    3 10  1
+</pre></div>
+
+
+<p>可以看到因子\(gear\)有三个层次，\(vs\)有两个层次，各个层次组合里观测数不一样，是一个非均衡实验设计。如果使用的一型方差分析。结果会随着因子顺序不同而变化：</p>
+<div class="highlight"><pre><span></span>mtc <span class="o">&lt;-</span> mtcars
+mtc<span class="o">$</span>vsf <span class="o">&lt;-</span> <span class="kp">as.factor</span><span class="p">(</span>mtcars<span class="o">$</span>vs<span class="p">)</span>
+mtc<span class="o">$</span>gearf <span class="o">&lt;-</span> <span class="kp">as.factor</span><span class="p">(</span>mtcars<span class="o">$</span>gear<span class="p">)</span>
+<span class="c1">#效应gear在前</span>
+anova<span class="p">(</span>lm<span class="p">(</span>mpg <span class="o">~</span> gearf <span class="o">+</span> vsf<span class="p">,</span> data<span class="o">=</span>mtc<span class="p">))</span>
+<span class="c1">#效应vs在前</span>
+anova<span class="p">(</span>lm<span class="p">(</span>mpg <span class="o">~</span> vsf <span class="o">+</span> gearf<span class="p">,</span> data<span class="o">=</span>mtc<span class="p">))</span>
+</pre></div>
+
+
+<p>结果如下    </p>
+<div class="highlight"><pre><span></span>Analysis of Variance Table
+
+Response: mpg
+          Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+gearf      2 483.24 241.622  14.310 5.231e-05 ***
+vsf        1 170.04 170.039  10.071  0.003642 ** 
+Residuals 28 472.77  16.884                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Analysis of Variance Table
+
+Response: mpg
+          Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+vsf        1 496.53  496.53  29.407 8.74e-06 ***
+gearf      2 156.75   78.38   4.642  0.01815 *  
+Residuals 28 472.77   16.88                     
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+</pre></div>
+
+
+<p>可以看到，结果发生了变化，把\(gear\)当第一个变量作为主效应时，具有强的显著性，而当成第二个变量的显著性就要低的多。这种情况对一型检验的功效性产生了影响，如果检验统计量\(F\)恰好在设定的\(u_{\alpha}\)附近，调换位置就是否接受零假设造成很大影响。</p>
+<h2>二型方差分析</h2>
+<p>二型方差分析没有主效应和副效应的区分，对所有的效应都是在去除其他效应影响的前提下进行，也就是说</p>
+<ul>
+<li>去除因子\(B\)的效应来计算\(SS_{A}\)</li>
+<li>去除因子\(A\)的效应来计算\(SS_{B}\)</li>
+<li>去除因子\(A\)和\(B\)的效应计算交互项\(SS_{AB}\)</li>
+</ul>
+<p>这样来看，二型分析其实可以用多次一型分析来代替，首先进行先\(A\)后\(B\)的一型分析，然后进行先\(B\)后\(A\)的一型分析，这样作为副效应的两个因子的\(F\)值是一样的。</p>
+<p>R语言下默认没有提供二型分析，需要加载<code>car</code>包使用<code>Anova</code>函数来进行</p>
+<div class="highlight"><pre><span></span>#效应gear在前
+Anova(lm(mpg ~ gearf + vsf, data=mtc), type=2)
+#效应vs在前
+Anova(lm(mpg ~ vsf + gearf, data=mtc), type=2)
+</pre></div>
+
+
+<p>结果如下</p>
+<div class="highlight"><pre><span></span>Anova Table (Type II tests)
+
+Response: mpg
+          Sum Sq Df F value   Pr(&gt;F)   
+gearf     156.75  2   4.642 0.018152 * 
+vsf       170.04  1  10.071 0.003642 **
+Residuals 472.77 28                    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Anova Table (Type II tests)
+
+Response: mpg
+          Sum Sq Df F value   Pr(&gt;F)   
+vsf       170.04  1  10.071 0.003642 **
+gearf     156.75  2   4.642 0.018152 * 
+Residuals 472.77 28                    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+</pre></div>
+
+
+<p>可以看出，对不均衡设计，使用二型方差分析，即使交换了因子顺序也不会产生结果上的变化。这样比一型方差分析功效更强。</p>
+<h2>三型方差分析</h2>
+<p>前面的两种方差分析都没有在方差分解时去除交互效应的影响，而三型方差分析假定交互效应是存在且显著的，并且总是会从方差分解中去除这一影响。</p>
+<ul>
+<li>去除因子\(B\)和交互项的效应来计算\(SS_{A}\)</li>
+<li>去除因子\(A\)和交互项的效应来计算\(SS_{B}\)</li>
+<li>去除因子\(A\)和\(B\)的效应计算交互项\(SS_{AB}\)</li>
+</ul>
+<p>三型方差分析同二型一样，不会受方差分解时因子的顺序而影响，但当交互效应不显著或者不存在时，三型方差分析会大大降低分析的功效，让一些本来显著的因子得出不甚显著的结果，还是用<code>mtcars</code>数据来做例子</p>
+<div class="highlight"><pre><span></span>#效应gear在前
+Anova(lm(mpg ~ gearf * vsf, data=mtc), type=3)
+#效应vs在前
+Anova(lm(mpg ~ vsf * gearf, data=mtc), type=3)
+</pre></div>
+
+
+<p>结果如下：</p>
+<div class="highlight"><pre><span></span>Anova Table (Type III tests)
+
+Response: mpg
+             Sum Sq Df  F value    Pr(&gt;F)    
+(Intercept) 2718.03  1 159.1108 1.376e-12 ***
+gearf         93.05  2   2.7235   0.08436 .  
+vsf           66.99  1   3.9217   0.05834 .  
+gearf:vsf     28.62  2   0.8376   0.44409    
+Residuals    444.15 26                       
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Anova Table (Type III tests)
+
+Response: mpg
+             Sum Sq Df  F value    Pr(&gt;F)    
+(Intercept) 2718.03  1 159.1108 1.376e-12 ***
+vsf           66.99  1   3.9217   0.05834 .  
+gearf         93.05  2   2.7235   0.08436 .  
+vsf:gearf     28.62  2   0.8376   0.44409    
+Residuals    444.15 26                       
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+</pre></div>
+
+
+<p>可以看到原本显著的因子<code>vs</code>和<code>gear</code>现在显著性大大降低，这样的结果与前面的相差很大，这可能是由于交互项的自由度降低了检验的功效。</p>
+<h1>三种方法的比较</h1>
+<p>对因子层次均衡且因子直接相互正交的实验数据（即不存在交互效应），三种方法结果上没有区别，如果是不均衡的实验设计且确定因子之间存在交互作用，三型分析较之二型分析更有效，反之，交互效应不显著，二型分析更优。</p>
+<p>可以按照如下的步骤来进行选择使用何种方差分析：</p>
+<ul>
+<li>先用一型方差分析来探索模型，确认交互项是否存在</li>
+<li>如果存在交互效应，使用三型方差分析更优，如果不存在，使用二型</li>
+<li>对均衡的因子设计，没有发现交互效应时，三种方法结果一样</li>
+</ul>
+<p>关于如何选择方法上，Øyvind Langsrud的论文“<a href="https://www.researchgate.net/profile/Oyvind_Langsrud/publication/220286726_ANOVA_for_unbalanced_data_Use_type_II_instead_of_type_III_sums_of_squares/links/556f3ffd08aefcb861dd622f/ANOVA-for-unbalanced-data-Use-type-II-instead-of-type-III-sums-of-squares.pdf">ANOVA for unbalanced data: Use Type II instead of Type III sums of squares</a>”有详细论述。</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/r.html">R</a>, <a href="/tag/math.html">math</a>, <a href="/tag/note.html">note</a></p>
+        </div>
+
+<hr>
+<div class="sharing">
+</div>
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://github.com/rogerclarkgc">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://weibo.com/3090511091/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+<script type="text/javascript">
+    var disqus_shortname = 'rogerclarkgc';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+
+</html>
