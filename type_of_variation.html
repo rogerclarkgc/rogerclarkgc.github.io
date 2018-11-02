@@ -110,8 +110,8 @@
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 <h2>一型方差分析</h2>
-<p>一型方差分析是有顺序性的，如果对于一个两个因子\(A\)和\(B\)的方差模型：</p>
-<p>\(y_{ij}=a_i + b_j + c_{ij} + e_{ij}\)</p>
+<p>一型方差分析是有顺序性的，如果对于一个两个因子$A$和$B$的方差模型：</p>
+<p>$y_{ij}=a_i + b_j + c_{ij} + e_{ij}$</p>
 <p>用\(SS_A,SS_B, SS_{AB},SS_{A,B}\)分别代表因子\(A\)，因子\(B\)，交互效应和总体模型的方差，一型方差分析会按照如下顺序计算：</p>
 <ul>
 <li>首先计算\(SS_A\)</li>
@@ -320,6 +320,22 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
         (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
     }());
 </script>
+	<!-- mathjax config similar to math.stackexchange -->
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		jax: ["input/TeX", "output/HTML-CSS"],
+		tex2jax: {
+			inlineMath: [ ['$', '$)'] ],
+			displayMath: [ ['$$', '$$']],
+			processEscapes: true,
+			skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+		},
+		messageStyle: "none",
+		"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+	});
+	</script>
+	<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
 </body>
 
 </html>
