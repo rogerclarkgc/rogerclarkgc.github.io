@@ -72,7 +72,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -129,12 +128,12 @@
 
 
 <p>可以看到，如果只使用<code>import socket</code>，在调用<code>socket()</code>时，需要再前面再加上模块的名字，单独调用会产生如下错误：</p>
-<div class="highlight"><pre><span></span>    &gt;&gt;&gt;&gt;&gt;&gt; socket()
+<div class="highlight"><pre><span></span>    <span class="o">&gt;&gt;&gt;&gt;&gt;&gt;</span> <span class="n">socket</span><span class="p">()</span>
 
-    Traceback (most recent call last):
-    File &quot;&lt;pyshell#7&gt;&quot;, line 1, in &lt;module&gt;
-    socket()
-    TypeError: &#39;module&#39; object is not callable
+    <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="k">call</span> <span class="k">last</span><span class="p">):</span>
+    <span class="n">File</span> <span class="ss">&quot;&lt;pyshell#7&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="k">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+    <span class="n">socket</span><span class="p">()</span>
+    <span class="n">TypeError</span><span class="p">:</span> <span class="s1">&#39;module&#39;</span> <span class="k">object</span> <span class="k">is</span> <span class="k">not</span> <span class="n">callable</span>
 </pre></div>
 
 
@@ -168,8 +167,8 @@
 <li>
 <p>在头部声明编码：
 如果不使用：<code>#coding:....</code>声明编码方式，那么在代码中出现的字符将由默认的编码方式编码，当需要使用英文以外的字符时，经常会出现编码转换错误，最常见的错误是这种：</p>
-<div class="highlight"><pre><span></span>UnicodeEncodeError: &#39;ascii&#39; codec can&#39;t encode 
-characters in position 0-3: ordinal not in range(128)
+<div class="highlight"><pre><span></span><span class="n">UnicodeEncodeError</span><span class="p">:</span> <span class="s1">&#39;ascii&#39;</span> <span class="n">codec</span> <span class="n">can</span><span class="err">&#39;</span><span class="n">t</span> <span class="n">encode</span> 
+<span class="n">characters</span> <span class="k">in</span> <span class="k">position</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span> <span class="n">ordinal</span> <span class="k">not</span> <span class="k">in</span> <span class="n">range</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>
 </pre></div>
 
 
@@ -178,14 +177,14 @@ characters in position 0-3: ordinal not in range(128)
 <p>另外，不指定编码方式，也会出现.py文件无法保存的现象。</p>
 <ul>
 <li>编码识别：
-可以借助chardet包来帮助判断字符串的编码方式，但是碰到中文字符不太准确。<div class="highlight"><pre><span></span>&gt;&gt;&gt; a = &quot;中文&quot;
-&gt;&gt;&gt; a
-&#39;\xd6\xd0\xce\xc4&#39;
-&gt;&gt;&gt; detect(a)
-{&#39;confidence&#39;: 0.682639754276994, &#39;encoding&#39;: &#39;KOI8-R&#39;}
-&gt;&gt;&gt; a = &#39;ccc&#39;
-&gt;&gt;&gt; detect(a)
-{&#39;confidence&#39;: 1.0, &#39;encoding&#39;: &#39;ascii&#39;}
+可以借助chardet包来帮助判断字符串的编码方式，但是碰到中文字符不太准确。<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="ss">&quot;中文&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span>
+<span class="s1">&#39;\xd6\xd0\xce\xc4&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">detect</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="err">{</span><span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">.</span><span class="mi">682639754276994</span><span class="p">,</span> <span class="s1">&#39;encoding&#39;</span><span class="p">:</span> <span class="s1">&#39;KOI8-R&#39;</span><span class="err">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;ccc&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">detect</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="err">{</span><span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;encoding&#39;</span><span class="p">:</span> <span class="s1">&#39;ascii&#39;</span><span class="err">}</span>
 </pre></div>
 
 
@@ -193,10 +192,10 @@ characters in position 0-3: ordinal not in range(128)
 </ul>
 <p>可以看到，在中文编码识别上，只有68%自信，而ascii则有100%</p>
 <p>其实还有一种简单方法，直接：</p>
-<div class="highlight"><pre><span></span>    &gt;&gt;&gt; print a.decode(&#39;GB2312&#39;)
-    中文
-    print a.decode(&#39;KOI8-R&#39;)
-    жпнд
+<div class="highlight"><pre><span></span>    <span class="o">&gt;&gt;&gt;</span> <span class="n">print</span> <span class="n">a</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;GB2312&#39;</span><span class="p">)</span>
+    <span class="err">中文</span>
+    <span class="n">print</span> <span class="n">a</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;KOI8-R&#39;</span><span class="p">)</span>
+    <span class="err">жпнд</span>
 </pre></div>
 
 
@@ -205,21 +204,21 @@ characters in position 0-3: ordinal not in range(128)
 <li>
 <p>编码转换：
 对于字符串，python提供了<code>decode()</code>和<code>encode()</code>两种方法来进行编码转换，用法如下：</p>
-<div class="highlight"><pre><span></span>#decode()能将其他编码转化为Unicode编码
-&gt;&gt;&gt; a = &quot;中文&quot;
-&gt;&gt;&gt; a
-&#39;\xd6\xd0\xce\xc4&#39;
-&gt;&gt;&gt; a.decode(&#39;GB2312&#39;)
-u&#39;\u4e2d\u6587&#39;     
-#encode()能将unicode编码转化为其他编码
-&gt;&gt;&gt; a = &quot;中文&quot;
-&gt;&gt;&gt; a
-&#39;\xd6\xd0\xce\xc4&#39;
-&gt;&gt;&gt; a = a.decode(&#39;GB2312&#39;)
-&gt;&gt;&gt; a
-u&#39;\u4e2d\u6587&#39;
-&gt;&gt;&gt; a.encode(&#39;utf-8&#39;)
-&#39;\xe4\xb8\xad\xe6\x96\x87&#39;
+<div class="highlight"><pre><span></span><span class="o">#</span><span class="n">decode</span><span class="p">()</span><span class="err">能将其他编码转化为</span><span class="n">Unicode</span><span class="err">编码</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="ss">&quot;中文&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span>
+<span class="s1">&#39;\xd6\xd0\xce\xc4&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;GB2312&#39;</span><span class="p">)</span>
+<span class="n">u</span><span class="s1">&#39;\u4e2d\u6587&#39;</span>     
+<span class="o">#</span><span class="n">encode</span><span class="p">()</span><span class="err">能将</span><span class="n">unicode</span><span class="err">编码转化为其他编码</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="ss">&quot;中文&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span>
+<span class="s1">&#39;\xd6\xd0\xce\xc4&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;GB2312&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span>
+<span class="n">u</span><span class="s1">&#39;\u4e2d\u6587&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="s1">&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span>
 </pre></div>
 
 

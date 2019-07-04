@@ -73,7 +73,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -107,42 +106,42 @@
     <article>
         <p>最近有个师姐想找我帮她把一张Arcgis地图中的颜色处理一下，突然勾起了我探索一下R中图像处理的兴趣，在网上看了几个图像处理的包，有个帖子写了奇异值分解在数据降维中的应用，突然发现自己好像学过奇异值分解这个东西，但又忘了一干二净，于是索性找来资料看看，却发现自己线性代数的东西完全看不懂了，幸好R代码还是看的懂的，于是用R中的奇异值分解做了个小东西玩玩，还挺有意思。</p>
 <p>奇异值分解其实是对一个m*n矩阵进行的分解，对于任何一个这样的矩阵，它满足</p>
-<p><img alt="svdformula" src="http://i.imgur.com/7lC8qPp.png" /></p>
+<p><img alt="svdformula" src="http://i.imgur.com/7lC8qPp.png"></p>
 <p>其中U是一个正交阵，Σ是一个对角阵，V也是一个正交阵。</p>
 <p>在图像中运用奇异值分解十分直观，图像本身就是一个矩阵，在R中raster数据类型就是一种图像的栅格数据，稍微做一下转化就能变成一个大型矩阵。因此直接对图像矩阵做奇异值分解是十分简单的。</p>
 <p>奇异值分解后形成的三个矩阵中，Σ对角线上的元素就是A的奇异值，对于Σ中的r个奇异值，满足如下关系：</p>
-<p><img alt="svd2" src="http://i.imgur.com/1tE1Trq.png" /></p>
+<p><img alt="svd2" src="http://i.imgur.com/1tE1Trq.png"></p>
 <p>很牛逼，只用r个奇异值就能大致还原一个矩阵，这么一来图像存储占的空间就少了许多，假如原图要500x500=250000的空间，奇异值分解后，用50个奇异值来存储，就只需要500x50+50x50+50x500=52500的空间了。实际上，我通过R模拟发现，大概50个左右的奇异值就能得到比较好的还原效果，真是神奇！</p>
-<hr />
+<hr>
 <p>多说无用，在R里用代码实际操作一下，就知道奇异值分解在数据降维中的威力了，R中自带了<code>svd()</code>函数专门用来做矩阵的奇异值分解，所以整个模拟十分简单，几行代码就可以搞定，代码如下：</p>
-<div class="highlight"><pre><span></span>    pic_svd <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>sourcename<span class="p">,</span> howmany<span class="p">){</span>
-    pic.ras <span class="o">&lt;-</span> raster<span class="p">(</span>sourcename<span class="p">)</span> <span class="c1">#获得raster数据</span>
-    n <span class="o">&lt;-</span> howmany
-    pic.flip <span class="o">&lt;-</span> flip<span class="p">(</span>pic.ras<span class="p">,</span> direction <span class="o">=</span> <span class="s">&quot;y&quot;</span><span class="p">)</span>
-    pic.m <span class="o">&lt;-</span> <span class="kp">t</span><span class="p">(</span><span class="kp">as.matrix</span><span class="p">(</span>pic.flip<span class="p">))</span>
-    pic.svd <span class="o">&lt;-</span> <span class="kp">svd</span><span class="p">(</span>pic.m<span class="p">)</span>
-    d <span class="o">&lt;-</span> <span class="kp">diag</span><span class="p">(</span>pic.svd<span class="o">$</span>d<span class="p">)</span>
-    v <span class="o">&lt;-</span> <span class="kp">as.matrix</span><span class="p">(</span>pic.svd<span class="o">$</span>v<span class="p">)</span>
-    u <span class="o">&lt;-</span> pic.svd<span class="o">$</span>u
-    u1 <span class="o">&lt;-</span> <span class="kp">as.matrix</span><span class="p">(</span>u<span class="p">[,</span> <span class="m">1</span><span class="o">:</span>n<span class="p">])</span>
-    d1 <span class="o">&lt;-</span> <span class="kp">as.matrix</span><span class="p">(</span>d<span class="p">[</span><span class="m">1</span><span class="o">:</span>n<span class="p">,</span> <span class="m">1</span><span class="o">:</span>n<span class="p">])</span>
-    v1 <span class="o">&lt;-</span> <span class="kp">as.matrix</span><span class="p">(</span>v<span class="p">[,</span> <span class="m">1</span><span class="o">:</span>n<span class="p">])</span>
-    pic_after <span class="o">&lt;-</span> u1 <span class="o">%*%</span> d1 <span class="o">%*%</span> <span class="kp">t</span><span class="p">(</span>v1<span class="p">)</span>
-    windows<span class="p">()</span>
-    image<span class="p">(</span>pic_after<span class="p">,</span> col <span class="o">=</span> grey<span class="p">(</span><span class="kp">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> length <span class="o">=</span> <span class="m">256</span><span class="p">)),</span> main <span class="o">=</span> n<span class="p">)</span> 
+<div class="highlight"><pre><span></span>    <span class="n">pic_svd</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">sourcename</span><span class="p">,</span> <span class="n">howmany</span><span class="p">){</span>
+    <span class="n">pic.ras</span> <span class="o">&lt;-</span> <span class="nf">raster</span><span class="p">(</span><span class="n">sourcename</span><span class="p">)</span> <span class="c1">#获得raster数据</span>
+    <span class="n">n</span> <span class="o">&lt;-</span> <span class="n">howmany</span>
+    <span class="n">pic.flip</span> <span class="o">&lt;-</span> <span class="nf">flip</span><span class="p">(</span><span class="n">pic.ras</span><span class="p">,</span> <span class="n">direction</span> <span class="o">=</span> <span class="s">&quot;y&quot;</span><span class="p">)</span>
+    <span class="n">pic.m</span> <span class="o">&lt;-</span> <span class="nf">t</span><span class="p">(</span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">pic.flip</span><span class="p">))</span>
+    <span class="n">pic.svd</span> <span class="o">&lt;-</span> <span class="nf">svd</span><span class="p">(</span><span class="n">pic.m</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">&lt;-</span> <span class="nf">diag</span><span class="p">(</span><span class="n">pic.svd</span><span class="o">$</span><span class="n">d</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">&lt;-</span> <span class="nf">as.matrix</span><span class="p">(</span><span class="n">pic.svd</span><span class="o">$</span><span class="n">v</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">&lt;-</span> <span class="n">pic.svd</span><span class="o">$</span><span class="n">u</span>
+    <span class="n">u1</span> <span class="o">&lt;-</span> <span class="nf">as.matrix</span><span class="p">(</span><span class="n">u[</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="n">n]</span><span class="p">)</span>
+    <span class="n">d1</span> <span class="o">&lt;-</span> <span class="nf">as.matrix</span><span class="p">(</span><span class="n">d[1</span><span class="o">:</span><span class="n">n</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="n">n]</span><span class="p">)</span>
+    <span class="n">v1</span> <span class="o">&lt;-</span> <span class="nf">as.matrix</span><span class="p">(</span><span class="n">v[</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="n">n]</span><span class="p">)</span>
+    <span class="n">pic_after</span> <span class="o">&lt;-</span> <span class="n">u1</span> <span class="o">%*%</span> <span class="n">d1</span> <span class="o">%*%</span> <span class="nf">t</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>
+    <span class="nf">windows</span><span class="p">()</span>
+    <span class="nf">image</span><span class="p">(</span><span class="n">pic_after</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="nf">grey</span><span class="p">(</span><span class="nf">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="m">256</span><span class="p">)),</span> <span class="n">main</span> <span class="o">=</span> <span class="n">n</span><span class="p">)</span> 
     <span class="p">}</span>
 </pre></div>
 
 
 <p>这个<code>pic.svd(sourcename, howmany)</code>函数有两个参数，第一个是读取的图片的文件名字，第二个是使用的奇异值模拟的数值，这个数值不能大于图片的长宽。</p>
 <p>我用自己的github头像做了测试，分别选取了几个奇异值进行模拟，其运行结果在下图展现：</p>
-<p><img alt="result" src="http://i.imgur.com/2IK8zks.gif" /></p>
+<p><img alt="result" src="http://i.imgur.com/2IK8zks.gif"></p>
 <p>可以看到，一开始只有一个奇异值时，图像完全看不出是什么，到5个奇异值时，能大概看出一点东西，当到了50个奇异值时，图像的信息基本可以辨认，后面随着奇异值的变多，图像噪点变少，到400个奇异值时，基本和原图(460*460)一样了,为了更加直观，下面直接对比一下：</p>
-<p><img alt="original" src="http://i.imgur.com/bCzgy5U.jpg" /></p>
+<p><img alt="original" src="http://i.imgur.com/bCzgy5U.jpg"></p>
 <p>这是原图，当然经过灰度处理</p>
-<p><img alt="svd50" src="http://i.imgur.com/8BeZgoN.jpg" /></p>
+<p><img alt="svd50" src="http://i.imgur.com/8BeZgoN.jpg"></p>
 <p>这个取50个奇异值后的结果，形状清晰，但噪点多</p>
-<p><img alt="svd400" src="http://i.imgur.com/TRMlsA3.jpg" /></p>
+<p><img alt="svd400" src="http://i.imgur.com/TRMlsA3.jpg"></p>
 <p>这是400个奇异值的结果，可以看到和原图基本一样了。</p>
 <p>虽然还是不太懂奇异值分解的推导过程，毕竟大学毕业后就没摸过线性代数，但借着R的强大，还是好好体会了一把奇异值分解的奇妙之处，用某位长者的话来说:</p>
 <blockquote>

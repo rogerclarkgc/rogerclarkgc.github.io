@@ -73,7 +73,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -117,7 +116,7 @@
 <li>Make for Windows - 用于在cmd终端里使用make命令，Windows下没有这个</li>
 <li>Markdownpad2 - 用于编写你的blog文章</li>
 </ul>
-<hr />
+<hr>
 <h3>然后是准备Pelican运行环境：</h3>
 <ul>
 <li>安装Python: Python的安装包很容易在Python的<a href="https://www.python.org/downloads/">官方网站</a>下载安装，不过我发现Python
@@ -129,15 +128,15 @@
 找到。安装完成后，一定要在PATH里配置make.exe所在的路径，要不然在cmd终端还是无法使用make。</li>
 <li>安装Markdownpad2: Markdown是一种简单的文本标记语法，用于在快速编写文章的同时排版文章段落格式，达到‘所想即所见’的效果，这篇文章就是用Markdown语法排版而成。Windows下常用的Markdown编辑器是Markdownpad2，能够即时预览文章，很方便。它可以在<a href="http://markdownpad.com/">官方网站</a>找到下载。</li>
 </ul>
-<hr />
+<hr>
 <h3>运行环境终于准备妥当，可以开始搭建博客了：</h3>
 <ul>
 <li>首先需要再github上注册账号，并按照<a href="https://pages.github.com/">指导</a>创建一个自己的仓库，这个仓库的名字是username.github.io，是以后博客的域名。</li>
 <li>在cmd终端里输入命令：<code>pelican-quickstart</code>,按照提示回答一系列问题，回答完毕后pelican就会告诉你已经完成了博客框架搭建了。
-<img alt="pelicanstart" src="http://i.imgur.com/CqSsYiM.jpg" /></li>
+<img alt="pelicanstart" src="http://i.imgur.com/CqSsYiM.jpg"></li>
 </ul>
 <p>在搭建完毕后，pelican会自动在指定的目录下面生成如下组织的文件夹:</p>
-<p><img alt="tree" src="http://i.imgur.com/J9G3Yap.jpg" /></p>
+<p><img alt="tree" src="http://i.imgur.com/J9G3Yap.jpg"></p>
 <p>其中<code>content</code>文件夹用来放置博客的内容，如文章和图片等，<code>output</code>则是输出html和css文件的地方。其他几个文件中，<code>publishconf.py</code>和<code>pelicanconf.py</code>是博客的设置文件，<code>Makefile</code>是pelican预先帮助你编写好的make规则文件，<code>fabfile.py</code>也是一种fab规则文件，不过既然有了make就没什么用了。最后<code>develop_server.sh</code>似乎是用来开启测试服务器的配置文件，我基本没有动过这个东西。</p>
 <ul>
 <li>
@@ -148,7 +147,7 @@
 <code>STATIC_PATHS = ['static', 'images']</code>, <code>HEADER_COVER = 'static/homepage.jpg'</code>。这样以后就能轻松的在<code>content</code>文件夹里直接换文章和主页背景图片了。</p>
 </li>
 </ul>
-<hr />
+<hr>
 <h3>博客的框架有了大概，下面就可以写博客了：</h3>
 <ul>
 <li>用Markdownpad2来写博文，可以看看这篇<a href="http://www.jianshu.com/p/1e402922ee32/">教程</a>来掌握Markdown的语法，十分简单便捷</li>
@@ -166,16 +165,16 @@
 <ul>
 <li>写好的md文件放在<code>content</code>文件夹中，也可以建立<code>pages</code>和<code>posts</code>文件夹，把md文件放到这里面。<code>pages</code>里的文件会当做独立的页面处理，<code>posts</code>会当成一般的博文，所以可以在<code>pages</code>里放上自我介绍之类的玩意。</li>
 </ul>
-<hr />
+<hr>
 <h3>是时候发布自己的博客了！</h3>
 <ul>
 <li>由于有了make，发布博客命令变得十分简单，首先进入博客的主目录，在主目录下运行<code>make html</code>，就会有自动生成的html和css文件到output目录中。</li>
 <li>希望预览一下博客，那是最好的，同样的输入<code>make serve</code>就可开启本地服务8000端口，在<code>localhost:8000</code>中就可以看到实际的效果。</li>
-<li>几番修改，终于可以推送到github上了，打开git bash终端，进入<code>output</code>目录，输入如下几条命令：<div class="highlight"><pre><span></span>git init
-git add *
-git commit -m &#39;made blog&#39;
-git remote add origin https://github.com/username/username.github.io.git
-git push -u origin master
+<li>几番修改，终于可以推送到github上了，打开git bash终端，进入<code>output</code>目录，输入如下几条命令：<div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">init</span>
+<span class="n">git</span> <span class="k">add</span> <span class="o">*</span>
+<span class="n">git</span> <span class="k">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s1">&#39;made blog&#39;</span>
+<span class="n">git</span> <span class="n">remote</span> <span class="k">add</span> <span class="n">origin</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">username</span><span class="o">/</span><span class="n">username</span><span class="p">.</span><span class="n">github</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">git</span>
+<span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">master</span>
 </pre></div>
 
 

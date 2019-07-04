@@ -72,7 +72,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -129,22 +128,22 @@
 </ul>
 <p>这种新的类型就解决了2.x系列中存在已久的疑惑，原来的unicode类整合进str类了，并且原来属于str类的二进制数据被单独分开成bytes类，这样确实更加符合使用的逻辑，本来二进制数据和字符串就不是两种数据，并且ASCII和其他8位文本本身就应该是一种简单的Unicode。</p>
 <p>要在python3.x中使用新的bytes类型，可以用b''显式指定一个二进制的字节码常量：</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt;b = b&#39;bytes&#39;
-&gt;&gt;&gt;s = &#39;string&#39;
-&gt;&gt;&gt;type(b), type(s)
-(&lt;class &#39;bytes&#39;&gt;, &lt;class &#39;str&#39;&gt;)
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="s1">&#39;bytes&#39;</span>
+<span class="o">&gt;&gt;&gt;</span><span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;string&#39;</span>
+<span class="o">&gt;&gt;&gt;</span><span class="k">type</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="k">type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="p">(</span><span class="o">&lt;</span><span class="k">class</span> <span class="s1">&#39;bytes&#39;</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="k">class</span> <span class="s1">&#39;str&#39;</span><span class="o">&gt;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>bytes对象和str对象一样都是不可变的，但是它都支持列表的索引操作，但是bytes实际上是一个存储了字节码的整数列表：</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; type(b), type(s)
-(&lt;class &#39;bytes&#39;&gt;, &lt;class &#39;str&#39;&gt;)
-&gt;&gt;&gt; b[0],s[0]
-(98, &#39;s&#39;)
-&gt;&gt;&gt; b[0:2], s[0:2]
-(b&#39;by&#39;, &#39;st&#39;)
-&gt;&gt;&gt; list(b), list(s)
-([98, 121, 116, 101, 115], [&#39;s&#39;, &#39;t&#39;, &#39;r&#39;, &#39;i&#39;, &#39;n&#39;, &#39;g&#39;])
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">type</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="k">type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="p">(</span><span class="o">&lt;</span><span class="k">class</span> <span class="s1">&#39;bytes&#39;</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="k">class</span> <span class="s1">&#39;str&#39;</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="p">(</span><span class="mi">98</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+<span class="p">(</span><span class="n">b</span><span class="s1">&#39;by&#39;</span><span class="p">,</span> <span class="s1">&#39;st&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">list</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">list</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="p">([</span><span class="mi">98</span><span class="p">,</span> <span class="mi">121</span><span class="p">,</span> <span class="mi">116</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">115</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">])</span>
 </pre></div>
 
 
@@ -152,22 +151,22 @@
 <p>Python3.x中由于明确了bytes和str的类型，其<code>encode()</code>和<code>decode()</code>方法与2.x中有了很大的不同。</p>
 <h3>2.x的编码转换</h3>
 <p>在2.x中，由于str是8位字符或字节码，unicode类是宽字符，所以str类能使用<code>encode()</code>和<code>decode()</code>方法：</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; a = &#39;中文&#39;
-&gt;&gt;&gt; a, type(a)
-(&#39;\xd6\xd0\xce\xc4&#39;, &lt;type &#39;str&#39;&gt;)
-&gt;&gt;&gt; a.decode(&#39;gbk&#39;), type(a.decode(&#39;gbk&#39;))
-(u&#39;\u4e2d\u6587&#39;, &lt;type &#39;unicode&#39;&gt;)
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;中文&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">,</span> <span class="k">type</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="p">(</span><span class="s1">&#39;\xd6\xd0\xce\xc4&#39;</span><span class="p">,</span> <span class="o">&lt;</span><span class="k">type</span> <span class="s1">&#39;str&#39;</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;gbk&#39;</span><span class="p">),</span> <span class="k">type</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;gbk&#39;</span><span class="p">))</span>
+<span class="p">(</span><span class="n">u</span><span class="s1">&#39;\u4e2d\u6587&#39;</span><span class="p">,</span> <span class="o">&lt;</span><span class="k">type</span> <span class="s1">&#39;unicode&#39;</span><span class="o">&gt;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>使用<code>decode()</code>方法能将str转化成unicode类，在转化前需要指定当前字符采用的编码集。</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; c = a.decode(&#39;gbk&#39;).encode(&#39;utf-8&#39;)
-&gt;&gt;&gt; c
-&#39;\xe4\xb8\xad\xe6\x96\x87&#39;
-&gt;&gt;&gt; print(c)
-中文
-&gt;&gt;&gt; c, type(c)
-(&#39;\xe4\xb8\xad\xe6\x96\x87&#39;, &lt;type &#39;str&#39;&gt;)
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">c</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;gbk&#39;</span><span class="p">).</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">c</span>
+<span class="s1">&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">print</span><span class="p">(</span><span class="k">c</span><span class="p">)</span>
+<span class="err">中文</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">c</span><span class="p">,</span> <span class="k">type</span><span class="p">(</span><span class="k">c</span><span class="p">)</span>
+<span class="p">(</span><span class="s1">&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><span class="p">,</span> <span class="o">&lt;</span><span class="k">type</span> <span class="s1">&#39;str&#39;</span><span class="o">&gt;</span><span class="p">)</span>
 </pre></div>
 
 
@@ -178,31 +177,31 @@
 <p>str类--&gt;<code>encode()</code>--&gt;bytes类</p>
 <p>bytes类--&gt;<code>decode()</code>--&gt;str类</p>
 <p>由于明确了字节码与字符串的区别，现在str类只能使用encode方法进行编码，转换成bytes类字节码，而反过来，bytes类通过decode方法进行解码，转换成字符串str类。</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; c
-&#39;字节码&#39;
-&gt;&gt;&gt; c.encode(&#39;gbk&#39;)
-b&#39;\xd7\xd6\xbd\xda\xc2\xeb&#39;
-&gt;&gt;&gt; c.encode(&#39;utf-8&#39;)
-b&#39;\xe5\xad\x97\xe8\x8a\x82\xe7\xa0\x81&#39;
-&gt;&gt;&gt; c, type(c)
-(&#39;字节码&#39;, &lt;class &#39;str&#39;&gt;)
-&gt;&gt;&gt; c.encode(&#39;gbk&#39;), c.encode(&#39;utf-8&#39;), type(c.encode(&#39;utf-8&#39;))
-(b&#39;\xd7\xd6\xbd\xda\xc2\xeb&#39;, b&#39;\xe5\xad\x97\xe8\x8a\x82\xe7\xa0\x81&#39;, &lt;class &#39;bytes&#39;&gt;)
-&gt;&gt;&gt; list(c.encode(&#39;utf-8&#39;)), list(c.encode(&#39;utf-8&#39;))
-([229, 173, 151, 232, 138, 130, 231, 160, 129], [229, 173, 151, 232, 138, 130, 231, 160, 129])
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">c</span>
+<span class="s1">&#39;字节码&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">c</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;gbk&#39;</span><span class="p">)</span>
+<span class="n">b</span><span class="s1">&#39;\xd7\xd6\xbd\xda\xc2\xeb&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">c</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">b</span><span class="s1">&#39;\xe5\xad\x97\xe8\x8a\x82\xe7\xa0\x81&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">c</span><span class="p">,</span> <span class="k">type</span><span class="p">(</span><span class="k">c</span><span class="p">)</span>
+<span class="p">(</span><span class="s1">&#39;字节码&#39;</span><span class="p">,</span> <span class="o">&lt;</span><span class="k">class</span> <span class="s1">&#39;str&#39;</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">c</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;gbk&#39;</span><span class="p">),</span> <span class="k">c</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="k">type</span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+<span class="p">(</span><span class="n">b</span><span class="s1">&#39;\xd7\xd6\xbd\xda\xc2\xeb&#39;</span><span class="p">,</span> <span class="n">b</span><span class="s1">&#39;\xe5\xad\x97\xe8\x8a\x82\xe7\xa0\x81&#39;</span><span class="p">,</span> <span class="o">&lt;</span><span class="k">class</span> <span class="s1">&#39;bytes&#39;</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">list</span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span> <span class="n">list</span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+<span class="p">([</span><span class="mi">229</span><span class="p">,</span> <span class="mi">173</span><span class="p">,</span> <span class="mi">151</span><span class="p">,</span> <span class="mi">232</span><span class="p">,</span> <span class="mi">138</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">231</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">129</span><span class="p">],</span> <span class="p">[</span><span class="mi">229</span><span class="p">,</span> <span class="mi">173</span><span class="p">,</span> <span class="mi">151</span><span class="p">,</span> <span class="mi">232</span><span class="p">,</span> <span class="mi">138</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">231</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">129</span><span class="p">])</span>
 </pre></div>
 
 
 <p>使用encode方法时，默认会转换成当前环境的编码方式，可以手动指定一个编码方式。</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; b = c.encode(&#39;gbk&#39;)
-&gt;&gt;&gt; b
-b&#39;\xd7\xd6\xbd\xda\xc2\xeb&#39;
-&gt;&gt;&gt; b.decode()
-Traceback (most recent call last):File &quot;&lt;pyshell#22&gt;&quot;, line 1, in &lt;module&gt;
-b.decode()
-UnicodeDecodeError: &#39;utf-8&#39; codec can&#39;t decode byte 0xd7 in position 0: invalid continuation byte
-&gt;&gt;&gt; b.decode(&#39;gbk&#39;)
-&#39;字节码&#39;
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="k">c</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;gbk&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span>
+<span class="n">b</span><span class="s1">&#39;\xd7\xd6\xbd\xda\xc2\xeb&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="p">.</span><span class="n">decode</span><span class="p">()</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="k">call</span> <span class="k">last</span><span class="p">):</span><span class="n">File</span> <span class="ss">&quot;&lt;pyshell#22&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="k">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="n">b</span><span class="p">.</span><span class="n">decode</span><span class="p">()</span>
+<span class="n">UnicodeDecodeError</span><span class="p">:</span> <span class="s1">&#39;utf-8&#39;</span> <span class="n">codec</span> <span class="n">can</span><span class="s1">&#39;t decode byte 0xd7 in position 0: invalid continuation byte</span>
+<span class="s1">&gt;&gt;&gt; b.decode(&#39;</span><span class="n">gbk</span><span class="s1">&#39;)</span>
+<span class="s1">&#39;</span><span class="err">字节码&#39;</span>
 </pre></div>
 
 

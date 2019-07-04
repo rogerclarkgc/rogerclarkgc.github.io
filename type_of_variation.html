@@ -74,7 +74,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -120,46 +119,46 @@
 </ul>
 <p>一型方差分析是根据模型里因子的顺序来计算方差的，对于非均衡的因子层次，这种计算方式会因为计算顺序不同而导致结果差异，进而产生功效不足的问题。（对均衡设计的实验，这三种方差分析结果是相同的）</p>
 <p>以<code>mtcars</code>数据集为例，这个数据集有多个因子对因变量\(mpg\)产生影响，现只考虑变量\(vs\)和\(gear\)，这时数据的层次如下</p>
-<div class="highlight"><pre><span></span>    &gt;library(car)
-    &gt;with(mtcars, table(vs, gear))
+<div class="highlight"><pre><span></span>    <span class="o">&gt;</span><span class="n">library</span><span class="p">(</span><span class="n">car</span><span class="p">)</span>
+    <span class="o">&gt;</span><span class="k">with</span><span class="p">(</span><span class="n">mtcars</span><span class="p">,</span> <span class="k">table</span><span class="p">(</span><span class="n">vs</span><span class="p">,</span> <span class="n">gear</span><span class="p">))</span>
 
-          gear
-    vs   3  4  5
-    0    12  2  4
-    1    3 10  1
+          <span class="n">gear</span>
+    <span class="n">vs</span>   <span class="mi">3</span>  <span class="mi">4</span>  <span class="mi">5</span>
+    <span class="mi">0</span>    <span class="mi">12</span>  <span class="mi">2</span>  <span class="mi">4</span>
+    <span class="mi">1</span>    <span class="mi">3</span> <span class="mi">10</span>  <span class="mi">1</span>
 </pre></div>
 
 
 <p>可以看到因子\(gear\)有三个层次，\(vs\)有两个层次，各个层次组合里观测数不一样，是一个非均衡实验设计。如果使用的一型方差分析。结果会随着因子顺序不同而变化：</p>
-<div class="highlight"><pre><span></span>mtc <span class="o">&lt;-</span> mtcars
-mtc<span class="o">$</span>vsf <span class="o">&lt;-</span> <span class="kp">as.factor</span><span class="p">(</span>mtcars<span class="o">$</span>vs<span class="p">)</span>
-mtc<span class="o">$</span>gearf <span class="o">&lt;-</span> <span class="kp">as.factor</span><span class="p">(</span>mtcars<span class="o">$</span>gear<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">mtc</span> <span class="o">&lt;-</span> <span class="n">mtcars</span>
+<span class="n">mtc</span><span class="o">$</span><span class="n">vsf</span> <span class="o">&lt;-</span> <span class="nf">as.factor</span><span class="p">(</span><span class="n">mtcars</span><span class="o">$</span><span class="n">vs</span><span class="p">)</span>
+<span class="n">mtc</span><span class="o">$</span><span class="n">gearf</span> <span class="o">&lt;-</span> <span class="nf">as.factor</span><span class="p">(</span><span class="n">mtcars</span><span class="o">$</span><span class="n">gear</span><span class="p">)</span>
 <span class="c1">#效应gear在前</span>
-anova<span class="p">(</span>lm<span class="p">(</span>mpg <span class="o">~</span> gearf <span class="o">+</span> vsf<span class="p">,</span> data<span class="o">=</span>mtc<span class="p">))</span>
+<span class="nf">anova</span><span class="p">(</span><span class="nf">lm</span><span class="p">(</span><span class="n">mpg</span> <span class="o">~</span> <span class="n">gearf</span> <span class="o">+</span> <span class="n">vsf</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">mtc</span><span class="p">))</span>
 <span class="c1">#效应vs在前</span>
-anova<span class="p">(</span>lm<span class="p">(</span>mpg <span class="o">~</span> vsf <span class="o">+</span> gearf<span class="p">,</span> data<span class="o">=</span>mtc<span class="p">))</span>
+<span class="nf">anova</span><span class="p">(</span><span class="nf">lm</span><span class="p">(</span><span class="n">mpg</span> <span class="o">~</span> <span class="n">vsf</span> <span class="o">+</span> <span class="n">gearf</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">mtc</span><span class="p">))</span>
 </pre></div>
 
 
 <p>结果如下    </p>
-<div class="highlight"><pre><span></span>Analysis of Variance Table
+<div class="highlight"><pre><span></span><span class="n">Analysis</span> <span class="k">of</span> <span class="n">Variance</span> <span class="k">Table</span>
 
-Response: mpg
-          Df Sum Sq Mean Sq F value    Pr(&gt;F)    
-gearf      2 483.24 241.622  14.310 5.231e-05 ***
-vsf        1 170.04 170.039  10.071  0.003642 ** 
-Residuals 28 472.77  16.884                      
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-Analysis of Variance Table
+<span class="n">Response</span><span class="p">:</span> <span class="n">mpg</span>
+          <span class="n">Df</span> <span class="k">Sum</span> <span class="n">Sq</span> <span class="n">Mean</span> <span class="n">Sq</span> <span class="n">F</span> <span class="n">value</span>    <span class="n">Pr</span><span class="p">(</span><span class="o">&gt;</span><span class="n">F</span><span class="p">)</span>    
+<span class="n">gearf</span>      <span class="mi">2</span> <span class="mi">483</span><span class="p">.</span><span class="mi">24</span> <span class="mi">241</span><span class="p">.</span><span class="mi">622</span>  <span class="mi">14</span><span class="p">.</span><span class="mi">310</span> <span class="mi">5</span><span class="p">.</span><span class="mi">231</span><span class="n">e</span><span class="o">-</span><span class="mi">05</span> <span class="o">***</span>
+<span class="n">vsf</span>        <span class="mi">1</span> <span class="mi">170</span><span class="p">.</span><span class="mi">04</span> <span class="mi">170</span><span class="p">.</span><span class="mi">039</span>  <span class="mi">10</span><span class="p">.</span><span class="mi">071</span>  <span class="mi">0</span><span class="p">.</span><span class="mi">003642</span> <span class="o">**</span> 
+<span class="n">Residuals</span> <span class="mi">28</span> <span class="mi">472</span><span class="p">.</span><span class="mi">77</span>  <span class="mi">16</span><span class="p">.</span><span class="mi">884</span>                      
+<span class="c1">---</span>
+<span class="n">Signif</span><span class="p">.</span> <span class="n">codes</span><span class="p">:</span>  <span class="mi">0</span> <span class="err">‘</span><span class="o">***</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">001</span> <span class="err">‘</span><span class="o">**</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">01</span> <span class="err">‘</span><span class="o">*</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">05</span> <span class="err">‘</span><span class="p">.</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1</span> <span class="err">‘</span> <span class="err">’</span> <span class="mi">1</span>
+<span class="n">Analysis</span> <span class="k">of</span> <span class="n">Variance</span> <span class="k">Table</span>
 
-Response: mpg
-          Df Sum Sq Mean Sq F value   Pr(&gt;F)    
-vsf        1 496.53  496.53  29.407 8.74e-06 ***
-gearf      2 156.75   78.38   4.642  0.01815 *  
-Residuals 28 472.77   16.88                     
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+<span class="n">Response</span><span class="p">:</span> <span class="n">mpg</span>
+          <span class="n">Df</span> <span class="k">Sum</span> <span class="n">Sq</span> <span class="n">Mean</span> <span class="n">Sq</span> <span class="n">F</span> <span class="n">value</span>   <span class="n">Pr</span><span class="p">(</span><span class="o">&gt;</span><span class="n">F</span><span class="p">)</span>    
+<span class="n">vsf</span>        <span class="mi">1</span> <span class="mi">496</span><span class="p">.</span><span class="mi">53</span>  <span class="mi">496</span><span class="p">.</span><span class="mi">53</span>  <span class="mi">29</span><span class="p">.</span><span class="mi">407</span> <span class="mi">8</span><span class="p">.</span><span class="mi">74</span><span class="n">e</span><span class="o">-</span><span class="mi">06</span> <span class="o">***</span>
+<span class="n">gearf</span>      <span class="mi">2</span> <span class="mi">156</span><span class="p">.</span><span class="mi">75</span>   <span class="mi">78</span><span class="p">.</span><span class="mi">38</span>   <span class="mi">4</span><span class="p">.</span><span class="mi">642</span>  <span class="mi">0</span><span class="p">.</span><span class="mi">01815</span> <span class="o">*</span>  
+<span class="n">Residuals</span> <span class="mi">28</span> <span class="mi">472</span><span class="p">.</span><span class="mi">77</span>   <span class="mi">16</span><span class="p">.</span><span class="mi">88</span>                     
+<span class="c1">---</span>
+<span class="n">Signif</span><span class="p">.</span> <span class="n">codes</span><span class="p">:</span>  <span class="mi">0</span> <span class="err">‘</span><span class="o">***</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">001</span> <span class="err">‘</span><span class="o">**</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">01</span> <span class="err">‘</span><span class="o">*</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">05</span> <span class="err">‘</span><span class="p">.</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1</span> <span class="err">‘</span> <span class="err">’</span> <span class="mi">1</span>
 </pre></div>
 
 
@@ -173,32 +172,32 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </ul>
 <p>这样来看，二型分析其实可以用多次一型分析来代替，首先进行先\(A\)后\(B\)的一型分析，然后进行先\(B\)后\(A\)的一型分析，这样作为副效应的两个因子的\(F\)值是一样的。</p>
 <p>R语言下默认没有提供二型分析，需要加载<code>car</code>包使用<code>Anova</code>函数来进行</p>
-<div class="highlight"><pre><span></span>#效应gear在前
-Anova(lm(mpg ~ gearf + vsf, data=mtc), type=2)
-#效应vs在前
-Anova(lm(mpg ~ vsf + gearf, data=mtc), type=2)
+<div class="highlight"><pre><span></span><span class="o">#</span><span class="err">效应</span><span class="n">gear</span><span class="err">在前</span>
+<span class="n">Anova</span><span class="p">(</span><span class="n">lm</span><span class="p">(</span><span class="n">mpg</span> <span class="o">~</span> <span class="n">gearf</span> <span class="o">+</span> <span class="n">vsf</span><span class="p">,</span> <span class="k">data</span><span class="o">=</span><span class="n">mtc</span><span class="p">),</span> <span class="k">type</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">#</span><span class="err">效应</span><span class="n">vs</span><span class="err">在前</span>
+<span class="n">Anova</span><span class="p">(</span><span class="n">lm</span><span class="p">(</span><span class="n">mpg</span> <span class="o">~</span> <span class="n">vsf</span> <span class="o">+</span> <span class="n">gearf</span><span class="p">,</span> <span class="k">data</span><span class="o">=</span><span class="n">mtc</span><span class="p">),</span> <span class="k">type</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
 
 <p>结果如下</p>
-<div class="highlight"><pre><span></span>Anova Table (Type II tests)
+<div class="highlight"><pre><span></span><span class="n">Anova</span> <span class="k">Table</span> <span class="p">(</span><span class="k">Type</span> <span class="n">II</span> <span class="n">tests</span><span class="p">)</span>
 
-Response: mpg
-          Sum Sq Df F value   Pr(&gt;F)   
-gearf     156.75  2   4.642 0.018152 * 
-vsf       170.04  1  10.071 0.003642 **
-Residuals 472.77 28                    
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-Anova Table (Type II tests)
+<span class="n">Response</span><span class="p">:</span> <span class="n">mpg</span>
+          <span class="k">Sum</span> <span class="n">Sq</span> <span class="n">Df</span> <span class="n">F</span> <span class="n">value</span>   <span class="n">Pr</span><span class="p">(</span><span class="o">&gt;</span><span class="n">F</span><span class="p">)</span>   
+<span class="n">gearf</span>     <span class="mi">156</span><span class="p">.</span><span class="mi">75</span>  <span class="mi">2</span>   <span class="mi">4</span><span class="p">.</span><span class="mi">642</span> <span class="mi">0</span><span class="p">.</span><span class="mi">018152</span> <span class="o">*</span> 
+<span class="n">vsf</span>       <span class="mi">170</span><span class="p">.</span><span class="mi">04</span>  <span class="mi">1</span>  <span class="mi">10</span><span class="p">.</span><span class="mi">071</span> <span class="mi">0</span><span class="p">.</span><span class="mi">003642</span> <span class="o">**</span>
+<span class="n">Residuals</span> <span class="mi">472</span><span class="p">.</span><span class="mi">77</span> <span class="mi">28</span>                    
+<span class="c1">---</span>
+<span class="n">Signif</span><span class="p">.</span> <span class="n">codes</span><span class="p">:</span>  <span class="mi">0</span> <span class="err">‘</span><span class="o">***</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">001</span> <span class="err">‘</span><span class="o">**</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">01</span> <span class="err">‘</span><span class="o">*</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">05</span> <span class="err">‘</span><span class="p">.</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1</span> <span class="err">‘</span> <span class="err">’</span> <span class="mi">1</span>
+<span class="n">Anova</span> <span class="k">Table</span> <span class="p">(</span><span class="k">Type</span> <span class="n">II</span> <span class="n">tests</span><span class="p">)</span>
 
-Response: mpg
-          Sum Sq Df F value   Pr(&gt;F)   
-vsf       170.04  1  10.071 0.003642 **
-gearf     156.75  2   4.642 0.018152 * 
-Residuals 472.77 28                    
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+<span class="n">Response</span><span class="p">:</span> <span class="n">mpg</span>
+          <span class="k">Sum</span> <span class="n">Sq</span> <span class="n">Df</span> <span class="n">F</span> <span class="n">value</span>   <span class="n">Pr</span><span class="p">(</span><span class="o">&gt;</span><span class="n">F</span><span class="p">)</span>   
+<span class="n">vsf</span>       <span class="mi">170</span><span class="p">.</span><span class="mi">04</span>  <span class="mi">1</span>  <span class="mi">10</span><span class="p">.</span><span class="mi">071</span> <span class="mi">0</span><span class="p">.</span><span class="mi">003642</span> <span class="o">**</span>
+<span class="n">gearf</span>     <span class="mi">156</span><span class="p">.</span><span class="mi">75</span>  <span class="mi">2</span>   <span class="mi">4</span><span class="p">.</span><span class="mi">642</span> <span class="mi">0</span><span class="p">.</span><span class="mi">018152</span> <span class="o">*</span> 
+<span class="n">Residuals</span> <span class="mi">472</span><span class="p">.</span><span class="mi">77</span> <span class="mi">28</span>                    
+<span class="c1">---</span>
+<span class="n">Signif</span><span class="p">.</span> <span class="n">codes</span><span class="p">:</span>  <span class="mi">0</span> <span class="err">‘</span><span class="o">***</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">001</span> <span class="err">‘</span><span class="o">**</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">01</span> <span class="err">‘</span><span class="o">*</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">05</span> <span class="err">‘</span><span class="p">.</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1</span> <span class="err">‘</span> <span class="err">’</span> <span class="mi">1</span>
 </pre></div>
 
 
@@ -211,36 +210,36 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <li>去除因子\(A\)和\(B\)的效应计算交互项\(SS_{AB}\)</li>
 </ul>
 <p>三型方差分析同二型一样，不会受方差分解时因子的顺序而影响，但当交互效应不显著或者不存在时，三型方差分析会大大降低分析的功效，让一些本来显著的因子得出不甚显著的结果，还是用<code>mtcars</code>数据来做例子</p>
-<div class="highlight"><pre><span></span>#效应gear在前
-Anova(lm(mpg ~ gearf * vsf, data=mtc), type=3)
-#效应vs在前
-Anova(lm(mpg ~ vsf * gearf, data=mtc), type=3)
+<div class="highlight"><pre><span></span><span class="o">#</span><span class="err">效应</span><span class="n">gear</span><span class="err">在前</span>
+<span class="n">Anova</span><span class="p">(</span><span class="n">lm</span><span class="p">(</span><span class="n">mpg</span> <span class="o">~</span> <span class="n">gearf</span> <span class="o">*</span> <span class="n">vsf</span><span class="p">,</span> <span class="k">data</span><span class="o">=</span><span class="n">mtc</span><span class="p">),</span> <span class="k">type</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="o">#</span><span class="err">效应</span><span class="n">vs</span><span class="err">在前</span>
+<span class="n">Anova</span><span class="p">(</span><span class="n">lm</span><span class="p">(</span><span class="n">mpg</span> <span class="o">~</span> <span class="n">vsf</span> <span class="o">*</span> <span class="n">gearf</span><span class="p">,</span> <span class="k">data</span><span class="o">=</span><span class="n">mtc</span><span class="p">),</span> <span class="k">type</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
 
 <p>结果如下：</p>
-<div class="highlight"><pre><span></span>Anova Table (Type III tests)
+<div class="highlight"><pre><span></span><span class="n">Anova</span> <span class="k">Table</span> <span class="p">(</span><span class="k">Type</span> <span class="n">III</span> <span class="n">tests</span><span class="p">)</span>
 
-Response: mpg
-             Sum Sq Df  F value    Pr(&gt;F)    
-(Intercept) 2718.03  1 159.1108 1.376e-12 ***
-gearf         93.05  2   2.7235   0.08436 .  
-vsf           66.99  1   3.9217   0.05834 .  
-gearf:vsf     28.62  2   0.8376   0.44409    
-Residuals    444.15 26                       
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-Anova Table (Type III tests)
+<span class="n">Response</span><span class="p">:</span> <span class="n">mpg</span>
+             <span class="k">Sum</span> <span class="n">Sq</span> <span class="n">Df</span>  <span class="n">F</span> <span class="n">value</span>    <span class="n">Pr</span><span class="p">(</span><span class="o">&gt;</span><span class="n">F</span><span class="p">)</span>    
+<span class="p">(</span><span class="n">Intercept</span><span class="p">)</span> <span class="mi">2718</span><span class="p">.</span><span class="mi">03</span>  <span class="mi">1</span> <span class="mi">159</span><span class="p">.</span><span class="mi">1108</span> <span class="mi">1</span><span class="p">.</span><span class="mi">376</span><span class="n">e</span><span class="o">-</span><span class="mi">12</span> <span class="o">***</span>
+<span class="n">gearf</span>         <span class="mi">93</span><span class="p">.</span><span class="mi">05</span>  <span class="mi">2</span>   <span class="mi">2</span><span class="p">.</span><span class="mi">7235</span>   <span class="mi">0</span><span class="p">.</span><span class="mi">08436</span> <span class="p">.</span>  
+<span class="n">vsf</span>           <span class="mi">66</span><span class="p">.</span><span class="mi">99</span>  <span class="mi">1</span>   <span class="mi">3</span><span class="p">.</span><span class="mi">9217</span>   <span class="mi">0</span><span class="p">.</span><span class="mi">05834</span> <span class="p">.</span>  
+<span class="n">gearf</span><span class="p">:</span><span class="n">vsf</span>     <span class="mi">28</span><span class="p">.</span><span class="mi">62</span>  <span class="mi">2</span>   <span class="mi">0</span><span class="p">.</span><span class="mi">8376</span>   <span class="mi">0</span><span class="p">.</span><span class="mi">44409</span>    
+<span class="n">Residuals</span>    <span class="mi">444</span><span class="p">.</span><span class="mi">15</span> <span class="mi">26</span>                       
+<span class="c1">---</span>
+<span class="n">Signif</span><span class="p">.</span> <span class="n">codes</span><span class="p">:</span>  <span class="mi">0</span> <span class="err">‘</span><span class="o">***</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">001</span> <span class="err">‘</span><span class="o">**</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">01</span> <span class="err">‘</span><span class="o">*</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">05</span> <span class="err">‘</span><span class="p">.</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1</span> <span class="err">‘</span> <span class="err">’</span> <span class="mi">1</span>
+<span class="n">Anova</span> <span class="k">Table</span> <span class="p">(</span><span class="k">Type</span> <span class="n">III</span> <span class="n">tests</span><span class="p">)</span>
 
-Response: mpg
-             Sum Sq Df  F value    Pr(&gt;F)    
-(Intercept) 2718.03  1 159.1108 1.376e-12 ***
-vsf           66.99  1   3.9217   0.05834 .  
-gearf         93.05  2   2.7235   0.08436 .  
-vsf:gearf     28.62  2   0.8376   0.44409    
-Residuals    444.15 26                       
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+<span class="n">Response</span><span class="p">:</span> <span class="n">mpg</span>
+             <span class="k">Sum</span> <span class="n">Sq</span> <span class="n">Df</span>  <span class="n">F</span> <span class="n">value</span>    <span class="n">Pr</span><span class="p">(</span><span class="o">&gt;</span><span class="n">F</span><span class="p">)</span>    
+<span class="p">(</span><span class="n">Intercept</span><span class="p">)</span> <span class="mi">2718</span><span class="p">.</span><span class="mi">03</span>  <span class="mi">1</span> <span class="mi">159</span><span class="p">.</span><span class="mi">1108</span> <span class="mi">1</span><span class="p">.</span><span class="mi">376</span><span class="n">e</span><span class="o">-</span><span class="mi">12</span> <span class="o">***</span>
+<span class="n">vsf</span>           <span class="mi">66</span><span class="p">.</span><span class="mi">99</span>  <span class="mi">1</span>   <span class="mi">3</span><span class="p">.</span><span class="mi">9217</span>   <span class="mi">0</span><span class="p">.</span><span class="mi">05834</span> <span class="p">.</span>  
+<span class="n">gearf</span>         <span class="mi">93</span><span class="p">.</span><span class="mi">05</span>  <span class="mi">2</span>   <span class="mi">2</span><span class="p">.</span><span class="mi">7235</span>   <span class="mi">0</span><span class="p">.</span><span class="mi">08436</span> <span class="p">.</span>  
+<span class="n">vsf</span><span class="p">:</span><span class="n">gearf</span>     <span class="mi">28</span><span class="p">.</span><span class="mi">62</span>  <span class="mi">2</span>   <span class="mi">0</span><span class="p">.</span><span class="mi">8376</span>   <span class="mi">0</span><span class="p">.</span><span class="mi">44409</span>    
+<span class="n">Residuals</span>    <span class="mi">444</span><span class="p">.</span><span class="mi">15</span> <span class="mi">26</span>                       
+<span class="c1">---</span>
+<span class="n">Signif</span><span class="p">.</span> <span class="n">codes</span><span class="p">:</span>  <span class="mi">0</span> <span class="err">‘</span><span class="o">***</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">001</span> <span class="err">‘</span><span class="o">**</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">01</span> <span class="err">‘</span><span class="o">*</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">05</span> <span class="err">‘</span><span class="p">.</span><span class="err">’</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1</span> <span class="err">‘</span> <span class="err">’</span> <span class="mi">1</span>
 </pre></div>
 
 

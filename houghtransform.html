@@ -72,7 +72,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -121,12 +120,12 @@
 <p>以一个实际例子来更进一步说明，我们假设有一条直线的为：</p>
 <p><img src="http://chart.googleapis.com/chart?cht=tx&chl=y=-x%2B2 " style="border:none;"></p>
 <p>随意取了四个点，如下图所示：</p>
-<p><img alt="recline" src="http://i.imgur.com/af4hSXX.jpg" /></p>
+<p><img alt="recline" src="http://i.imgur.com/af4hSXX.jpg"></p>
 <p>以这四个点的坐标为mc空间中直线的参数分别画出四条直线：</p>
-<p><img alt="mcline" src="http://i.imgur.com/4aGvwE4.jpg" /></p>
+<p><img alt="mcline" src="http://i.imgur.com/4aGvwE4.jpg"></p>
 <p>可以看到这四条直线都能够相交于同一点，这个点的坐标（-1, 2)就是我们要找的直线的截距和斜率。</p>
 <p>在具体实现这个算法上，一般不会采用mc空间，因为m和c的取值范围无限，计算代价太大，而是将直线换成另外一种表达方式，其形式类似于极坐标系。</p>
-<p><img alt="hspace" src="http://i.imgur.com/ulN5ywA.jpg" /></p>
+<p><img alt="hspace" src="http://i.imgur.com/ulN5ywA.jpg"></p>
 <p>除了斜率和截距可以唯一确定一条直线外，如上图，从原点到直线的垂线的长度r以及这条垂线与x轴大于零方向的夹角可以唯一确定一条直线，即(ρ, θ）可以唯一确定一条直线,对于ρ和θ的关系，可以这样描述：</p>
 <p><img src="http://chart.googleapis.com/chart?cht=tx&chl=\rho=x\cos\theta%2By\sin\theta " style="border:none;"></p>
 <p>由于ρ不会大于垂线长度，θ也在（0， π）之间，所以整个ρθ空间的搜索范围有限，极大减少计算量。</p>
@@ -134,7 +133,7 @@
 <img src="http://chart.googleapis.com/chart?cht=tx&chl=\rho=x\cos\theta%2By\sin\theta " style="border:none;"></p>
 <p>同样的，我们取一个直线上的点(x1, y1)，带入上式中，让θ从0变动到π，得到对应的ρ，这样的图像是一条曲线，由于这个点在我们要找的直线上，所以它是一定通过唯一确定一条直线的点(ρ, θ)的，重复这一步骤会得到相交于同一点的很多曲线。</p>
 <p>仍然用上面的例子：</p>
-<p><img alt="dd" src="http://i.imgur.com/uqhibbQ.jpg" /></p>
+<p><img alt="dd" src="http://i.imgur.com/uqhibbQ.jpg"></p>
 <p>还是</p>
 <p><img src="http://chart.googleapis.com/chart?cht=tx&chl=y=-x%2B2 " style="border:none;"></p>
 <p>它对应的(ρ, θ)=(sqrt(2),0.25π)，取的四个点坐标依次为：</p>
@@ -145,7 +144,7 @@
 <p><img src="http://chart.googleapis.com/chart?cht=tx&chl=3:\rho=3\cos\theta-\sin\theta " style="border:none;"></p>
 <p><img src="http://chart.googleapis.com/chart?cht=tx&chl=4:\rho=4\cos\theta-2\sin\theta " style="border:none;"></p>
 <p>把它们在(ρ, θ)空间中表示出来：</p>
-<p><img alt="hough" src="http://i.imgur.com/ioOGbcF.jpg" /></p>
+<p><img alt="hough" src="http://i.imgur.com/ioOGbcF.jpg"></p>
 <p>的确，这些曲线都相交于同一个点，这个点的坐标就是我们要找的直线(sqrt(2),0.25π)</p>
 <h3>霍夫直线变换实现思路：</h3>
 <p>在</p>

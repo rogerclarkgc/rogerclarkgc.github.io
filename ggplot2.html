@@ -73,7 +73,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -134,9 +133,9 @@
 </ul>
 <p>qplot通过<code>facets</code>参数指定分面，用形如<code>row_var ~ col_var</code>的表达式来描述具体分面情况，如果只想指定一行或者一列，使用<code>row_var ~ .</code>的形式来指定单列图形或单行图形</p>
 <p>例子：</p>
-<div class="highlight"><pre><span></span>qplot(carat, data = diamonds, facets = color ~ ., geom = &quot;histogram&quot;, binwidth = 0.1, xlim = c(0, 3))
+<div class="highlight"><pre><span></span><span class="n">qplot</span><span class="p">(</span><span class="n">carat</span><span class="p">,</span> <span class="k">data</span> <span class="o">=</span> <span class="n">diamonds</span><span class="p">,</span> <span class="n">facets</span> <span class="o">=</span> <span class="n">color</span> <span class="o">~</span> <span class="p">.,</span> <span class="n">geom</span> <span class="o">=</span> <span class="ss">&quot;histogram&quot;</span><span class="p">,</span> <span class="n">binwidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">,</span> <span class="n">xlim</span> <span class="o">=</span> <span class="k">c</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 
-qplot(carat, ..density.., data = diamonds, facets = color ~ ., geom = &quot;histogram&quot;, binwidth = 0.1, xlim = c(0, 3))
+<span class="n">qplot</span><span class="p">(</span><span class="n">carat</span><span class="p">,</span> <span class="p">..</span><span class="n">density</span><span class="p">..,</span> <span class="k">data</span> <span class="o">=</span> <span class="n">diamonds</span><span class="p">,</span> <span class="n">facets</span> <span class="o">=</span> <span class="n">color</span> <span class="o">~</span> <span class="p">.,</span> <span class="n">geom</span> <span class="o">=</span> <span class="ss">&quot;histogram&quot;</span><span class="p">,</span> <span class="n">binwidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">,</span> <span class="n">xlim</span> <span class="o">=</span> <span class="k">c</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 </pre></div>
 
 
@@ -154,12 +153,12 @@ qplot(carat, ..density.., data = diamonds, facets = color ~ ., geom = &quot;hist
 </ul>
 <h2>ggplot()函数：用图层构建对象</h2>
 <p>ggplot()函数的两个主要参数：</p>
-<div class="highlight"><pre><span></span>ggplot（data, aes())
+<div class="highlight"><pre><span></span><span class="n">ggplot</span><span class="err">（</span><span class="k">data</span><span class="p">,</span> <span class="n">aes</span><span class="p">())</span>
 </pre></div>
 
 
 <p>data用于加载数据，aes()描述映射关系</p>
-<div class="highlight"><pre><span></span>p <span class="o">&lt;-</span> ggplot<span class="p">(</span>data <span class="o">=</span> diamonds<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> carat<span class="p">,</span> y <span class="o">=</span> price<span class="p">,</span> colour <span class="o">=</span> <span class="kp">cut</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">diamonds</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">carat</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">price</span><span class="p">,</span> <span class="n">colour</span> <span class="o">=</span> <span class="n">cut</span><span class="p">)</span>
 </pre></div>
 
 
@@ -168,56 +167,56 @@ qplot(carat, ..density.., data = diamonds, facets = color ~ ., geom = &quot;hist
 <li>添加图层：</li>
 </ul>
 <p>layer函数可以在ggplot对象上添加图层，函数形式如下</p>
-<div class="highlight"><pre><span></span>layer(geom = NULL, stat = NULL, data = NULL, 
-mapping = NULL,position = NULL, params = list(),
-inherit.aes = TRUE, subset = NULL,show.legend = NA)
+<div class="highlight"><pre><span></span><span class="nv">layer</span><span class="ss">(</span><span class="nv">geom</span> <span class="o">=</span> <span class="nv">NULL</span>, <span class="nv">stat</span> <span class="o">=</span> <span class="nv">NULL</span>, <span class="nv">data</span> <span class="o">=</span> <span class="nv">NULL</span>, 
+<span class="nv">mapping</span> <span class="o">=</span> <span class="nv">NULL</span>,<span class="nv">position</span> <span class="o">=</span> <span class="nv">NULL</span>, <span class="nb">params</span> <span class="o">=</span> <span class="nv">list</span><span class="ss">()</span>,
+<span class="nv">inherit</span>.<span class="nv">aes</span> <span class="o">=</span> <span class="nv">TRUE</span>, <span class="nv">subset</span> <span class="o">=</span> <span class="nv">NULL</span>,<span class="k">show</span>.<span class="nv">legend</span> <span class="o">=</span> <span class="nv">NA</span><span class="ss">)</span>
 </pre></div>
 
 
 <p>geom为该图层展现的几何对象类型，stat为使用的统计变换，data如果不指定，就会从ggplot对象中继承，mapping为映射关系，默认情况下从aes()函数中继承，position为位置参数。stat参数和position参数必须要明文指定。</p>
-<div class="highlight"><pre><span></span>p <span class="o">&lt;-</span> p <span class="o">+</span> layer<span class="p">(</span>geom <span class="o">=</span> <span class="s">&quot;point&quot;</span><span class="p">,</span> stat <span class="o">=</span> <span class="s">&quot;identify&quot;</span><span class="p">,</span> 
-position <span class="o">=</span> <span class="s">&quot;</span><span class="err">identity)</span>
+<div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">&lt;-</span> <span class="n">p</span> <span class="o">+</span> <span class="nf">layer</span><span class="p">(</span><span class="n">geom</span> <span class="o">=</span> <span class="s">&quot;point&quot;</span><span class="p">,</span> <span class="n">stat</span> <span class="o">=</span> <span class="s">&quot;identify&quot;</span><span class="p">,</span> 
+<span class="n">position</span> <span class="o">=</span> <span class="s">&quot;</span><span class="err">identity)</span>
 </pre></div>
 
 
 <p>这里在原来的图像的基础上加上一个图层，使用点作为几何对象。</p>
 <p>更复杂一点的例子：</p>
-<div class="highlight"><pre><span></span>p <span class="o">&lt;-</span> ggplot<span class="p">(</span>diamonds<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> carat<span class="p">))</span>
-p <span class="o">&lt;-</span> p <span class="o">+</span> layer<span class="p">(</span>
-geom <span class="o">=</span> <span class="s">&quot;bar&quot;</span><span class="p">,</span>
-stat <span class="o">=</span> <span class="s">&quot;bin&quot;</span><span class="p">,</span>
-position <span class="o">=</span> <span class="s">&quot;identity&quot;</span><span class="p">,</span>
-params <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>fill <span class="o">=</span> <span class="s">&quot;steelblue&quot;</span><span class="p">,</span> binwidth <span class="o">=</span> <span class="m">0.2</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">(</span><span class="n">diamonds</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">carat</span><span class="p">))</span>
+<span class="n">p</span> <span class="o">&lt;-</span> <span class="n">p</span> <span class="o">+</span> <span class="nf">layer</span><span class="p">(</span>
+<span class="n">geom</span> <span class="o">=</span> <span class="s">&quot;bar&quot;</span><span class="p">,</span>
+<span class="n">stat</span> <span class="o">=</span> <span class="s">&quot;bin&quot;</span><span class="p">,</span>
+<span class="n">position</span> <span class="o">=</span> <span class="s">&quot;identity&quot;</span><span class="p">,</span>
+<span class="n">params</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&quot;steelblue&quot;</span><span class="p">,</span> <span class="n">binwidth</span> <span class="o">=</span> <span class="m">0.2</span><span class="p">)</span>
 <span class="p">)</span>
-p
+<span class="n">p</span>
 </pre></div>
 
 
 <p>这里首先建立一个包含数据和映射的ggplot对象，然后添加了一个图层，这个图层的几何对象为直方图，并进行相应的统计变换，还指定了组距和填充颜色</p>
 <p>更为便捷的替代layer函数的方法是直接使用geom_XXX和stat_XXX类函数，如上面的可改为</p>
-<div class="highlight"><pre><span></span>p <span class="o">&lt;-</span> ggplot<span class="p">(</span>diamonds<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> carat<span class="p">))</span> <span class="o">+</span>
-geom_histogram<span class="p">(</span>binwidth <span class="o">=</span> <span class="m">0.2</span><span class="p">,</span> fill <span class="o">=</span> <span class="s">&quot;</span><span class="err">steelblue)</span>
+<div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">(</span><span class="n">diamonds</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">carat</span><span class="p">))</span> <span class="o">+</span>
+<span class="nf">geom_histogram</span><span class="p">(</span><span class="n">binwidth</span> <span class="o">=</span> <span class="m">0.2</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="s">&quot;</span><span class="err">steelblue)</span>
 </pre></div>
 
 
 <p>等价的例子：</p>
-<div class="highlight"><pre><span></span>ggplot(msleep, aes(sleep_rem / sleep_total, awake)) + geom_point()
-##等价于
-qplot(sleep_rem / sleep_total, awake, data = msleep)
-***************************************************
-qplot(sleep_rem / sleep_total, awake, data = msleep,
-geom = c(&quot;point&quot;, &quot;smooth&quot;))
-###等价于
-qplot(sleep_rem / sleep_total, awake, data = msleep) + 
-geom_smooth()
-###或
-ggplot(msleep, aes(x = sleep_rem / sleep_total, awake)) +　geom_point() + geom_smooth()
+<div class="highlight"><pre><span></span><span class="n">ggplot</span><span class="p">(</span><span class="n">msleep</span><span class="p">,</span> <span class="n">aes</span><span class="p">(</span><span class="n">sleep_rem</span> <span class="o">/</span> <span class="n">sleep_total</span><span class="p">,</span> <span class="n">awake</span><span class="p">))</span> <span class="o">+</span> <span class="n">geom_point</span><span class="p">()</span>
+<span class="o">##</span><span class="err">等价于</span>
+<span class="n">qplot</span><span class="p">(</span><span class="n">sleep_rem</span> <span class="o">/</span> <span class="n">sleep_total</span><span class="p">,</span> <span class="n">awake</span><span class="p">,</span> <span class="k">data</span> <span class="o">=</span> <span class="n">msleep</span><span class="p">)</span>
+<span class="o">***************************************************</span>
+<span class="n">qplot</span><span class="p">(</span><span class="n">sleep_rem</span> <span class="o">/</span> <span class="n">sleep_total</span><span class="p">,</span> <span class="n">awake</span><span class="p">,</span> <span class="k">data</span> <span class="o">=</span> <span class="n">msleep</span><span class="p">,</span>
+<span class="n">geom</span> <span class="o">=</span> <span class="k">c</span><span class="p">(</span><span class="ss">&quot;point&quot;</span><span class="p">,</span> <span class="ss">&quot;smooth&quot;</span><span class="p">))</span>
+<span class="o">###</span><span class="err">等价于</span>
+<span class="n">qplot</span><span class="p">(</span><span class="n">sleep_rem</span> <span class="o">/</span> <span class="n">sleep_total</span><span class="p">,</span> <span class="n">awake</span><span class="p">,</span> <span class="k">data</span> <span class="o">=</span> <span class="n">msleep</span><span class="p">)</span> <span class="o">+</span> 
+<span class="n">geom_smooth</span><span class="p">()</span>
+<span class="o">###</span><span class="err">或</span>
+<span class="n">ggplot</span><span class="p">(</span><span class="n">msleep</span><span class="p">,</span> <span class="n">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">sleep_rem</span> <span class="o">/</span> <span class="n">sleep_total</span><span class="p">,</span> <span class="n">awake</span><span class="p">))</span> <span class="o">+</span><span class="err">　</span><span class="n">geom_point</span><span class="p">()</span> <span class="o">+</span> <span class="n">geom_smooth</span><span class="p">()</span>
 </pre></div>
 
 
 <p>图层本身也是个对象，可以赋值到任意变量上，这样可以重复利用这个图层的样式。</p>
-<div class="highlight"><pre><span></span>smoothfit <span class="o">&lt;-</span> geom_smooth<span class="p">(</span>method <span class="o">=</span> <span class="s">&quot;lm&quot;</span><span class="p">,</span> se <span class="o">=</span> <span class="bp">F</span><span class="p">,</span> colour <span class="o">=</span> alpha<span class="p">(</span><span class="s">&quot;steelblue&quot;</span><span class="p">,</span> <span class="m">0.5</span><span class="p">),</span> size <span class="o">=</span> <span class="m">2</span><span class="p">)</span>
-qplot<span class="p">(</span>sleep_rem<span class="p">,</span> sleep_total<span class="p">,</span> data <span class="o">=</span> msleep<span class="p">)</span> <span class="o">+</span> smoothfit
+<div class="highlight"><pre><span></span><span class="n">smoothfit</span> <span class="o">&lt;-</span> <span class="nf">geom_smooth</span><span class="p">(</span><span class="n">method</span> <span class="o">=</span> <span class="s">&quot;lm&quot;</span><span class="p">,</span> <span class="n">se</span> <span class="o">=</span> <span class="bp">F</span><span class="p">,</span> <span class="n">colour</span> <span class="o">=</span> <span class="nf">alpha</span><span class="p">(</span><span class="s">&quot;steelblue&quot;</span><span class="p">,</span> <span class="m">0.5</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">)</span>
+<span class="nf">qplot</span><span class="p">(</span><span class="n">sleep_rem</span><span class="p">,</span> <span class="n">sleep_total</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">msleep</span><span class="p">)</span> <span class="o">+</span> <span class="n">smoothfit</span>
 </pre></div>
 
 
@@ -227,10 +226,10 @@ qplot<span class="p">(</span>sleep_rem<span class="p">,</span> sleep_total<span 
 </ul>
 <p>有两种方式可以设定一个图层中元素的属性，如颜色属性：</p>
 <div class="highlight"><pre><span></span><span class="c1">##设定方式</span>
-p <span class="o">&lt;-</span> ggplot<span class="p">(</span>mtcars<span class="p">,</span> aes<span class="p">(</span>mpg<span class="p">,</span> wt<span class="p">))</span>
-p <span class="o">+</span> geom_point<span class="p">(</span>colour <span class="o">=</span> <span class="s">&quot;darkblue&quot;</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">(</span><span class="n">mtcars</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">mpg</span><span class="p">,</span> <span class="n">wt</span><span class="p">))</span>
+<span class="n">p</span> <span class="o">+</span> <span class="nf">geom_point</span><span class="p">(</span><span class="n">colour</span> <span class="o">=</span> <span class="s">&quot;darkblue&quot;</span><span class="p">)</span>
 <span class="c1">##映射方式</span>
-p <span class="o">+</span> geom_point<span class="p">(</span>aes<span class="p">(</span>colour <span class="o">=</span> <span class="kp">I</span><span class="p">(</span><span class="s">&quot;darkblue&quot;</span><span class="p">))</span>
+<span class="n">p</span> <span class="o">+</span> <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">colour</span> <span class="o">=</span> <span class="nf">I</span><span class="p">(</span><span class="s">&quot;darkblue&quot;</span><span class="p">))</span>
 </pre></div>
 
 
@@ -240,20 +239,20 @@ p <span class="o">+</span> geom_point<span class="p">(</span>aes<span class="p">
 </ul>
 <p>通过将group映射到在不同组有不同取值的变量来在一张图像中绘制不同组的数据</p>
 <p>多个分组与单个图形</p>
-<div class="highlight"><pre><span></span>p <span class="o">&lt;-</span> ggplot<span class="p">(</span>Oxboys<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> age<span class="p">,</span> y <span class="o">=</span> height<span class="p">,</span> group <span class="o">=</span> Subject<span class="p">))</span> <span class="o">+</span>
-geom_line<span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">(</span><span class="n">Oxboys</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">age</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">height</span><span class="p">,</span> <span class="n">group</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">))</span> <span class="o">+</span>
+<span class="nf">geom_line</span><span class="p">()</span>
 </pre></div>
 
 
 <p>指定Oxboys数据框中Subject映射到group中，将对么个Subject下的所有观测单独连线，绘制一条折线图。</p>
 <p>不同图层上的不同分组</p>
-<div class="highlight"><pre><span></span>p + geom_smooth(aes(group = 1), method = &quot;lm&quot;, se = F, size = 3)
+<div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">+</span> <span class="n">geom_smooth</span><span class="p">(</span><span class="n">aes</span><span class="p">(</span><span class="k">group</span> <span class="o">=</span> <span class="mi">1</span><span class="p">),</span> <span class="k">method</span> <span class="o">=</span> <span class="ss">&quot;lm&quot;</span><span class="p">,</span> <span class="n">se</span> <span class="o">=</span> <span class="n">F</span><span class="p">,</span> <span class="k">size</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
 
 <p>让group = 1， 能基于所有数据点绘制一条回归直线，并且单独作为一个图层叠加到原来的图上</p>
-<div class="highlight"><pre><span></span>boybox <span class="o">&lt;-</span> ggplot<span class="p">(</span>Oxboys<span class="p">,</span> aes<span class="p">(</span>Ocasion<span class="p">,</span> height<span class="p">))</span> <span class="o">+</span> geom_boxplot<span class="p">(</span>fill <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">)</span>
-boybox <span class="o">+</span> geom_line<span class="p">(</span>aes<span class="p">(</span>group <span class="o">=</span> Subject<span class="p">),</span> colour <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">boybox</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">(</span><span class="n">Oxboys</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">Ocasion</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span> <span class="o">+</span> <span class="nf">geom_boxplot</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">)</span>
+<span class="n">boybox</span> <span class="o">+</span> <span class="nf">geom_line</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">group</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">),</span> <span class="n">colour</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
 </pre></div>
 
 
@@ -269,9 +268,9 @@ boybox <span class="o">+</span> geom_line<span class="p">(</span>aes<span class=
 <p><code>geom_text()</code>可在指定点处添加标签， 需要指定label参数，hjust和vjust属性控制文本横纵位置，angel控制文本的旋转</p>
 <p><code>geom_title()</code>绘制色深图或水平图</p>
 <p><code>geom_boxplot = stat_boxplot + geom_boxplot</code>绘制箱线图，在类别型变量时比较有用，对于连续变量，经过封箱处理后也可使用</p>
-<div class="highlight"><pre><span></span>library(plyr)
-qplot(carat, depth, data = diamonds, geom = &quot;boxplot&quot;, 
-group = round_any(carat, 0.1, floor), xlim = c(0, 3))
+<div class="highlight"><pre><span></span><span class="n">library</span><span class="p">(</span><span class="n">plyr</span><span class="p">)</span>
+<span class="n">qplot</span><span class="p">(</span><span class="n">carat</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="k">data</span> <span class="o">=</span> <span class="n">diamonds</span><span class="p">,</span> <span class="n">geom</span> <span class="o">=</span> <span class="ss">&quot;boxplot&quot;</span><span class="p">,</span> 
+<span class="k">group</span> <span class="o">=</span> <span class="n">round_any</span><span class="p">(</span><span class="n">carat</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">,</span> <span class="n">floor</span><span class="p">),</span> <span class="n">xlim</span> <span class="o">=</span> <span class="k">c</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 </pre></div>
 
 
@@ -279,48 +278,48 @@ group = round_any(carat, 0.1, floor), xlim = c(0, 3))
 <p><code>geom_jitter = position_jitter + geom_point</code>通过添加随机噪声来避免点之间的相互遮盖的问题</p>
 <h2>解决遮盖问题</h2>
 <p>用更小的点来绘制散点图</p>
-<div class="highlight"><pre><span></span>df <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>x <span class="o">=</span> rnorm<span class="p">(</span><span class="m">2000</span><span class="p">),</span> y <span class="o">=</span> rnorm<span class="p">(</span><span class="m">2000</span><span class="p">))</span>
-norm <span class="o">&lt;-</span> ggplot<span class="p">(</span>df<span class="p">,</span> aes<span class="p">(</span>x<span class="p">,</span> y<span class="p">))</span>
-norm <span class="o">+</span> geom_point<span class="p">()</span>
-norm <span class="o">+</span> geom_point<span class="p">(</span>shape <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
-norm <span class="o">+</span> geom_point<span class="p">(</span>shape <span class="o">=</span> <span class="s">&quot;.&quot;</span><span class="p">)</span> <span class="c1">#用“.”来作为图中的点</span>
+<div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">2000</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">2000</span><span class="p">))</span>
+<span class="n">norm</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="n">norm</span> <span class="o">+</span> <span class="nf">geom_point</span><span class="p">()</span>
+<span class="n">norm</span> <span class="o">+</span> <span class="nf">geom_point</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
+<span class="n">norm</span> <span class="o">+</span> <span class="nf">geom_point</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="s">&quot;.&quot;</span><span class="p">)</span> <span class="c1">#用“.”来作为图中的点</span>
 </pre></div>
 
 
 <p>用透明度来表示重叠程度</p>
-<div class="highlight"><pre><span></span>norm + geom_point(colour = &quot;black&quot;, alpha = 1/3)
-norm + geom_point(colour = &quot;black&quot;, alpha = 1/5)
-norm + geom_point(colour = &quot;black&quot;, alpha = 1/10)
+<div class="highlight"><pre><span></span><span class="n">norm</span> <span class="o">+</span> <span class="n">geom_point</span><span class="p">(</span><span class="n">colour</span> <span class="o">=</span> <span class="ss">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">norm</span> <span class="o">+</span> <span class="n">geom_point</span><span class="p">(</span><span class="n">colour</span> <span class="o">=</span> <span class="ss">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">norm</span> <span class="o">+</span> <span class="n">geom_point</span><span class="p">(</span><span class="n">colour</span> <span class="o">=</span> <span class="ss">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
 
 <p>給数据添加扰动减少重叠</p>
-<div class="highlight"><pre><span></span>td <span class="o">&lt;-</span> ggplot<span class="p">(</span>diamonds<span class="p">,</span> aes<span class="p">(</span><span class="kp">table</span><span class="p">,</span> depth<span class="p">))</span> <span class="o">+</span> xlim<span class="p">(</span><span class="m">50</span><span class="p">,</span> <span class="m">70</span><span class="p">)</span> <span class="o">+</span> ylim<span class="p">(</span><span class="m">50</span><span class="p">,</span> <span class="m">70</span><span class="p">)</span>
-td <span class="o">+</span> geom_point<span class="p">()</span>
-td <span class="o">+</span> geom_jitter<span class="p">()</span> <span class="c1">#默认扰动</span>
-jit <span class="o">&lt;-</span> position_jitter<span class="p">(</span>width <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="c1">#添加横向扰动</span>
-td <span class="o">+</span> geom_jitter<span class="p">(</span>position <span class="o">=</span> jit<span class="p">)</span>
-td <span class="o">+</span> geom_jitter<span class="p">(</span>position <span class="o">=</span> jit<span class="p">,</span> colour <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">10</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">td</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">(</span><span class="n">diamonds</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">depth</span><span class="p">))</span> <span class="o">+</span> <span class="nf">xlim</span><span class="p">(</span><span class="m">50</span><span class="p">,</span> <span class="m">70</span><span class="p">)</span> <span class="o">+</span> <span class="nf">ylim</span><span class="p">(</span><span class="m">50</span><span class="p">,</span> <span class="m">70</span><span class="p">)</span>
+<span class="n">td</span> <span class="o">+</span> <span class="nf">geom_point</span><span class="p">()</span>
+<span class="n">td</span> <span class="o">+</span> <span class="nf">geom_jitter</span><span class="p">()</span> <span class="c1">#默认扰动</span>
+<span class="n">jit</span> <span class="o">&lt;-</span> <span class="nf">position_jitter</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="c1">#添加横向扰动</span>
+<span class="n">td</span> <span class="o">+</span> <span class="nf">geom_jitter</span><span class="p">(</span><span class="n">position</span> <span class="o">=</span> <span class="n">jit</span><span class="p">)</span>
+<span class="n">td</span> <span class="o">+</span> <span class="nf">geom_jitter</span><span class="p">(</span><span class="n">position</span> <span class="o">=</span> <span class="n">jit</span><span class="p">,</span> <span class="n">colour</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">10</span><span class="p">)</span>
 </pre></div>
 
 
 <p>给数据封箱</p>
 <div class="highlight"><pre><span></span><span class="c1">#bins控制箱的数量， binwidth控制箱的大小</span>
-d <span class="o">&lt;-</span> ggplot<span class="p">(</span>diamonds<span class="p">,</span> aes<span class="p">(</span>carat<span class="p">,</span> price<span class="p">))</span> <span class="o">+</span> xlim<span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span> <span class="o">+</span> theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span>
-d <span class="o">+</span> stat_bin2d<span class="p">()</span>
-d <span class="o">+</span> stat_bin2d<span class="p">(</span>bins <span class="o">=</span> <span class="m">10</span><span class="p">)</span>
-d <span class="o">+</span> stat_bin2d<span class="p">(</span>binwidth <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.02</span><span class="p">,</span> <span class="m">200</span><span class="p">))</span>
-d <span class="o">+</span> stat_binhex<span class="p">(</span>bins <span class="o">=</span> <span class="m">10</span><span class="p">)</span>
-d <span class="o">+</span> stat_binhex<span class="p">(</span>binwidth <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.02</span><span class="p">,</span> <span class="m">200</span><span class="p">))</span>
+<span class="n">d</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">(</span><span class="n">diamonds</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">carat</span><span class="p">,</span> <span class="n">price</span><span class="p">))</span> <span class="o">+</span> <span class="nf">xlim</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span> <span class="o">+</span> <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">+</span> <span class="nf">stat_bin2d</span><span class="p">()</span>
+<span class="n">d</span> <span class="o">+</span> <span class="nf">stat_bin2d</span><span class="p">(</span><span class="n">bins</span> <span class="o">=</span> <span class="m">10</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">+</span> <span class="nf">stat_bin2d</span><span class="p">(</span><span class="n">binwidth</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.02</span><span class="p">,</span> <span class="m">200</span><span class="p">))</span>
+<span class="n">d</span> <span class="o">+</span> <span class="nf">stat_binhex</span><span class="p">(</span><span class="n">bins</span> <span class="o">=</span> <span class="m">10</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">+</span> <span class="nf">stat_binhex</span><span class="p">(</span><span class="n">binwidth</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.02</span><span class="p">,</span> <span class="m">200</span><span class="p">))</span>
 </pre></div>
 
 
 <p>使用stat_density2d作二维密度估计，并添加等高线</p>
-<div class="highlight"><pre><span></span>d <span class="o">&lt;-</span> ggplot<span class="p">(</span>diamonds<span class="p">,</span> aes<span class="p">(</span>carat<span class="p">,</span> price<span class="p">))</span> <span class="o">+</span> xlim<span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span> <span class="o">+</span> theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span>
-d <span class="o">+</span> geom_point<span class="p">()</span> <span class="o">+</span> geom_density2d<span class="p">()</span>
-d <span class="o">+</span> stat_density2d<span class="p">(</span>geom <span class="o">=</span> <span class="s">&quot;point&quot;</span><span class="p">,</span> aes<span class="p">(</span>size <span class="o">=</span> <span class="m">..</span>density..<span class="p">),</span> contour <span class="o">=</span> <span class="bp">F</span><span class="p">)</span> <span class="o">+</span> scale_size_area<span class="p">()</span>
-d <span class="o">+</span> stat_density2d<span class="p">(</span>geom <span class="o">=</span> <span class="s">&quot;tile&quot;</span><span class="p">,</span> aes<span class="p">(</span>fill <span class="o">=</span> <span class="m">..</span>density..<span class="p">),</span> contour <span class="o">=</span> <span class="bp">F</span><span class="p">)</span>
-last_plot<span class="p">()</span> <span class="o">+</span> scale_fill_gradient<span class="p">(</span>limits <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">1e-5</span><span class="p">,</span> <span class="m">8e-4</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">(</span><span class="n">diamonds</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">carat</span><span class="p">,</span> <span class="n">price</span><span class="p">))</span> <span class="o">+</span> <span class="nf">xlim</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span> <span class="o">+</span> <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">+</span> <span class="nf">geom_point</span><span class="p">()</span> <span class="o">+</span> <span class="nf">geom_density2d</span><span class="p">()</span>
+<span class="n">d</span> <span class="o">+</span> <span class="nf">stat_density2d</span><span class="p">(</span><span class="n">geom</span> <span class="o">=</span> <span class="s">&quot;point&quot;</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="n">..density..</span><span class="p">),</span> <span class="n">contour</span> <span class="o">=</span> <span class="bp">F</span><span class="p">)</span> <span class="o">+</span> <span class="nf">scale_size_area</span><span class="p">()</span>
+<span class="n">d</span> <span class="o">+</span> <span class="nf">stat_density2d</span><span class="p">(</span><span class="n">geom</span> <span class="o">=</span> <span class="s">&quot;tile&quot;</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="n">..density..</span><span class="p">),</span> <span class="n">contour</span> <span class="o">=</span> <span class="bp">F</span><span class="p">)</span>
+<span class="nf">last_plot</span><span class="p">()</span> <span class="o">+</span> <span class="nf">scale_fill_gradient</span><span class="p">(</span><span class="n">limits</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">1e-5</span><span class="p">,</span> <span class="m">8e-4</span><span class="p">))</span>
 </pre></div>
 
 
@@ -331,39 +330,39 @@ last_plot<span class="p">()</span> <span class="o">+</span> scale_fill_gradient<
 <p><code>geom_react</code>强调图形中感兴趣区域</p>
 <p><code>geom_line</code>，<code>geom_path</code>，<code>geom_segment</code>添加直线，都有一个arrow参数，可以在线上放置一个箭头</p>
 <p>*实例</p>
-<div class="highlight"><pre><span></span>unemp <span class="o">&lt;-</span> qplot<span class="p">(</span><span class="kp">date</span><span class="p">,</span> unemploy<span class="p">,</span> data <span class="o">=</span> economics<span class="p">,</span> geom 
-<span class="o">=</span> <span class="s">&quot;line&quot;</span><span class="p">,</span> xlab <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span> ylab <span class="o">=</span> <span class="s">&quot;No.unemployed(1000s))&quot;</span>
-presidentia <span class="o">&lt;-</span> presidential<span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">),</span> <span class="p">]</span>
-yrng <span class="o">&lt;-</span> <span class="kp">range</span><span class="p">(</span>economics<span class="o">$</span>unemploy<span class="p">)</span>
-xrng <span class="o">&lt;-</span> <span class="kp">range</span>（economics<span class="o">$</span><span class="kp">date</span><span class="p">)</span>
-unemp <span class="o">+</span>geom_vline<span class="p">(</span>aes<span class="p">(</span>xintercept <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>start<span class="p">)),</span> data <span class="o">=</span> presidential<span class="p">)</span> <span class="c1">#添加垂直线，各个总统任期起始年</span>
-<span class="kn">library</span><span class="p">(</span><span class="kp">scale</span><span class="p">)</span>
-unemp <span class="o">+</span> geom_rect<span class="p">(</span>aes<span class="p">(</span><span class="kc">NULL</span><span class="p">,</span> <span class="kc">NULL</span><span class="p">,</span> xmin <span class="o">=</span> start<span class="p">,</span> xmax <span class="o">=</span> end<span class="p">,</span> fill <span class="o">=</span> party<span class="p">),</span> ymin <span class="o">=</span> yrng<span class="p">[</span><span class="m">1</span><span class="p">],</span> ymax <span class="o">=</span> yrng<span class="p">[</span><span class="m">2</span><span class="p">],</span>
-data <span class="o">=</span> presidential<span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.2</span><span class="p">)</span> <span class="o">+</span> scale_fill_manule<span class="p">(</span>values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span><span class="p">)</span> <span class="c1">#强调感兴趣的区间，用蓝色红色交替显示</span>
-last_plot<span class="p">()</span> <span class="o">+</span> geom_text<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> start<span class="p">,</span> y <span class="o">=</span> yrng<span class="p">[</span><span class="m">1</span><span class="p">],</span> label <span class="o">=</span> name<span class="p">),</span> data <span class="o">=</span> presidential<span class="p">,</span> size <span class="o">=</span> <span class="m">3</span><span class="p">)</span><span class="c1">#添加文字标签</span>
+<div class="highlight"><pre><span></span><span class="nv">unemp</span> <span class="o">&lt;-</span> <span class="nv">qplot</span><span class="ss">(</span><span class="nv">date</span>, <span class="nv">unemploy</span>, <span class="nv">data</span> <span class="o">=</span> <span class="nv">economics</span>, <span class="nv">geom</span> 
+<span class="o">=</span> <span class="s2">&quot;</span><span class="s">line</span><span class="s2">&quot;</span>, <span class="nv">xlab</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>, <span class="nv">ylab</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">No.unemployed(1000s))</span><span class="s2">&quot;</span>
+<span class="nv">presidentia</span> <span class="o">&lt;-</span> <span class="nv">presidential</span>[<span class="o">-</span><span class="ss">(</span><span class="mi">1</span>:<span class="mi">3</span><span class="ss">)</span>, ]
+<span class="nv">yrng</span> <span class="o">&lt;-</span> <span class="nv">range</span><span class="ss">(</span><span class="nv">economics</span>$<span class="nv">unemploy</span><span class="ss">)</span>
+<span class="nv">xrng</span> <span class="o">&lt;-</span> <span class="nv">range</span>（<span class="nv">economics</span><span class="mh">$da</span><span class="nv">te</span><span class="ss">)</span>
+<span class="nv">unemp</span> <span class="o">+</span><span class="nv">geom_vline</span><span class="ss">(</span><span class="nv">aes</span><span class="ss">(</span><span class="nv">xintercept</span> <span class="o">=</span> <span class="nv">as</span>.<span class="nv">numeric</span><span class="ss">(</span><span class="nv">start</span><span class="ss">))</span>, <span class="nv">data</span> <span class="o">=</span> <span class="nv">presidential</span><span class="ss">)</span> #添加垂直线，各个总统任期起始年
+<span class="nv">library</span><span class="ss">(</span><span class="nv">scale</span><span class="ss">)</span>
+<span class="nv">unemp</span> <span class="o">+</span> <span class="nv">geom_rect</span><span class="ss">(</span><span class="nv">aes</span><span class="ss">(</span><span class="nv">NULL</span>, <span class="nv">NULL</span>, <span class="nv">xmin</span> <span class="o">=</span> <span class="nv">start</span>, <span class="nv">xmax</span> <span class="o">=</span> <span class="k">end</span>, <span class="nv">fill</span> <span class="o">=</span> <span class="nv">party</span><span class="ss">)</span>, <span class="nv">ymin</span> <span class="o">=</span> <span class="nv">yrng</span>[<span class="mi">1</span>], <span class="nv">ymax</span> <span class="o">=</span> <span class="nv">yrng</span>[<span class="mi">2</span>],
+<span class="nv">data</span> <span class="o">=</span> <span class="nv">presidential</span>, <span class="nv">alpha</span> <span class="o">=</span> <span class="mi">0</span>.<span class="mi">2</span><span class="ss">)</span> <span class="o">+</span> <span class="nv">scale_fill_manule</span><span class="ss">(</span><span class="nv">values</span> <span class="o">=</span> <span class="nv">c</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">blue</span><span class="s2">&quot;</span>, <span class="s2">&quot;</span><span class="s">red</span><span class="s2">&quot;</span><span class="ss">)</span> #强调感兴趣的区间，用蓝色红色交替显示
+<span class="nv">last_plot</span><span class="ss">()</span> <span class="o">+</span> <span class="nv">geom_text</span><span class="ss">(</span><span class="nv">aes</span><span class="ss">(</span><span class="nv">x</span> <span class="o">=</span> <span class="nv">start</span>, <span class="nv">y</span> <span class="o">=</span> <span class="nv">yrng</span>[<span class="mi">1</span>], <span class="nv">label</span> <span class="o">=</span> <span class="nv">name</span><span class="ss">)</span>, <span class="nv">data</span> <span class="o">=</span> <span class="nv">presidential</span>, <span class="nv">size</span> <span class="o">=</span> <span class="mi">3</span><span class="ss">)</span>#添加文字标签
 </pre></div>
 
 
 <h2>含权数据</h2>
 <p>用点的大小来表示权重，即size属性
 实例：</p>
-<div class="highlight"><pre><span></span>qplot(percwhite, percbelowpoverty, data = midwest)
-#用人口数量做权重
-qplot(percwhite, percbelowpoverty, data = midwest, 
-size = poptotal / 1e6) + scale_size_area(&quot;Population\n(millions)&quot;, breaks = c(0.5, 1, 2, 4))
-#用面积做权重
-qplot(percwhite, percbelowpoverty, data = midwest, 
-size = area) + scale_size_area()
+<div class="highlight"><pre><span></span><span class="n">qplot</span><span class="p">(</span><span class="n">percwhite</span><span class="p">,</span> <span class="n">percbelowpoverty</span><span class="p">,</span> <span class="k">data</span> <span class="o">=</span> <span class="n">midwest</span><span class="p">)</span>
+<span class="o">#</span><span class="err">用人口数量做权重</span>
+<span class="n">qplot</span><span class="p">(</span><span class="n">percwhite</span><span class="p">,</span> <span class="n">percbelowpoverty</span><span class="p">,</span> <span class="k">data</span> <span class="o">=</span> <span class="n">midwest</span><span class="p">,</span> 
+<span class="k">size</span> <span class="o">=</span> <span class="n">poptotal</span> <span class="o">/</span> <span class="mi">1</span><span class="n">e6</span><span class="p">)</span> <span class="o">+</span> <span class="n">scale_size_area</span><span class="p">(</span><span class="ss">&quot;Population\n(millions)&quot;</span><span class="p">,</span> <span class="n">breaks</span> <span class="o">=</span> <span class="k">c</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="o">#</span><span class="err">用面积做权重</span>
+<span class="n">qplot</span><span class="p">(</span><span class="n">percwhite</span><span class="p">,</span> <span class="n">percbelowpoverty</span><span class="p">,</span> <span class="k">data</span> <span class="o">=</span> <span class="n">midwest</span><span class="p">,</span> 
+<span class="k">size</span> <span class="o">=</span> <span class="n">area</span><span class="p">)</span> <span class="o">+</span> <span class="n">scale_size_area</span><span class="p">()</span>
 </pre></div>
 
 
 <p>考虑权重作为拟合结果</p>
-<div class="highlight"><pre><span></span>lm_smooth <span class="o">&lt;-</span> geom_smooth<span class="p">(</span>method <span class="o">=</span> lm<span class="p">,</span> size <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">lm_smooth</span> <span class="o">&lt;-</span> <span class="nf">geom_smooth</span><span class="p">(</span><span class="n">method</span> <span class="o">=</span> <span class="n">lm</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
 <span class="c1">#不考虑人口密度作为权重</span>
-qplot<span class="p">(</span>percwhite<span class="p">,</span> percbelowpoverty<span class="p">,</span> data <span class="o">=</span> midwest<span class="p">)</span> <span class="o">+</span> lm_smooth
+<span class="nf">qplot</span><span class="p">(</span><span class="n">percwhite</span><span class="p">,</span> <span class="n">percbelowpoverty</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">midwest</span><span class="p">)</span> <span class="o">+</span> <span class="n">lm_smooth</span>
 <span class="c1">#考虑人口密度作为权重</span>
-qplot<span class="p">(</span>percwhite<span class="p">,</span> percbelowpoverty<span class="p">,</span> data <span class="o">=</span> midwest<span class="p">,</span> weight <span class="o">=</span> popdensity<span class="p">,</span> 
-size <span class="o">=</span> popdensity<span class="p">)</span> <span class="o">+</span> lm_smooth
+<span class="nf">qplot</span><span class="p">(</span><span class="n">percwhite</span><span class="p">,</span> <span class="n">percbelowpoverty</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">midwest</span><span class="p">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">popdensity</span><span class="p">,</span> 
+<span class="n">size</span> <span class="o">=</span> <span class="n">popdensity</span><span class="p">)</span> <span class="o">+</span> <span class="n">lm_smooth</span>
 </pre></div>
 
 
@@ -383,13 +382,13 @@ size <span class="o">=</span> popdensity<span class="p">)</span> <span class="o"
 <p>标度通用的参数</p>
 <p><code>name</code>设置坐标轴或者图例上出现的标签</p>
 <p>例子：</p>
-<div class="highlight"><pre><span></span>p <span class="o">&lt;-</span> qplot<span class="p">(</span>cty<span class="p">,</span> hwy<span class="p">,</span> data <span class="o">=</span> mpg<span class="p">,</span> colour <span class="o">=</span> displ<span class="p">)</span>
-p
-p <span class="o">+</span> scale_x_continuous<span class="p">(</span>name <span class="o">=</span> <span class="s">&quot;City mpg&quot;</span><span class="p">)</span>
-p <span class="o">+</span> xlab<span class="p">(</span><span class="s">&quot;City mpg&quot;</span><span class="p">)</span> <span class="c1">#用xlab()更便捷</span>
-p <span class="o">+</span> ylab<span class="p">(</span><span class="s">&quot;Highyway mpg&quot;</span><span class="p">)</span>
-p <span class="o">+</span> labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&quot;City mpg&quot;</span><span class="p">,</span> y <span class="o">=</span> <span class="s">&quot;Highway&quot;</span><span class="p">,</span> colour <span class="o">=</span> <span class="s">&quot;Displacement&quot;</span><span class="p">)</span>
-p <span class="o">+</span> xlab<span class="p">(</span><span class="kp">expression</span><span class="p">(</span>frac<span class="p">(</span>miles<span class="p">,</span> gallon<span class="p">)))</span>
+<div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">&lt;-</span> <span class="nf">qplot</span><span class="p">(</span><span class="n">cty</span><span class="p">,</span> <span class="n">hwy</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">mpg</span><span class="p">,</span> <span class="n">colour</span> <span class="o">=</span> <span class="n">displ</span><span class="p">)</span>
+<span class="n">p</span>
+<span class="n">p</span> <span class="o">+</span> <span class="nf">scale_x_continuous</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;City mpg&quot;</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">+</span> <span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;City mpg&quot;</span><span class="p">)</span> <span class="c1">#用xlab()更便捷</span>
+<span class="n">p</span> <span class="o">+</span> <span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;Highyway mpg&quot;</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">+</span> <span class="nf">labs</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s">&quot;City mpg&quot;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;Highway&quot;</span><span class="p">,</span> <span class="n">colour</span> <span class="o">=</span> <span class="s">&quot;Displacement&quot;</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">+</span> <span class="nf">xlab</span><span class="p">(</span><span class="nf">expression</span><span class="p">(</span><span class="nf">frac</span><span class="p">(</span><span class="n">miles</span><span class="p">,</span> <span class="n">gallon</span><span class="p">)))</span>
 </pre></div>
 
 

@@ -74,7 +74,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -115,23 +114,23 @@
 <p>这本书从构建最基本的向量开始，自己定义了向量运算法则，再在此基础上定义了一系列力，包括恒力、摩擦力、流体阻力、万有引力等，我
 跟着作者的脉络练习了一下，感觉似乎在重新学习荒废依旧的物理。下面是这个练习的一个成果：</p>
 <p>我用它模拟了万有引力，没有处理物体之间的碰撞，但处理了与屏幕边缘的碰撞：</p>
-<p><img alt="forcelib" src="http://i.imgur.com/QmnLw6w.gif" /></p>
+<p><img alt="forcelib" src="http://i.imgur.com/QmnLw6w.gif"></p>
 <h3>粒子系统</h3>
 <p>构建了力后，最直接的运用就是把它运用到多个粒子上，由于<code>draw()</code>函数独有的特性，它能以一定频率更新绘图设备，因此定义一个变力也很容易，加上自己绘制的烟雾贴图，能很简单的模拟出诸如烟雾、火焰的粒子特效：</p>
-<p><img alt="smoke" src="http://i.imgur.com/663ybtM.gif" /></p>
+<p><img alt="smoke" src="http://i.imgur.com/663ybtM.gif"></p>
 <p>图上圆形白色点指出了当前这个粒子系统的受到的力的方向和大小（越远越大），可以看到烟雾会随力的大小和方向而产生流速的变化。
 如果把贴图绘制的更加精巧，甚至能随时间而改变形状（perlin噪声实现），那么烟雾的效果会很真实！</p>
 <h3>细胞自动机</h3>
 <p>这也是本书最吸引我的地方之一，只为一个简单的元素定义几套规则，那么在时间的演变下，这些元素的集合能展现十分复杂的行为，有些时候
 这些行为似乎很难预测，无不让人感叹魔幻。</p>
 <p>细胞自动机就是一个典型的复杂系统，在一些初始条件下，细胞自动机能形成许多美丽而复杂的分形图案：</p>
-<p><img alt="1dca" src="http://i.imgur.com/MoVscCt.gif" /></p>
+<p><img alt="1dca" src="http://i.imgur.com/MoVscCt.gif"></p>
 <p>二维的细胞自动机更加不可捉摸：</p>
-<p><img alt="2dca" src="http://i.imgur.com/ahKllxI.gif" /></p>
+<p><img alt="2dca" src="http://i.imgur.com/ahKllxI.gif"></p>
 <h3>遗传算法</h3>
 <p>遗传算法是一种随机算法，它模拟了大自然的选择原理，能够让符合一定规则的元素在“交配池”中或得更大的传播下一代的机会，因此这种算法常常能够用来做一些数值上的优化。</p>
 <p>这本书给出了一个非常有趣的例子，让遗传算法来猜一句话，只要参数设置得当，通常几秒内算法就会达到收敛，真是“Deus ex machina”:</p>
-<p><img alt="ga" src="http://i.imgur.com/SPhAdDY.gif" /></p>
+<p><img alt="ga" src="http://i.imgur.com/SPhAdDY.gif"></p>
 <p>后记：
 我是寒假的时候看的这本书，最近突然接触到一种叫"sugarscape"的人工社会模型，它类似于细胞自动机，给每个元素定义了一套规则来模拟一个群体的演化，我突然有了一种要用processing实现这个模型的决心，于是便开始动手写代码，目前原型已经基本完成，也能够实现这个理论所描述的一些现象，希望能够让这个模型更加漂亮！</p>
     </article>

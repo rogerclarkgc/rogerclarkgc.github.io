@@ -74,7 +74,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -126,7 +125,7 @@
 <p>有了这两大神器，事情就简单了很多，Selenium管Phantomjs这类解析器叫Webdriver，它支持多种IE、Chrome、FireFox、Phamtomjs多种解析器，因此现在要做的就是用Selenium控制一个Webdriver来进行用户登录名、密码的输入操作，在登录完成后再搞到登录的cookies，就大功告成了！</p>
 <h2>用requests库构造请求</h2>
 <p>由于我实际要利用新浪微博的搜索功能来构造一个含有搜索关键词的URL来获取搜索结果，因此我使用requests库来构造请求，构造URL比较简单，直接通过浏览器多尝试几次就可以弄清如何构造一个URL，一个我需要的URL是这样的：</p>
-<div class="highlight"><pre><span></span>http://s.weibo.com/weibo/%25E5%25A4%25A7%25E7%2586%258A%25E7%258C%25AB&amp;scope=ori&amp;suball=1&amp;timescope=custom:2015-8-01:2015-8-31&amp;page=15
+<div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">s</span><span class="p">.</span><span class="n">weibo</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">weibo</span><span class="o">/%</span><span class="mi">25</span><span class="n">E5</span><span class="o">%</span><span class="mi">25</span><span class="n">A4</span><span class="o">%</span><span class="mi">25</span><span class="n">A7</span><span class="o">%</span><span class="mi">25</span><span class="n">E7</span><span class="o">%</span><span class="mi">2586</span><span class="o">%</span><span class="mi">258</span><span class="n">A</span><span class="o">%</span><span class="mi">25</span><span class="n">E7</span><span class="o">%</span><span class="mi">258</span><span class="k">C</span><span class="o">%</span><span class="mi">25</span><span class="n">AB</span><span class="o">&amp;</span><span class="k">scope</span><span class="o">=</span><span class="n">ori</span><span class="o">&amp;</span><span class="n">suball</span><span class="o">=</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">timescope</span><span class="o">=</span><span class="n">custom</span><span class="p">:</span><span class="mi">2015</span><span class="o">-</span><span class="mi">8</span><span class="o">-</span><span class="mi">01</span><span class="p">:</span><span class="mi">2015</span><span class="o">-</span><span class="mi">8</span><span class="o">-</span><span class="mi">31</span><span class="o">&amp;</span><span class="n">page</span><span class="o">=</span><span class="mi">15</span>
 </pre></div>
 
 
@@ -143,12 +142,12 @@
 <p>因为要使用微博的搜索功能，必须是登录状态，因此，需要搞清楚在登录中使用了哪些cookies，只要搞清楚这一点，可以在使用<code>Session.get</code>方法时传入cookies就能够以登录状态进行搜索了。</p>
 <p>为了或得新浪微博登录时的cookies，我逐个测试了webdriver在登录页面时返回的所有cookies，最终发现了一个名为'SUB'的cookies是问题的关键，只要这个cookies存在，就能以登录的状态进行操作。</p>
 <p><code>Session.get</code>方法可以传入一个以字典形式构造的cookies，因此这个请求过程改成这样：</p>
-<div class="highlight"><pre><span></span>cookie = {&#39;SUB&#39;:COOKIES}
-s = Session()
-result = s.get(url=&#39;some url&#39;, 
-               cookies=cookie,
-               headers=header)
-page = result.text
+<div class="highlight"><pre><span></span><span class="n">cookie</span> <span class="o">=</span> <span class="err">{</span><span class="s1">&#39;SUB&#39;</span><span class="p">:</span><span class="n">COOKIES</span><span class="err">}</span>
+<span class="n">s</span> <span class="o">=</span> <span class="k">Session</span><span class="p">()</span>
+<span class="k">result</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;some url&#39;</span><span class="p">,</span> 
+               <span class="n">cookies</span><span class="o">=</span><span class="n">cookie</span><span class="p">,</span>
+               <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">)</span>
+<span class="n">page</span> <span class="o">=</span> <span class="k">result</span><span class="p">.</span><span class="nb">text</span>
 </pre></div>
 
 
@@ -160,7 +159,7 @@ page = result.text
 <p>解析后的内容以列表的形式存储，每条微博都是列表中的一个元素，而元素以字典的形式组织，刚好符合mongodb的bson存储格式。</p>
 <h2>用mongodb存储内容</h2>
 <p>这是第二次用mongodb，这个数据库很简单，部署也方便，只需要：</p>
-<div class="highlight"><pre><span></span>mongod -dbpath YOUR DATABASE PATH
+<div class="highlight"><pre><span></span><span class="n">mongod</span> <span class="o">-</span><span class="n">dbpath</span> <span class="n">YOUR</span> <span class="k">DATABASE</span> <span class="n">PATH</span>
 </pre></div>
 
 
@@ -175,8 +174,8 @@ page = result.text
 
 <span class="k">class</span> <span class="nc">workThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
     <span class="c1"># 继承自thread对象</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stop</span> <span class="o">=</span> <span class="bp">False</span>
 
@@ -193,14 +192,14 @@ page = result.text
 
 
 <p>这样就创建了一个继承自的<code>threading.thread</code>的子类，这个子类通过自有的<code>start()</code>方法运行一个进程，通过<code>stop</code>方法来终止一个进程，具体使用是这样的：</p>
-<div class="highlight"><pre><span></span>thread = workThread()
-thread.start()
-thread.join(timeout) # 让线程等待一段时间
-if thread.isAlive(): # 如果一段时间内没完成则终止线程
-    thread.stop()
-    raise TimeoutError
-else:
-    return thread.result
+<div class="highlight"><pre><span></span><span class="nv">thread</span> <span class="o">=</span> <span class="nv">workThread</span><span class="ss">()</span>
+<span class="nv">thread</span>.<span class="nv">start</span><span class="ss">()</span>
+<span class="nv">thread</span>.<span class="nv">join</span><span class="ss">(</span><span class="nb">timeout</span><span class="ss">)</span> # 让线程等待一段时间
+<span class="k">if</span> <span class="nv">thread</span>.<span class="nv">isAlive</span><span class="ss">()</span>: # 如果一段时间内没完成则终止线程
+    <span class="nv">thread</span>.<span class="nv">stop</span><span class="ss">()</span>
+    <span class="nv">raise</span> <span class="nv">TimeoutError</span>
+<span class="k">else</span>:
+    <span class="k">return</span> <span class="nv">thread</span>.<span class="nb">result</span>
 </pre></div>
 
 
@@ -224,43 +223,43 @@ else:
 </ul>
 <h2>运行效果</h2>
 <p>我在写爬虫时没有考虑到各个模块之间的消息传递问题，只是把任务消息输出的屏幕上，目前正在开发一个日志模块用来写入消息日志。不过爬虫运行还算稳定，当前运行的效果是这样的。</p>
-<div class="highlight"><pre><span></span>###获取的博主id为2428831331, 这是第10个微博
-此次抓取需要登录
-获取roger的COOKIES中...
-已连接Mongodb!
-获取的cookies的时间是2017-07-28 09:20:58, 拥有者为roger
-开始获取页面...
-抓取http://weibo.com/p/1005052428831331/info?mod=pedit_more页面成功
-###等待2秒...###
-###选择towa的账户进行登录###
-###获取的博主id为5541652987, 这是第11个微博
-此次抓取需要登录
-获取towa的COOKIES中...
-已连接Mongodb!
-获取的cookies的时间是2017-07-28 09:22:48, 拥有者为towa
-开始获取页面...
-抓取http://weibo.com/p/1005055541652987/info?mod=pedit_more页面成功
-已连接Mongodb, collection:weibo
-###一共有11条微博将插入数据库###
-已插入微博数据到数据库，集合：weibo，插入时间为：2017-07-28 12:11:55
-已插入微博数据到数据库，集合：weibo，插入时间为：2017-07-28 12:11:55
-已插入微博数据到数据库，集合：weibo，插入时间为：2017-07-28 12:11:55
-已插入微博数据到数据库，集合：weibo，插入时间为：2017-07-28 12:11:55
-已插入微博数据到数据库，集合：weibo，插入时间为：2017-07-28 12:11:55
-已插入微博数据到数据库，集合：weibo，插入时间为：2017-07-28 12:11:55
-出现编码问题，跳过插入此条微博到数据库
-出现编码问题，跳过插入此条微博到数据库
-已插入微博数据到数据库，集合：weibo，插入时间为：2017-07-28 12:11:55
-已插入微博数据到数据库，集合：weibo，插入时间为：2017-07-28 12:11:55
-已插入微博数据到数据库，集合：weibo，插入时间为：2017-07-28 12:11:55
-###插入操作，成功：9，失败：2###
-##############开始获取：第15页搜索结果##############
-###等待6秒...###
-此次抓取需要登录
-获取roger的COOKIES中...
-已连接Mongodb!
-获取的cookies的时间是2017-07-28 09:20:58, 拥有者为roger
-开始获取页面...
+<div class="highlight"><pre><span></span><span class="o">###</span><span class="err">获取的博主</span><span class="n">id</span><span class="err">为</span><span class="mi">2428831331</span><span class="p">,</span> <span class="err">这是第</span><span class="mi">10</span><span class="err">个微博</span>
+<span class="err">此次抓取需要登录</span>
+<span class="err">获取</span><span class="n">roger</span><span class="err">的</span><span class="n">COOKIES</span><span class="err">中</span><span class="p">...</span>
+<span class="err">已连接</span><span class="n">Mongodb</span><span class="o">!</span>
+<span class="err">获取的</span><span class="n">cookies</span><span class="err">的时间是</span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">28</span> <span class="mi">09</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">58</span><span class="p">,</span> <span class="err">拥有者为</span><span class="n">roger</span>
+<span class="err">开始获取页面</span><span class="p">...</span>
+<span class="err">抓取</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">weibo</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">p</span><span class="o">/</span><span class="mi">1005052428831331</span><span class="o">/</span><span class="n">info</span><span class="o">?</span><span class="k">mod</span><span class="o">=</span><span class="n">pedit_more</span><span class="err">页面成功</span>
+<span class="o">###</span><span class="err">等待</span><span class="mi">2</span><span class="err">秒</span><span class="p">...</span><span class="o">###</span>
+<span class="o">###</span><span class="err">选择</span><span class="n">towa</span><span class="err">的账户进行登录</span><span class="o">###</span>
+<span class="o">###</span><span class="err">获取的博主</span><span class="n">id</span><span class="err">为</span><span class="mi">5541652987</span><span class="p">,</span> <span class="err">这是第</span><span class="mi">11</span><span class="err">个微博</span>
+<span class="err">此次抓取需要登录</span>
+<span class="err">获取</span><span class="n">towa</span><span class="err">的</span><span class="n">COOKIES</span><span class="err">中</span><span class="p">...</span>
+<span class="err">已连接</span><span class="n">Mongodb</span><span class="o">!</span>
+<span class="err">获取的</span><span class="n">cookies</span><span class="err">的时间是</span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">28</span> <span class="mi">09</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mi">48</span><span class="p">,</span> <span class="err">拥有者为</span><span class="n">towa</span>
+<span class="err">开始获取页面</span><span class="p">...</span>
+<span class="err">抓取</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">weibo</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">p</span><span class="o">/</span><span class="mi">1005055541652987</span><span class="o">/</span><span class="n">info</span><span class="o">?</span><span class="k">mod</span><span class="o">=</span><span class="n">pedit_more</span><span class="err">页面成功</span>
+<span class="err">已连接</span><span class="n">Mongodb</span><span class="p">,</span> <span class="n">collection</span><span class="p">:</span><span class="n">weibo</span>
+<span class="o">###</span><span class="err">一共有</span><span class="mi">11</span><span class="err">条微博将插入数据库</span><span class="o">###</span>
+<span class="err">已插入微博数据到数据库，集合：</span><span class="n">weibo</span><span class="err">，插入时间为：</span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">28</span> <span class="mi">12</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mi">55</span>
+<span class="err">已插入微博数据到数据库，集合：</span><span class="n">weibo</span><span class="err">，插入时间为：</span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">28</span> <span class="mi">12</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mi">55</span>
+<span class="err">已插入微博数据到数据库，集合：</span><span class="n">weibo</span><span class="err">，插入时间为：</span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">28</span> <span class="mi">12</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mi">55</span>
+<span class="err">已插入微博数据到数据库，集合：</span><span class="n">weibo</span><span class="err">，插入时间为：</span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">28</span> <span class="mi">12</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mi">55</span>
+<span class="err">已插入微博数据到数据库，集合：</span><span class="n">weibo</span><span class="err">，插入时间为：</span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">28</span> <span class="mi">12</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mi">55</span>
+<span class="err">已插入微博数据到数据库，集合：</span><span class="n">weibo</span><span class="err">，插入时间为：</span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">28</span> <span class="mi">12</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mi">55</span>
+<span class="err">出现编码问题，跳过插入此条微博到数据库</span>
+<span class="err">出现编码问题，跳过插入此条微博到数据库</span>
+<span class="err">已插入微博数据到数据库，集合：</span><span class="n">weibo</span><span class="err">，插入时间为：</span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">28</span> <span class="mi">12</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mi">55</span>
+<span class="err">已插入微博数据到数据库，集合：</span><span class="n">weibo</span><span class="err">，插入时间为：</span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">28</span> <span class="mi">12</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mi">55</span>
+<span class="err">已插入微博数据到数据库，集合：</span><span class="n">weibo</span><span class="err">，插入时间为：</span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">28</span> <span class="mi">12</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mi">55</span>
+<span class="o">###</span><span class="err">插入操作，成功：</span><span class="mi">9</span><span class="err">，失败：</span><span class="mi">2</span><span class="o">###</span>
+<span class="o">##############</span><span class="err">开始获取：第</span><span class="mi">15</span><span class="err">页搜索结果</span><span class="o">##############</span>
+<span class="o">###</span><span class="err">等待</span><span class="mi">6</span><span class="err">秒</span><span class="p">...</span><span class="o">###</span>
+<span class="err">此次抓取需要登录</span>
+<span class="err">获取</span><span class="n">roger</span><span class="err">的</span><span class="n">COOKIES</span><span class="err">中</span><span class="p">...</span>
+<span class="err">已连接</span><span class="n">Mongodb</span><span class="o">!</span>
+<span class="err">获取的</span><span class="n">cookies</span><span class="err">的时间是</span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">28</span> <span class="mi">09</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">58</span><span class="p">,</span> <span class="err">拥有者为</span><span class="n">roger</span>
+<span class="err">开始获取页面</span><span class="p">...</span>
 </pre></div>
 
 

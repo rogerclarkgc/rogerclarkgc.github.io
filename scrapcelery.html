@@ -73,7 +73,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -122,24 +121,24 @@
 <h3>分析网页</h3>
 <p>写这个爬虫花了我大概5天业余时间，其中大部分时间主要花在分析网页源代码上和调教Celery上面，下面是我事后分析。</p>
 <p>我要爬取的目标网页是北京市环境监测中心的空气检测数据发布网页，这个网页是这样的：</p>
-<p><img alt="bjmemc" src="http://i.imgur.com/Ld7ij9Q.jpg" /></p>
+<p><img alt="bjmemc" src="http://i.imgur.com/Ld7ij9Q.jpg"></p>
 <p>这个网页总的来说层次很简单，要爬取的数据就是地图上那些点的环境监测数据，但是数据不是直接显示在页面上的，而是需要用户点击地图上的点才会出现，因此这个网页很可能是在用户端动态渲染的，想从网页源代码上抓取数据可能有点难。</p>
 <p>其实从这里开始我的思路就是进入了一个误区，在下载了网页源码后，我发现网页几乎没有html标签，而是大段大段的js代码以及相关的函数定义，因此我就以为网页的数据都是这些js代码定义的函数实时渲染的，转而开始思考如何用模拟浏览器的方式渲染网页然后提取数据。</p>
 <p>诚然，模拟浏览器渲染是一个方法，Selenium是一个解决方案，但是这种方法效率也不高，而且我本身从未用过这个库，这样一来写这个爬虫花的时间成本也太高了。因此我开始思考别的办法，在迷茫了几日后，想到也许回到本来的地方也许不错，由于网页源码有几千行，我都是随便扫了扫，没有仔细看，如果我仔细关注一些点，也许回有重大发现。</p>
 <p>在我仔细看了几个源码中的js定义后，发现这个网页的地图是调用了某个公司的API加载的因此这部分关系没必要关注，而关键的数据部分似乎是在几个函数之间参数传递，好在源码上有不少注释，变量名也比较好懂，我循着函数的层层引用往上寻找，最终发现了关键的这段</p>
-<div class="highlight"><pre><span></span>var wfelkfbnx = eval(&quot;(&quot;+b.decode(&#39;W3siZGF0Z...&#39;)&quot;)&quot;)
+<div class="highlight"><pre><span></span><span class="n">var</span> <span class="n">wfelkfbnx</span> <span class="o">=</span> <span class="n">eval</span><span class="p">(</span><span class="ss">&quot;(&quot;</span><span class="o">+</span><span class="n">b</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;W3siZGF0Z...&#39;</span><span class="p">)</span><span class="ss">&quot;)&quot;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>我首先发现许多函数的调用最终指向了这个变量，而这些函数的名字和功能看起来都和用户点击有关，根据中文注释还有函数的功能我猜测这很可能就时我要找的数据，作为多年的老司机，我认为decode里包裹的字符串很可能是基于base64编码的，因此我把它丢到base64解码下一看，果然直觉没有错，这串字符就时用的base64编码的各个位点的空气检测数据！它在解译后是这样的</p>
-<div class="highlight"><pre><span></span>[{&quot;date_f&quot;:&quot;1493024400&quot;,&quot;id&quot;:1,&quot;aqi&quot;:53,&quot;so2&quot;:3,&quot;first&quot;:&quot;3&quot;,&quot;grade&quot;:2,&quot;pm10&quot;:5,...},{...}]
+<div class="highlight"><pre><span></span><span class="p">[</span><span class="err">{</span><span class="ss">&quot;date_f&quot;</span><span class="p">:</span><span class="ss">&quot;1493024400&quot;</span><span class="p">,</span><span class="ss">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="ss">&quot;aqi&quot;</span><span class="p">:</span><span class="mi">53</span><span class="p">,</span><span class="ss">&quot;so2&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="ss">&quot;first&quot;</span><span class="p">:</span><span class="ss">&quot;3&quot;</span><span class="p">,</span><span class="ss">&quot;grade&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="ss">&quot;pm10&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,...</span><span class="err">}</span><span class="p">,</span><span class="err">{</span><span class="p">...</span><span class="err">}</span><span class="p">]</span>
 </pre></div>
 
 
 <p>这不就是python里的一个列表么，列表的每个元素是一个字典，一个字典应该对应一个监测站点，而字典的键值就是空气监测数据了！
 下面的目标就是搞懂字典里各个键值的意思了。</p>
 <p>再次看看网页源码，发现所有和疑似地名的键值"id"有关的调用都指向一个函数：<code>xz_station(item.id)</code>。而这个函数的定义却没有在源文件里，因此我再次用Chrome的开发者工具尝试监听网页加载过程，看看是不是漏掉了什么东西，果不其然，这个网页除了会加载一个用于交互的源网页外，还加载了一个控制页面响应的js文件，这个文件由于URL和源网页不一样，在使用爬虫下载页面时不会被下载到：</p>
-<p><img alt="publicjs" src="http://i.imgur.com/89znjy4.png" /></p>
+<p><img alt="publicjs" src="http://i.imgur.com/89znjy4.png"></p>
 <p>顺利拿到这个<code>public_controller.js</code>文件后，十分顺利的找到了这个<code>xz_station(item.id)</code>的定义，在这个函数定义的上方也找到了地名和键值id的对应关系，这样一来，键值中最重要的地名是弄明白了。有了这一进展，后续的工作也简单多了，我很快弄清了字典中其他键值代表的含义。</p>
 <p>在弄明白了要获取的数据在哪里后，就可以开始有针对性的抓取数据了</p>
 <h3>过滤数据</h3>
@@ -157,7 +156,7 @@
 <p>安装mongodb时没碰到什么麻烦，这个数据库对win有支持，直接下载了.msi文件安装即可，安装后会自动注册路径到PATH变量中。</p>
 <p>mongodb是一种非关系型数据库，数据以“文档”的形式存储，“文档”的更上一层是“集合”，它是多个文档组成的结构，而最上层的就是数据库，这个关系类似于数据表，表格是一个集合，而每一行就是一个文档，多个表格组合在一起，形成我们的数据库。</p>
 <p>mongodb中最基本的概率是“文档”，文档十分类似与python中的字典，一个文档是这个样子的：</p>
-<div class="highlight"><pre><span></span>{&quot;siteName&quot;:&quot;永定门&quot;, &quot;id&quot;:&quot;1&quot;, &quot;pm25aqi&quot;:200}
+<div class="highlight"><pre><span></span><span class="err">{</span><span class="ss">&quot;siteName&quot;</span><span class="p">:</span><span class="ss">&quot;永定门&quot;</span><span class="p">,</span> <span class="ss">&quot;id&quot;</span><span class="p">:</span><span class="ss">&quot;1&quot;</span><span class="p">,</span> <span class="ss">&quot;pm25aqi&quot;</span><span class="p">:</span><span class="mi">200</span><span class="err">}</span>
 </pre></div>
 
 
@@ -167,43 +166,43 @@
 <p>好在我们的抓取的网站每小时更新一次数据，因此只要看看数据库中有没有当前时间的记录就好了，如果有这个记录，说明我们要插入的数据是重复的，不执行插入，反之，我们执行插入操作。于是整个流程就变成这样:</p>
 <p>原始数据→组装成<code>DataFrame</code>→逐行转换成<code>dict</code>→查询mongodb是否有当前时间的记录→有记录，放弃插入\无记录，执行插入</p>
 <p>有了思路后，实现起来也很快，mongodb在python的接口通过pymongo库来实现，这安装起来也很简单</p>
-<div class="highlight"><pre><span></span>&gt;pip install pymongo
+<div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pymongo</span>
 </pre></div>
 
 
 <p>要使用mongodb，需要先启动mongodb服务，这在win下是这样实现的：
 首先需要建立好我们的数据库文件夹，在建立好后输入如下命令行：</p>
-<div class="highlight"><pre><span></span>&gt;mongod.exe --dbpath E:\mongodata\airstation\db
+<div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="n">mongod</span><span class="p">.</span><span class="n">exe</span> <span class="c1">--dbpath E:\mongodata\airstation\db</span>
 </pre></div>
 
 
 <p>这样会开启一个一直运行的mongodb服务，由于数据库存储在本地，因此mongodb会默认开启本地的端口来访问数据库。如果关闭了这个命令窗口，mongodb也无法使用了</p>
 <p>在启用服务后，可以看看mongodb的原生shell，进入到mongodb的bin目录下启动：</p>
-<div class="highlight"><pre><span></span>PS D:\Program Files (x86)\mongodb\bin&gt; .\mongo.exe
+<div class="highlight"><pre><span></span><span class="n">PS</span> <span class="n">D</span><span class="p">:</span><span class="err">\</span><span class="n">Program</span> <span class="n">Files</span> <span class="p">(</span><span class="n">x86</span><span class="p">)</span><span class="err">\</span><span class="n">mongodb</span><span class="err">\</span><span class="n">bin</span><span class="o">&gt;</span> <span class="p">.</span><span class="err">\</span><span class="n">mongo</span><span class="p">.</span><span class="n">exe</span>
 </pre></div>
 
 
 <p>启动成功后如下面：</p>
-<div class="highlight"><pre><span></span>PS D:\Program Files (x86)\mongodb\bin&gt; .\mongo.exe
-MongoDB shell version v3.4.4
-connecting to: mongodb://127.0.0.1:27017
-MongoDB server version: 3.4.4
-Server has startup warnings:
-2017-05-02T18:56:55.320+0800 I CONTROL  [initandlisten]
-2017-05-02T18:56:55.321+0800 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
-2017-05-02T18:56:55.321+0800 I CONTROL  [initandlisten] **          Read and write access to data and configuration is u
-nrestricted.
-2017-05-02T18:56:55.321+0800 I CONTROL  [initandlisten]
-2017-05-02T18:56:55.321+0800 I CONTROL  [initandlisten]
-2017-05-02T18:56:55.321+0800 I CONTROL  [initandlisten] ** WARNING: You are running on a NUMA machine.
-2017-05-02T18:56:55.321+0800 I CONTROL  [initandlisten] **          We suggest disabling NUMA in the machine BIOS
-2017-05-02T18:56:55.322+0800 I CONTROL  [initandlisten] **          by enabling interleaving to avoid performance proble
-ms.
-2017-05-02T18:56:55.322+0800 I CONTROL  [initandlisten] **          See your BIOS documentation for more information.
-2017-05-02T18:56:55.322+0800 I CONTROL  [initandlisten] Hotfix KB2731284 or later update is not installed, will zero-out
-data files.
-2017-05-02T18:56:55.322+0800 I CONTROL  [initandlisten]
-&gt;
+<div class="highlight"><pre><span></span><span class="nv">PS</span> <span class="nv">D</span>:\<span class="nv">Program</span> <span class="nv">Files</span> <span class="ss">(</span><span class="nv">x86</span><span class="ss">)</span>\<span class="nv">mongodb</span>\<span class="nv">bin</span><span class="o">&gt;</span> .\<span class="nv">mongo</span>.<span class="nv">exe</span>
+<span class="nv">MongoDB</span> <span class="nv">shell</span> <span class="nv">version</span> <span class="nv">v3</span>.<span class="mi">4</span>.<span class="mi">4</span>
+<span class="nv">connecting</span> <span class="nv">to</span>: <span class="nv">mongodb</span>:<span class="o">//</span><span class="mi">127</span>.<span class="mi">0</span>.<span class="mi">0</span>.<span class="mi">1</span>:<span class="mi">27017</span>
+<span class="nv">MongoDB</span> <span class="nv">server</span> <span class="nv">version</span>: <span class="mi">3</span>.<span class="mi">4</span>.<span class="mi">4</span>
+<span class="nv">Server</span> <span class="nv">has</span> <span class="nv">startup</span> <span class="nv">warnings</span>:
+<span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">02</span><span class="nv">T18</span>:<span class="mi">56</span>:<span class="mi">55</span>.<span class="mi">320</span><span class="o">+</span><span class="mi">0800</span> <span class="nv">I</span> <span class="nv">CONTROL</span>  [<span class="nv">initandlisten</span>]
+<span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">02</span><span class="nv">T18</span>:<span class="mi">56</span>:<span class="mi">55</span>.<span class="mi">321</span><span class="o">+</span><span class="mi">0800</span> <span class="nv">I</span> <span class="nv">CONTROL</span>  [<span class="nv">initandlisten</span>] <span class="o">**</span> <span class="nv">WARNING</span>: <span class="nv">Access</span> <span class="nv">control</span> <span class="nv">is</span> <span class="nv">not</span> <span class="nv">enabled</span> <span class="k">for</span> <span class="nv">the</span> <span class="nv">database</span>.
+<span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">02</span><span class="nv">T18</span>:<span class="mi">56</span>:<span class="mi">55</span>.<span class="mi">321</span><span class="o">+</span><span class="mi">0800</span> <span class="nv">I</span> <span class="nv">CONTROL</span>  [<span class="nv">initandlisten</span>] <span class="o">**</span>          <span class="nv">Read</span> <span class="nv">and</span> <span class="nv">write</span> <span class="nv">access</span> <span class="nv">to</span> <span class="nv">data</span> <span class="nv">and</span> <span class="nv">configuration</span> <span class="nv">is</span> <span class="nv">u</span>
+<span class="nv">nrestricted</span>.
+<span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">02</span><span class="nv">T18</span>:<span class="mi">56</span>:<span class="mi">55</span>.<span class="mi">321</span><span class="o">+</span><span class="mi">0800</span> <span class="nv">I</span> <span class="nv">CONTROL</span>  [<span class="nv">initandlisten</span>]
+<span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">02</span><span class="nv">T18</span>:<span class="mi">56</span>:<span class="mi">55</span>.<span class="mi">321</span><span class="o">+</span><span class="mi">0800</span> <span class="nv">I</span> <span class="nv">CONTROL</span>  [<span class="nv">initandlisten</span>]
+<span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">02</span><span class="nv">T18</span>:<span class="mi">56</span>:<span class="mi">55</span>.<span class="mi">321</span><span class="o">+</span><span class="mi">0800</span> <span class="nv">I</span> <span class="nv">CONTROL</span>  [<span class="nv">initandlisten</span>] <span class="o">**</span> <span class="nv">WARNING</span>: <span class="nv">You</span> <span class="nv">are</span> <span class="nv">running</span> <span class="nv">on</span> <span class="nv">a</span> <span class="nv">NUMA</span> <span class="nv">machine</span>.
+<span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">02</span><span class="nv">T18</span>:<span class="mi">56</span>:<span class="mi">55</span>.<span class="mi">321</span><span class="o">+</span><span class="mi">0800</span> <span class="nv">I</span> <span class="nv">CONTROL</span>  [<span class="nv">initandlisten</span>] <span class="o">**</span>          <span class="nv">We</span> <span class="nv">suggest</span> <span class="nv">disabling</span> <span class="nv">NUMA</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">machine</span> <span class="nv">BIOS</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">02</span><span class="nv">T18</span>:<span class="mi">56</span>:<span class="mi">55</span>.<span class="mi">322</span><span class="o">+</span><span class="mi">0800</span> <span class="nv">I</span> <span class="nv">CONTROL</span>  [<span class="nv">initandlisten</span>] <span class="o">**</span>          <span class="nv">by</span> <span class="nv">enabling</span> <span class="nv">interleaving</span> <span class="nv">to</span> <span class="nv">avoid</span> <span class="nv">performance</span> <span class="nv">proble</span>
+<span class="nv">ms</span>.
+<span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">02</span><span class="nv">T18</span>:<span class="mi">56</span>:<span class="mi">55</span>.<span class="mi">322</span><span class="o">+</span><span class="mi">0800</span> <span class="nv">I</span> <span class="nv">CONTROL</span>  [<span class="nv">initandlisten</span>] <span class="o">**</span>          <span class="nv">See</span> <span class="nv">your</span> <span class="nv">BIOS</span> <span class="nv">documentation</span> <span class="k">for</span> <span class="nv">more</span> <span class="nv">information</span>.
+<span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">02</span><span class="nv">T18</span>:<span class="mi">56</span>:<span class="mi">55</span>.<span class="mi">322</span><span class="o">+</span><span class="mi">0800</span> <span class="nv">I</span> <span class="nv">CONTROL</span>  [<span class="nv">initandlisten</span>] <span class="nv">Hotfix</span> <span class="nv">KB2731284</span> <span class="nv">or</span> <span class="nv">later</span> <span class="nv">update</span> <span class="nv">is</span> <span class="nv">not</span> <span class="nv">installed</span>, <span class="nv">will</span> <span class="nv">zero</span><span class="o">-</span><span class="nv">out</span>
+<span class="nv">data</span> <span class="nv">files</span>.
+<span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">02</span><span class="nv">T18</span>:<span class="mi">56</span>:<span class="mi">55</span>.<span class="mi">322</span><span class="o">+</span><span class="mi">0800</span> <span class="nv">I</span> <span class="nv">CONTROL</span>  [<span class="nv">initandlisten</span>]
+<span class="o">&gt;</span>
 </pre></div>
 
 
@@ -223,13 +222,13 @@ python下的mongodb操作基本和mongodb提供的原生shell无差别，用起�
 <p><code>BROKER_URL</code>:用于设定消息中间人，我们使用运行在本地的redis服务，因此就写<code>'redis://localhost'</code></p>
 <p><code>CELERY_RESULT_BACKEND</code>：用于设定存储职程运行结果的参数，这个参数默认是不开启的</p>
 <p><code>CELERYBEAT_SCHEDULE</code>：用于设置<code>celery beat</code>模块的运行参数，我们这里是这样设置的：</p>
-<div class="highlight"><pre><span></span>    CELERYBEAT_SCHEDULE = {
-    &#39;add-every-1min&#39;:{
-        &#39;task&#39;:&#39;test_celery.run&#39;,
-        &#39;schedule&#39;: crontab(minute = &#39;*/1&#39;),
-        &#39;args&#39;:()
-    }
-}
+<div class="highlight"><pre><span></span>    <span class="n">CELERYBEAT_SCHEDULE</span> <span class="o">=</span> <span class="err">{</span>
+    <span class="s1">&#39;add-every-1min&#39;</span><span class="p">:</span><span class="err">{</span>
+        <span class="s1">&#39;task&#39;</span><span class="p">:</span><span class="s1">&#39;test_celery.run&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;schedule&#39;</span><span class="p">:</span> <span class="n">crontab</span><span class="p">(</span><span class="k">minute</span> <span class="o">=</span> <span class="s1">&#39;*/1&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;args&#39;</span><span class="p">:()</span>
+    <span class="err">}</span>
+<span class="err">}</span>
 </pre></div>
 
 
@@ -256,14 +255,14 @@ python下的mongodb操作基本和mongodb提供的原生shell无差别，用起�
 <p>以上就是职程的全部内容，首先初始化一个Celery对象，对象的初始化参数即职程的文件名，随后我们导入刚刚写的配置文件，一般把这个文件放在同一目录下，所以不需要绝对路径，接着我们利用装饰器<code>@app.task</code>声明一个叫做<code>run()</code>的函数，这个函数所执行的我们要做的爬取空气检测数据的工作，我把前面讲的爬虫的下载网页，过滤数据，加入数据库的工作都整合到一个接口<code>bjmemc.runOnetask</code>中，这样可以更方便的调用爬虫。</p>
 <h3>启动爬虫</h3>
 <p>在搭建好环境后，首先启动redis和mongodb服务，启动爬虫也变得如此简单，只需要在shell或者命令行中输入如下</p>
-<div class="highlight"><pre><span></span># start redis
-D:\env\redis\&gt;redis-server
-# start mongodb
-D:\env\mongodb\bin\&gt;mongod.exe --dbpath E:\mongodata\airstation\db
-# start celery worker
-D:\&gt;celery -A test_celery worker --loglevel=info
-# start celery beat
-D:\&gt;celery beat
+<div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">start</span> <span class="n">redis</span>
+<span class="n">D</span><span class="p">:</span><span class="err">\</span><span class="n">env</span><span class="err">\</span><span class="n">redis</span><span class="err">\</span><span class="o">&gt;</span><span class="n">redis</span><span class="o">-</span><span class="n">server</span>
+<span class="o">#</span> <span class="k">start</span> <span class="n">mongodb</span>
+<span class="n">D</span><span class="p">:</span><span class="err">\</span><span class="n">env</span><span class="err">\</span><span class="n">mongodb</span><span class="err">\</span><span class="n">bin</span><span class="err">\</span><span class="o">&gt;</span><span class="n">mongod</span><span class="p">.</span><span class="n">exe</span> <span class="c1">--dbpath E:\mongodata\airstation\db</span>
+<span class="o">#</span> <span class="k">start</span> <span class="n">celery</span> <span class="n">worker</span>
+<span class="n">D</span><span class="p">:</span><span class="err">\</span><span class="o">&gt;</span><span class="n">celery</span> <span class="o">-</span><span class="n">A</span> <span class="n">test_celery</span> <span class="n">worker</span> <span class="c1">--loglevel=info</span>
+<span class="o">#</span> <span class="k">start</span> <span class="n">celery</span> <span class="n">beat</span>
+<span class="n">D</span><span class="p">:</span><span class="err">\</span><span class="o">&gt;</span><span class="n">celery</span> <span class="n">beat</span>
 </pre></div>
 
 

@@ -74,7 +74,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -110,24 +109,24 @@
 <p>最近终于把Ubuntu在自己的工作机上安装好了，准备逐渐开始习惯在Linux下完成自己的代码工作，因此首先就是要搭建工作环境了。</p>
 <p>我最常用的语言就是R与Python，Ubuntu自己有Python支持，所以暂时不用担心，只用安装R运行环境。由于我在安装Ubuntu时使用的是不连网的安装方式，因此许多支持的库根本没有安装好，要自行编译R，那少不了许多编译用的库。</p>
 <p>首先当然是<code>build-essential</code>,这个库几乎所有通过编译安装的软件都要使用：</p>
-<div class="highlight"><pre><span></span>sudo apt-get install build-essential
+<div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="k">get</span> <span class="n">install</span> <span class="n">build</span><span class="o">-</span><span class="n">essential</span>
 </pre></div>
 
 
 <p>接着就是到R<a href="https://mirrors.tuna.tsinghua.edu.cn/CRAN/">官方</a>网站下载对应的打包文件</p>
-<div class="highlight"><pre><span></span>wget https://mirrors.tuna.tsinghua.edu.cn/CRAN/src/base/R-3/R-3.4.2.tar.gz
+<div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">mirrors</span><span class="p">.</span><span class="n">tuna</span><span class="p">.</span><span class="n">tsinghua</span><span class="p">.</span><span class="n">edu</span><span class="p">.</span><span class="n">cn</span><span class="o">/</span><span class="n">CRAN</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">base</span><span class="o">/</span><span class="n">R</span><span class="o">-</span><span class="mi">3</span><span class="o">/</span><span class="n">R</span><span class="o">-</span><span class="mi">3</span><span class="p">.</span><span class="mi">4</span><span class="p">.</span><span class="mi">2</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
 </pre></div>
 
 
 <p>在下载完后将文件解压缩到一个已知的位置，我在<code>~</code>下新建一个<code>RHOME</code>文件夹来放置解压后文件：</p>
-<div class="highlight"><pre><span></span>mkdir ~/R_HOME
-tar -zxvf ~/下载/R-3.4.2.tar.gz
+<div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">~/</span><span class="n">R_HOME</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="o">~/</span><span class="err">下载</span><span class="o">/</span><span class="n">R</span><span class="o">-</span><span class="mi">3</span><span class="p">.</span><span class="mi">4</span><span class="p">.</span><span class="mi">2</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
 </pre></div>
 
 
 <p>这里放置的时未经过编译的R源文件，需要执行后续的编译步骤才能生成能运行的bin</p>
 <p>现在开始编译，现在目录下解压缩生成的文件夹<code>R-3.4.2</code>内运行配置脚本：</p>
-<div class="highlight"><pre><span></span>./configure
+<div class="highlight"><pre><span></span><span class="p">.</span><span class="o">/</span><span class="n">configure</span>
 </pre></div>
 
 
@@ -147,13 +146,13 @@ tar -zxvf ~/下载/R-3.4.2.tar.gz
 <p>在完成编译环境依赖库安装后，可以直接运行<code>make</code>和<code>make test</code>来进行编译和编译后的测试。</p>
 <p>完成以上的步骤后，<code>R-3.4.2</code>的目录发生了改变，已经多出了bin等文件夹，进入bin后可以运行R，但安装还没有完成，再运行<code>make install</code>来把R安装到默认的目录<code>/usr/local/lib/</code>下。此时，可以在shell中直接输入R来运行R3.4.2</p>
 <p>在编译时，可以使用：</p>
-<div class="highlight"><pre><span></span>`./configure --prefix /where/you/want/to/install/R`
+<div class="highlight"><pre><span></span><span class="o">`</span><span class="p">.</span><span class="o">/</span><span class="n">configure</span> <span class="c1">--prefix /where/you/want/to/install/R`</span>
 </pre></div>
 
 
 <p>来制定make install的安装路径</p>
 <p>在后续安装Rstudio时，出现了如下错误：</p>
-<div class="highlight"><pre><span></span>R shared library (/usr/local/lib/R/lib/libR.so) not found
+<div class="highlight"><pre><span></span><span class="n">R</span> <span class="n">shared</span> <span class="n">library</span> <span class="p">(</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">R</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libR</span><span class="p">.</span><span class="n">so</span><span class="p">)</span> <span class="k">not</span> <span class="k">found</span>
 </pre></div>
 
 

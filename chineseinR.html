@@ -72,7 +72,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -106,24 +105,24 @@
     <article>
         <h2>问题</h2>
 <p>在R中画图编程有一段时间了，在遇到输出图片的情景时，总会碰到中文字符无法正常输出的问题，只要图片中有中文字符，那么输出的pdf必然无法正常显示中文，下面来看这个简单的例子：</p>
-<div class="highlight"><pre><span></span>#R中默认没有显式设定字体的类型
-pdf(&quot;nonefamily.pdf&quot;)
-plot(1:10, 1:10, type = &quot;b&quot;, main = &quot;测试&quot;, 
-xlab = &quot;x轴&quot;, ylab = &quot;y轴&quot;, col = &quot;red&quot;)
-dev.off()
+<div class="highlight"><pre><span></span><span class="o">#</span><span class="n">R</span><span class="err">中默认没有显式设定字体的类型</span>
+<span class="n">pdf</span><span class="p">(</span><span class="ss">&quot;nonefamily.pdf&quot;</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="k">type</span> <span class="o">=</span> <span class="ss">&quot;b&quot;</span><span class="p">,</span> <span class="n">main</span> <span class="o">=</span> <span class="ss">&quot;测试&quot;</span><span class="p">,</span> 
+<span class="n">xlab</span> <span class="o">=</span> <span class="ss">&quot;x轴&quot;</span><span class="p">,</span> <span class="n">ylab</span> <span class="o">=</span> <span class="ss">&quot;y轴&quot;</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="ss">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">dev</span><span class="p">.</span><span class="k">off</span><span class="p">()</span>
 </pre></div>
 
 
 <p>这个例子输出了一张折线图到pdf文件中，使用R中默认的字体，输出的pdf会变成这个样子：</p>
-<p><img alt="nonefamily" src="http://i.imgur.com/DxtZ17U.jpg" /></p>
+<p><img alt="nonefamily" src="http://i.imgur.com/DxtZ17U.jpg"></p>
 <p>图片的标题，横纵坐标轴标签的中文都无法显示，实际上，在运行这段代码后，R还给出如下warnings():</p>
-<div class="highlight"><pre><span></span>&gt; warnings()
-警告信息：
-1: In title(...) : &#39;mbcsToSbcs&#39;里转换&#39;娴嬭瘯&#39;出错：&lt;e6&gt;代替了dot
-2: In title(...) : &#39;mbcsToSbcs&#39;里转换&#39;娴嬭瘯&#39;出错：&lt;b5&gt;代替了dot
-3: In title(...) : &#39;mbcsToSbcs&#39;里转换&#39;娴嬭瘯&#39;出错：&lt;8b&gt;代替了dot
-4: In title(...) : &#39;mbcsToSbcs&#39;里转换&#39;娴嬭瘯&#39;出错：&lt;e8&gt;代替了dot
-5: In title(...) : &#39;mbcsToSbcs&#39;里转换&#39;娴嬭瘯&#39;出错：&lt;af&gt;代替了dot
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">warnings</span><span class="p">()</span>
+<span class="err">警告信息：</span>
+<span class="mi">1</span><span class="p">:</span> <span class="k">In</span> <span class="n">title</span><span class="p">(...)</span> <span class="p">:</span> <span class="s1">&#39;mbcsToSbcs&#39;</span><span class="err">里转换</span><span class="s1">&#39;娴嬭瘯&#39;</span><span class="err">出错：</span><span class="o">&lt;</span><span class="n">e6</span><span class="o">&gt;</span><span class="err">代替了</span><span class="n">dot</span>
+<span class="mi">2</span><span class="p">:</span> <span class="k">In</span> <span class="n">title</span><span class="p">(...)</span> <span class="p">:</span> <span class="s1">&#39;mbcsToSbcs&#39;</span><span class="err">里转换</span><span class="s1">&#39;娴嬭瘯&#39;</span><span class="err">出错：</span><span class="o">&lt;</span><span class="n">b5</span><span class="o">&gt;</span><span class="err">代替了</span><span class="n">dot</span>
+<span class="mi">3</span><span class="p">:</span> <span class="k">In</span> <span class="n">title</span><span class="p">(...)</span> <span class="p">:</span> <span class="s1">&#39;mbcsToSbcs&#39;</span><span class="err">里转换</span><span class="s1">&#39;娴嬭瘯&#39;</span><span class="err">出错：</span><span class="o">&lt;</span><span class="mi">8</span><span class="n">b</span><span class="o">&gt;</span><span class="err">代替了</span><span class="n">dot</span>
+<span class="mi">4</span><span class="p">:</span> <span class="k">In</span> <span class="n">title</span><span class="p">(...)</span> <span class="p">:</span> <span class="s1">&#39;mbcsToSbcs&#39;</span><span class="err">里转换</span><span class="s1">&#39;娴嬭瘯&#39;</span><span class="err">出错：</span><span class="o">&lt;</span><span class="n">e8</span><span class="o">&gt;</span><span class="err">代替了</span><span class="n">dot</span>
+<span class="mi">5</span><span class="p">:</span> <span class="k">In</span> <span class="n">title</span><span class="p">(...)</span> <span class="p">:</span> <span class="s1">&#39;mbcsToSbcs&#39;</span><span class="err">里转换</span><span class="s1">&#39;娴嬭瘯&#39;</span><span class="err">出错：</span><span class="o">&lt;</span><span class="n">af</span><span class="o">&gt;</span><span class="err">代替了</span><span class="n">dot</span>
 </pre></div>
 
 
@@ -132,19 +131,19 @@ dev.off()
 <p>在仔细看了帮助文档后，发现这个很现实的问题似乎在R中埋有很深的机理，我尽量些写下自己的理解。</p>
 <h3>par()控制输出到屏幕的图形设备</h3>
 <p>在R中，输出的图像，不论是pdf还是png，都是一种图形设备，当输出到屏幕时，图形设备的参数由<code>par()</code>中的一系列参数控制，而与字体有关的主要是这些参数：</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;</span> mypar <span class="o">&lt;-</span> par<span class="p">()</span>
-<span class="o">&gt;</span> mypar<span class="o">$</span>family
-<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="s">&quot;&quot;</span>
-<span class="o">&gt;</span> mypar<span class="o">$</span>font
-<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
-<span class="o">&gt;</span> mypar<span class="o">$</span>font.lab
-<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
-<span class="o">&gt;</span> mypar<span class="o">$</span>font.axis
-<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
-<span class="o">&gt;</span> mypar<span class="o">$</span>font.main
-<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">2</span>
-<span class="o">&gt;</span> mypar<span class="o">$</span>font.sub
-<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">mypar</span> <span class="o">&lt;-</span> <span class="nf">par</span><span class="p">()</span>
+<span class="o">&gt;</span> <span class="n">mypar</span><span class="o">$</span><span class="n">family</span>
+<span class="n">[1]</span> <span class="s">&quot;&quot;</span>
+<span class="o">&gt;</span> <span class="n">mypar</span><span class="o">$</span><span class="n">font</span>
+<span class="n">[1]</span> <span class="m">1</span>
+<span class="o">&gt;</span> <span class="n">mypar</span><span class="o">$</span><span class="n">font.lab</span>
+<span class="n">[1]</span> <span class="m">1</span>
+<span class="o">&gt;</span> <span class="n">mypar</span><span class="o">$</span><span class="n">font.axis</span>
+<span class="n">[1]</span> <span class="m">1</span>
+<span class="o">&gt;</span> <span class="n">mypar</span><span class="o">$</span><span class="n">font.main</span>
+<span class="n">[1]</span> <span class="m">2</span>
+<span class="o">&gt;</span> <span class="n">mypar</span><span class="o">$</span><span class="n">font.sub</span>
+<span class="n">[1]</span> <span class="m">1</span>
 </pre></div>
 
 
@@ -157,75 +156,75 @@ dev.off()
 <li><code>font = 5</code>使用Adobe Symbol字体</li>
 </ul>
 <p>要改变输出到屏幕的图像的字体比较简单，可以通过下面的函数来自定义自己的字体：</p>
-<div class="highlight"><pre><span></span>&gt; windowsFonts(caiyun = windowsFont(&quot;STCAIYUN&quot;))
-&gt; par(family = &quot;caiyun&quot;)
-&gt; par(&quot;family&quot;)
-[1] &quot;caiyun&quot;
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">windowsFonts</span><span class="p">(</span><span class="n">caiyun</span> <span class="o">=</span> <span class="n">windowsFont</span><span class="p">(</span><span class="ss">&quot;STCAIYUN&quot;</span><span class="p">))</span>
+<span class="o">&gt;</span> <span class="n">par</span><span class="p">(</span><span class="n">family</span> <span class="o">=</span> <span class="ss">&quot;caiyun&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">par</span><span class="p">(</span><span class="ss">&quot;family&quot;</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;caiyun&quot;</span>
 </pre></div>
 
 
 <p><code>windowsFonts()</code>和<code>windowsFont()</code>函数可以在一个字符串和windows字体建立映射，这样设置的字体可以在<code>par()</code>中以映射的字符串中指定。要查看windows字体库，可以在控制面板中的字体选项卡查看。</p>
-<div class="highlight"><pre><span></span>&gt; plot(1:10, 1:10, main = &quot;测试&quot;)
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">plot</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="n">main</span> <span class="o">=</span> <span class="ss">&quot;测试&quot;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>在Rstudio环境下，右下角的图片栏中的显示确实已经改成了华文彩云的字体：</p>
-<p><img alt="caiyun" src="http://i.imgur.com/Doeb8D4.jpg" /></p>
+<p><img alt="caiyun" src="http://i.imgur.com/Doeb8D4.jpg"></p>
 <p>如果此时，通过Rstudio中自带的转换pdf的程序，可以输出正常显示的pdf，但是字体不是我们指定的字体，而是宋体：</p>
-<p><img alt="songti" src="http://i.imgur.com/WAYsjBt.jpg" /></p>
+<p><img alt="songti" src="http://i.imgur.com/WAYsjBt.jpg"></p>
 <p>这个间接说明了R的pdf图形设备参数应该是通过另外的函数控制的。</p>
 <h3>R中的pdf图形设备</h3>
 <p>我们一般使用<code>pdf()</code>来打开一个pdf图形设备来作图，在作图完毕后使用<code>dev.off()</code>来关闭当前活动的图形设备，而<code>pdf()</code>的参数列表如下</p>
-<div class="highlight"><pre><span></span>pdf(file = ifelse(onefile, &quot;Rplots.pdf&quot;, &quot;Rplot%03d.pdf&quot;),
-width, height, onefile, family, title, fonts, version,
-paper, encoding, bg, fg, pointsize, pagecentre, colormodel,
-useDingbats, useKerning, fillOddEven, compress)
+<div class="highlight"><pre><span></span><span class="n">pdf</span><span class="p">(</span><span class="n">file</span> <span class="o">=</span> <span class="n">ifelse</span><span class="p">(</span><span class="n">onefile</span><span class="p">,</span> <span class="ss">&quot;Rplots.pdf&quot;</span><span class="p">,</span> <span class="ss">&quot;Rplot%03d.pdf&quot;</span><span class="p">),</span>
+<span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">onefile</span><span class="p">,</span> <span class="n">family</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">fonts</span><span class="p">,</span> <span class="k">version</span><span class="p">,</span>
+<span class="n">paper</span><span class="p">,</span> <span class="k">encoding</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">fg</span><span class="p">,</span> <span class="n">pointsize</span><span class="p">,</span> <span class="n">pagecentre</span><span class="p">,</span> <span class="n">colormodel</span><span class="p">,</span>
+<span class="n">useDingbats</span><span class="p">,</span> <span class="n">useKerning</span><span class="p">,</span> <span class="n">fillOddEven</span><span class="p">,</span> <span class="n">compress</span><span class="p">)</span>
 </pre></div>
 
 
 <p>这几个参数中<code>family</code>是直接控制输出pdf的字体族的，而它的缺省设置是"Helvetica"，这个字体族是英文字体族，没有对中文进行编码，所以我们在输出含有中文的pdf时，会出现无法正常显示的情况。</p>
 <p>然而要想在pdf中指定自己的字体没有那么简单，R中的pdf图形设备的字体参数之间有一个比较复杂的映射关系，因此在实际操作中很容易让人疑惑不解。</p>
 <p>首先，<code>pdf(family=)</code>接收的是一个字符串，这个字符串要求已经与一个字体族（文件）建立了映射关系，前面提到的缺省设置就是一个已经映射好的字符串，它对应的字体族是'sans serif'，在R中，系统已经默认设置好了一批映射关系，但是没有几个是对应了中文字符。要查看已建立的映射，可以通过如下方式：</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;</span>fontlist <span class="o">&lt;-</span> postscriptFonts<span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="n">fontlist</span> <span class="o">&lt;-</span> <span class="nf">postscriptFonts</span><span class="p">()</span>
 <span class="c1">#或fontlist &lt;- pdfFonts()</span>
-<span class="o">&gt;</span> <span class="kp">names</span><span class="p">(</span>fontlist<span class="p">)</span>
-<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="s">&quot;serif&quot;</span>                <span class="s">&quot;sans&quot;</span>                 <span class="s">&quot;mono&quot;</span>                 <span class="s">&quot;AvantGarde&quot;</span>           <span class="s">&quot;Bookman&quot;</span>              <span class="s">&quot;Courier&quot;</span>             
-<span class="p">[</span><span class="m">7</span><span class="p">]</span> <span class="s">&quot;Helvetica&quot;</span>            <span class="s">&quot;Helvetica-Narrow&quot;</span>     <span class="s">&quot;NewCenturySchoolbook&quot;</span> <span class="s">&quot;Palatino&quot;</span>             <span class="s">&quot;Times&quot;</span>                <span class="s">&quot;URWGothic&quot;</span>           
-<span class="p">[</span><span class="m">13</span><span class="p">]</span> <span class="s">&quot;URWBookman&quot;</span>           <span class="s">&quot;NimbusMon&quot;</span>            <span class="s">&quot;NimbusSan&quot;</span>            <span class="s">&quot;URWHelvetica&quot;</span>         <span class="s">&quot;NimbusSanCond&quot;</span>        <span class="s">&quot;CenturySch&quot;</span>          
-<span class="p">[</span><span class="m">19</span><span class="p">]</span> <span class="s">&quot;URWPalladio&quot;</span>          <span class="s">&quot;NimbusRom&quot;</span>            <span class="s">&quot;URWTimes&quot;</span>             <span class="s">&quot;ArialMT&quot;</span>              <span class="s">&quot;ComputerModern&quot;</span>       <span class="s">&quot;ComputerModernItalic&quot;</span>
-<span class="p">[</span><span class="m">25</span><span class="p">]</span> <span class="s">&quot;Japan1&quot;</span>               <span class="s">&quot;Japan1HeiMin&quot;</span>         <span class="s">&quot;Japan1GothicBBB&quot;</span>      <span class="s">&quot;Japan1Ryumin&quot;</span>         <span class="s">&quot;Korea1&quot;</span>               <span class="s">&quot;Korea1deb&quot;</span>           
-<span class="p">[</span><span class="m">31</span><span class="p">]</span> <span class="s">&quot;CNS1&quot;</span>                 <span class="s">&quot;GB1&quot;</span>
+<span class="o">&gt;</span> <span class="nf">names</span><span class="p">(</span><span class="n">fontlist</span><span class="p">)</span>
+<span class="n">[1]</span> <span class="s">&quot;serif&quot;</span>                <span class="s">&quot;sans&quot;</span>                 <span class="s">&quot;mono&quot;</span>                 <span class="s">&quot;AvantGarde&quot;</span>           <span class="s">&quot;Bookman&quot;</span>              <span class="s">&quot;Courier&quot;</span>             
+<span class="n">[7]</span> <span class="s">&quot;Helvetica&quot;</span>            <span class="s">&quot;Helvetica-Narrow&quot;</span>     <span class="s">&quot;NewCenturySchoolbook&quot;</span> <span class="s">&quot;Palatino&quot;</span>             <span class="s">&quot;Times&quot;</span>                <span class="s">&quot;URWGothic&quot;</span>           
+<span class="n">[13]</span> <span class="s">&quot;URWBookman&quot;</span>           <span class="s">&quot;NimbusMon&quot;</span>            <span class="s">&quot;NimbusSan&quot;</span>            <span class="s">&quot;URWHelvetica&quot;</span>         <span class="s">&quot;NimbusSanCond&quot;</span>        <span class="s">&quot;CenturySch&quot;</span>          
+<span class="n">[19]</span> <span class="s">&quot;URWPalladio&quot;</span>          <span class="s">&quot;NimbusRom&quot;</span>            <span class="s">&quot;URWTimes&quot;</span>             <span class="s">&quot;ArialMT&quot;</span>              <span class="s">&quot;ComputerModern&quot;</span>       <span class="s">&quot;ComputerModernItalic&quot;</span>
+<span class="n">[25]</span> <span class="s">&quot;Japan1&quot;</span>               <span class="s">&quot;Japan1HeiMin&quot;</span>         <span class="s">&quot;Japan1GothicBBB&quot;</span>      <span class="s">&quot;Japan1Ryumin&quot;</span>         <span class="s">&quot;Korea1&quot;</span>               <span class="s">&quot;Korea1deb&quot;</span>           
+<span class="n">[31]</span> <span class="s">&quot;CNS1&quot;</span>                 <span class="s">&quot;GB1&quot;</span>
 </pre></div>
 
 
 <p>可以看到R中已经建立32个字体映射，但是只有两种中文字体，都是宋体类型的，其中"CNS1"是繁体中文的字体族，而"GB1"是简体中文的字体族，这两种字体中只有"GB1"能同时兼容简体和繁体。</p>
 <p>知道了这一点，在生成pdf文件时，可以在函数中事先声明要采用的字体族，但只能从"GB1"和"CNS1"中选择：</p>
-<div class="highlight"><pre><span></span>&gt;pdf(&quot;cns1.pdf&quot;, family = &quot;CNS1&quot;)
-#或者pdf(&quot;gb1.pdf&quot;, family = &quot;GB1&quot;)
-&gt; plot(1:10, 1:10, main = &quot;測試&quot;)
-&gt; dev.off()
+<div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="n">pdf</span><span class="p">(</span><span class="ss">&quot;cns1.pdf&quot;</span><span class="p">,</span> <span class="n">family</span> <span class="o">=</span> <span class="ss">&quot;CNS1&quot;</span><span class="p">)</span>
+<span class="o">#</span><span class="err">或者</span><span class="n">pdf</span><span class="p">(</span><span class="ss">&quot;gb1.pdf&quot;</span><span class="p">,</span> <span class="n">family</span> <span class="o">=</span> <span class="ss">&quot;GB1&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">plot</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="n">main</span> <span class="o">=</span> <span class="ss">&quot;測試&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">dev</span><span class="p">.</span><span class="k">off</span><span class="p">()</span>
 </pre></div>
 
 
 <p>这样生成的pdf能正常显示出中文字符，并且字体也是我们指定的字体。</p>
-<p><img alt="cns1" src="http://i.imgur.com/GFPbFM5.jpg" /></p>
+<p><img alt="cns1" src="http://i.imgur.com/GFPbFM5.jpg"></p>
 <p>但是这还不够，我们的目标是能够自己指定字体，因此还需要更进一步的了解R中的pdf图形设备中字体设置的原理。</p>
 <p>利用<code>pdfFonts()</code>或者<code>postscriptFonts()</code>获取的是一个记录了每个字体族信息的列表，它详细记录了这些字体族的映射信息，对于英文的字体族：</p>
-<div class="highlight"><pre><span></span><span class="x">&gt; fontlist[1]</span>
-<span class="p">$</span><span class="nv">serif</span><span class="x"></span>
-<span class="p">$</span><span class="nv">family</span><span class="x"></span>
-<span class="x">[1] &quot;Times&quot;</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">fontlist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="err">$</span><span class="n">serif</span>
+<span class="err">$</span><span class="n">family</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;Times&quot;</span>
 
-<span class="p">$</span><span class="nv">metrics</span><span class="x"></span>
-<span class="x">[1] &quot;Times-Roman.afm&quot;      &quot;Times-Bold.afm&quot;       </span>
-<span class="x">&quot;Times-Italic.afm&quot;     &quot;Times-BoldItalic.afm&quot; </span>
-<span class="x">&quot;Symbol.afm&quot;</span>
+<span class="err">$</span><span class="n">metrics</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;Times-Roman.afm&quot;</span>      <span class="ss">&quot;Times-Bold.afm&quot;</span>       
+<span class="ss">&quot;Times-Italic.afm&quot;</span>     <span class="ss">&quot;Times-BoldItalic.afm&quot;</span> 
+<span class="ss">&quot;Symbol.afm&quot;</span>
 
-<span class="p">$</span><span class="nv">encoding</span><span class="x"></span>
-<span class="x">[1] &quot;default&quot;</span>
+<span class="err">$</span><span class="k">encoding</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;default&quot;</span>
 
-<span class="x">attr(,&quot;class&quot;)</span>
-<span class="x">[1] &quot;Type1Font&quot;</span>
+<span class="n">attr</span><span class="p">(,</span><span class="ss">&quot;class&quot;</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;Type1Font&quot;</span>
 </pre></div>
 
 
@@ -238,35 +237,35 @@ useDingbats, useKerning, fillOddEven, compress)
 <li><code>attr(, "class")</code>:这是一个类名表识，表明这是Type1Font类字体</li>
 </ul>
 <p>对于非西文的字体族，也有类似的列表存储了映射信息：</p>
-<div class="highlight"><pre><span></span><span class="x">&gt; fontlist[29]</span>
-<span class="p">$</span><span class="nv">CNS1</span><span class="x"></span>
-<span class="p">$</span><span class="nv">family</span><span class="x"></span>
-<span class="x">[1] &quot;MSungStd-Light-Acro&quot;</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">fontlist</span><span class="p">[</span><span class="mi">29</span><span class="p">]</span>
+<span class="err">$</span><span class="n">CNS1</span>
+<span class="err">$</span><span class="n">family</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;MSungStd-Light-Acro&quot;</span>
 
-<span class="p">$</span><span class="nv">metrics</span><span class="x"></span>
-<span class="x">[1] &quot;&quot;           &quot;&quot;           &quot;&quot;           &quot;&quot;           &quot;Symbol.afm&quot;</span>
+<span class="err">$</span><span class="n">metrics</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;&quot;</span>           <span class="ss">&quot;&quot;</span>           <span class="ss">&quot;&quot;</span>           <span class="ss">&quot;&quot;</span>           <span class="ss">&quot;Symbol.afm&quot;</span>
 
-<span class="p">$</span><span class="nv">cmap</span><span class="x"></span>
-<span class="x">[1] &quot;B5pc-H&quot;</span>
+<span class="err">$</span><span class="n">cmap</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;B5pc-H&quot;</span>
 
-<span class="p">$</span><span class="nv">cmapEncoding</span><span class="x"></span>
-<span class="x">[1] &quot;CP950&quot;</span>
+<span class="err">$</span><span class="n">cmapEncoding</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;CP950&quot;</span>
 
-<span class="p">$</span><span class="nv">pdfresource</span><span class="x"></span>
-<span class="x">[1] &quot;/FontDescriptor\n      &lt;&lt;\n        /Type /FontDescriptor\n        /</span>
-<span class="x">CapHeight 662 /Ascent 1071 /Descent -249 /StemV 66\n        /FontBBox </span>
-<span class="x">[-160 -249 1015 1071]\n        /ItalicAngle 0 /Flags 6 /XHeight 400\n    </span>
-<span class="x">/Style &lt;&lt; /Panose &lt;000001000600000000000000&gt; &gt;&gt;\n      &gt;&gt;\n      </span>
-<span class="x">/CIDSystemInfo &lt;&lt; /Registry(Adobe) /Ordering(CNS1) /Supplement  0 &gt;&gt;\n      </span>
-<span class="x">/DW 1000\n      /W [\n           1 33 500\n           </span>
-<span class="x">34 [749 673 679 679 685 671 738 736 333 494 739 696 902 720 </span>
-<span class="x">750 674 746 672 627 769 707 777 887 709 616]\n           60 65 500\n           </span>
-<span class="x">66 [500 511 502 549 494 356 516 550 321 321 510 317 738 533 535 545 533 </span>
-<span class="x">376 443 261 529 742 534 576 439]\n           92 95 500\n           </span>
-<span class="x">13648 13742 500\n           17603 [500]\n      ]\n&quot;</span>
+<span class="err">$</span><span class="n">pdfresource</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;/FontDescriptor\n      &lt;&lt;\n        /Type /FontDescriptor\n        /</span>
+<span class="ss">CapHeight 662 /Ascent 1071 /Descent -249 /StemV 66\n        /FontBBox </span>
+<span class="ss">[-160 -249 1015 1071]\n        /ItalicAngle 0 /Flags 6 /XHeight 400\n    </span>
+<span class="ss">/Style &lt;&lt; /Panose &lt;000001000600000000000000&gt; &gt;&gt;\n      &gt;&gt;\n      </span>
+<span class="ss">/CIDSystemInfo &lt;&lt; /Registry(Adobe) /Ordering(CNS1) /Supplement  0 &gt;&gt;\n      </span>
+<span class="ss">/DW 1000\n      /W [\n           1 33 500\n           </span>
+<span class="ss">34 [749 673 679 679 685 671 738 736 333 494 739 696 902 720 </span>
+<span class="ss">750 674 746 672 627 769 707 777 887 709 616]\n           60 65 500\n           </span>
+<span class="ss">66 [500 511 502 549 494 356 516 550 321 321 510 317 738 533 535 545 533 </span>
+<span class="ss">376 443 261 529 742 534 576 439]\n           92 95 500\n           </span>
+<span class="ss">13648 13742 500\n           17603 [500]\n      ]\n&quot;</span>
 
-<span class="x">attr(,&quot;class&quot;)</span>
-<span class="x">[1] &quot;CIDFont&quot;</span>
+<span class="n">attr</span><span class="p">(,</span><span class="ss">&quot;class&quot;</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ss">&quot;CIDFont&quot;</span>
 </pre></div>
 
 
@@ -281,23 +280,23 @@ useDingbats, useKerning, fillOddEven, compress)
 <p>可以看到，R中对西文和中文字体处理方式不大相同，英文使用Type1Font类字体，而中文使用CIDFont，并且两种字体的映射关系也有差别，这使得要自定义字体变得比较麻烦，要想手动注册字体比较费时费力，而且容易出错。</p>
 <p>要添加自己的英文字体，可以把要加入的.afm字形文件加入到<code>R_HOME/library/grDevices/afm</code>下，然后用<code>Type1Font()</code>函数建立字体映射关系，最后用<code>pdfFonts()</code>或者<code>postscriptFonts()</code>注册新字体</p>
 <div class="highlight"><pre><span></span><span class="c1">#已经把字体文件放到了R_HOME/library/grDevices/afm下</span>
-<span class="o">&gt;</span>utopia <span class="o">&lt;-</span> Type1Font<span class="p">(</span><span class="s">&quot;utopia&quot;</span><span class="p">,</span> 
-<span class="kt">c</span><span class="p">(</span><span class="s">&quot;putb8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putbi8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putr8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putri8a.afm&quot;</span><span class="p">))</span>
-<span class="o">&gt;</span> pdfFonts<span class="p">(</span>utopia <span class="o">=</span> utopia<span class="p">)</span>
+<span class="o">&gt;</span><span class="n">utopia</span> <span class="o">&lt;-</span> <span class="nf">Type1Font</span><span class="p">(</span><span class="s">&quot;utopia&quot;</span><span class="p">,</span> 
+<span class="nf">c</span><span class="p">(</span><span class="s">&quot;putb8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putbi8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putr8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putri8a.afm&quot;</span><span class="p">))</span>
+<span class="o">&gt;</span> <span class="nf">pdfFonts</span><span class="p">(</span><span class="n">utopia</span> <span class="o">=</span> <span class="n">utopia</span><span class="p">)</span>
 </pre></div>
 
 
 <p>如果参数都正确，注册的字体能够被<code>pdf()</code>中<code>family</code>作为参数接受：</p>
-<div class="highlight"><pre><span></span>&gt; pdf(&quot;utopia.pdf&quot;, family = &quot;utopia&quot;)
-&gt; plot(1:10, main = &quot;test utopia&quot;)
-&gt; dev.off()
-null device 
-      1
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">pdf</span><span class="p">(</span><span class="ss">&quot;utopia.pdf&quot;</span><span class="p">,</span> <span class="n">family</span> <span class="o">=</span> <span class="ss">&quot;utopia&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">plot</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="n">main</span> <span class="o">=</span> <span class="ss">&quot;test utopia&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">dev</span><span class="p">.</span><span class="k">off</span><span class="p">()</span>
+<span class="k">null</span> <span class="n">device</span> 
+      <span class="mi">1</span>
 </pre></div>
 
 
 <p>成功输出pdf，字体也改变了：</p>
-<p><img alt="utopia" src="http://i.imgur.com/zSZ9bay.jpg" /></p>
+<p><img alt="utopia" src="http://i.imgur.com/zSZ9bay.jpg"></p>
 <p>由于目前对中文字体的了解不够多，因此没有找到手动添加中文字体的方法。</p>
 <h3>R对pdf图形设备的处理</h3>
 <p>R在生成pdf图形设备时，似乎不是真正的在绘制pdf上的文字，而是采用声明的方式，它只是在pdf中写入了文字的字体、字形信息，如果用户的操作系统没有pdf中声明的字体，而pdf中的一些文字没有被采用系统缺省的字体正确描述，那么就会出现前面的无法正常显示的问题。R的这种较为“偷懒”的处理方式正是导致中文字符无法正常显示的根源。</p>
@@ -305,22 +304,22 @@ null device
 <p>在探究问题原因的过程中，其实已经出现了一些解决方案，这里把我从网上收集到的解决办法和我自己的理解写在一起。</p>
 <h3>屏幕输出或图片输出</h3>
 <p>这种问题不涉及到pdf图形设备，因此是最好解决的，我们只需要预先在R中声明当前图形设备的字体，再更改图形设备的绘图参数就可以达到改变字体的目的：</p>
-<div class="highlight"><pre><span></span>&gt;windowsFonts(lishu = windowsFont(&quot;STLITI&quot;))
-&gt;plot(1:10, main = &quot;测试&quot;, family = &quot;lishu&quot;)
+<div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="n">windowsFonts</span><span class="p">(</span><span class="n">lishu</span> <span class="o">=</span> <span class="n">windowsFont</span><span class="p">(</span><span class="ss">&quot;STLITI&quot;</span><span class="p">))</span>
+<span class="o">&gt;</span><span class="n">plot</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="n">main</span> <span class="o">=</span> <span class="ss">&quot;测试&quot;</span><span class="p">,</span> <span class="n">family</span> <span class="o">=</span> <span class="ss">&quot;lishu&quot;</span><span class="p">)</span>
 </pre></div>
 
 
-<p><img alt="lishu" src="http://i.imgur.com/PKTECsA.jpg" /></p>
+<p><img alt="lishu" src="http://i.imgur.com/PKTECsA.jpg"></p>
 <h3>pdf输出</h3>
 <p>前面已经提到，pdf图形设备比较复杂，因此解决方法也更多，在不使用其他包的情况下，我只能自己指定英文字体，但也不是一步到位：</p>
 <div class="highlight"><pre><span></span><span class="c1">#已经把字体文件放到了R_HOME/library/grDevices/afm下</span>
-<span class="o">&gt;</span>utopia <span class="o">&lt;-</span> Type1Font<span class="p">(</span><span class="s">&quot;utopia&quot;</span><span class="p">,</span> 
-<span class="kt">c</span><span class="p">(</span><span class="s">&quot;putb8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putbi8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putr8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putri8a.afm&quot;</span><span class="p">))</span>
-<span class="o">&gt;</span> pdfFonts<span class="p">(</span>utopia <span class="o">=</span> utopia<span class="p">)</span>
-<span class="o">&gt;</span> pdf<span class="p">(</span><span class="s">&quot;utopia.pdf&quot;</span><span class="p">,</span> family <span class="o">=</span> <span class="s">&quot;utopia&quot;</span><span class="p">)</span>
-<span class="o">&gt;</span> plot<span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">,</span> main <span class="o">=</span> <span class="s">&quot;test utopia&quot;</span><span class="p">)</span>
-<span class="o">&gt;</span> dev.off<span class="p">()</span>
-null device 
+<span class="o">&gt;</span><span class="n">utopia</span> <span class="o">&lt;-</span> <span class="nf">Type1Font</span><span class="p">(</span><span class="s">&quot;utopia&quot;</span><span class="p">,</span> 
+<span class="nf">c</span><span class="p">(</span><span class="s">&quot;putb8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putbi8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putr8a.afm&quot;</span><span class="p">,</span> <span class="s">&quot;putri8a.afm&quot;</span><span class="p">))</span>
+<span class="o">&gt;</span> <span class="nf">pdfFonts</span><span class="p">(</span><span class="n">utopia</span> <span class="o">=</span> <span class="n">utopia</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="nf">pdf</span><span class="p">(</span><span class="s">&quot;utopia.pdf&quot;</span><span class="p">,</span> <span class="n">family</span> <span class="o">=</span> <span class="s">&quot;utopia&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="nf">plot</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">,</span> <span class="n">main</span> <span class="o">=</span> <span class="s">&quot;test utopia&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="nf">dev.off</span><span class="p">()</span>
+<span class="n">null</span> <span class="n">device</span> 
       <span class="m">1</span>
 </pre></div>
 
@@ -330,8 +329,8 @@ null device
 <p>这是目前我发现的最简单的方法，输出效果也是最不好的，先把图片输出到屏幕(必须先指定字体)，再利用Rstudio中的"save as pdf"，就可以获得正常显示的pdf，但是只能使用宋体，排版也不尽人意，而且pdf还是不能被AI正常显示。</p>
 <h4>利用福昕pdf打印机</h4>
 <p>这里利用了福昕pdf浏览器的pdf打印功能，同样先输出到屏幕，再进行打印</p>
-<div class="highlight"><pre><span></span>&gt;dev.new()
-&gt;plot(1:10, main = &quot;测试&quot;, family = &quot;lishu&quot;)
+<div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="n">dev</span><span class="p">.</span><span class="k">new</span><span class="p">()</span>
+<span class="o">&gt;</span><span class="n">plot</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="n">main</span> <span class="o">=</span> <span class="ss">&quot;测试&quot;</span><span class="p">,</span> <span class="n">family</span> <span class="o">=</span> <span class="ss">&quot;lishu&quot;</span><span class="p">)</span>
 </pre></div>
 
 
@@ -346,59 +345,59 @@ null device
 <li>在R中注册刚刚建立表格中的所有字体（使用pdfFonts()）函数</li>
 </ol>
 <p>在Rstudio环境下运行：</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;</span>install.packages<span class="p">(</span><span class="s">&quot;extrafont&quot;</span><span class="p">)</span>
-<span class="o">&gt;</span>font_import<span class="p">()</span> <span class="c1">#导入字体，根据字体多少决定时间，只需要运行一次</span>
-<span class="o">&gt;</span>loadfonts<span class="p">()</span> <span class="c1">#注册字体，只需运行一次</span>
-<span class="o">&gt;</span>fontlist <span class="o">&lt;-</span> pdfFonts<span class="p">()</span>
-<span class="o">&gt;</span><span class="kp">length</span><span class="p">(</span>fontlist<span class="p">)</span>
-<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">425</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="nf">install.packages</span><span class="p">(</span><span class="s">&quot;extrafont&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span><span class="nf">font_import</span><span class="p">()</span> <span class="c1">#导入字体，根据字体多少决定时间，只需要运行一次</span>
+<span class="o">&gt;</span><span class="nf">loadfonts</span><span class="p">()</span> <span class="c1">#注册字体，只需运行一次</span>
+<span class="o">&gt;</span><span class="n">fontlist</span> <span class="o">&lt;-</span> <span class="nf">pdfFonts</span><span class="p">()</span>
+<span class="o">&gt;</span><span class="nf">length</span><span class="p">(</span><span class="n">fontlist</span><span class="p">)</span>
+<span class="n">[1]</span> <span class="m">425</span>
 </pre></div>
 
 
 <p>在完成这几步后，我们已经可以使用新的字体了。</p>
 <p>但是，经过测试，我发现extrafont包对中文支持不好，仍然出现无法正常使用字体的问题：</p>
-<div class="highlight"><pre><span></span>&gt; pdf(&quot;youyuan.pdf&quot;, family = &quot;YouYuan&quot;)
-&gt; plot(1:10, main = &quot;test 测试&quot;)
-There were 50 or more warnings (use warnings() to see the first 50)
-&gt; warnings()
-警告信息：
-1: In axis(side = side, at = at, labels = labels, ...) :
-字符0x6d不带字体宽度这样的设置
-2: In axis(side = side, at = at, labels = labels, ...) :
-字符0x32不带字体宽度这样的设置
-3: In axis(side = side, at = at, labels = labels, ...) :
-字符0x32不带字体宽度这样的设置
-4: In axis(side = side, at = at, labels = labels, ...) : 字符0x4d不带字体度量
-#省略部分报警信息
-&gt; dev.off()
-null device 
-      1
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">pdf</span><span class="p">(</span><span class="ss">&quot;youyuan.pdf&quot;</span><span class="p">,</span> <span class="n">family</span> <span class="o">=</span> <span class="ss">&quot;YouYuan&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">plot</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="n">main</span> <span class="o">=</span> <span class="ss">&quot;test 测试&quot;</span><span class="p">)</span>
+<span class="n">There</span> <span class="n">were</span> <span class="mi">50</span> <span class="k">or</span> <span class="k">more</span> <span class="n">warnings</span> <span class="p">(</span><span class="n">use</span> <span class="n">warnings</span><span class="p">()</span> <span class="k">to</span> <span class="n">see</span> <span class="n">the</span> <span class="k">first</span> <span class="mi">50</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">warnings</span><span class="p">()</span>
+<span class="err">警告信息：</span>
+<span class="mi">1</span><span class="p">:</span> <span class="k">In</span> <span class="n">axis</span><span class="p">(</span><span class="n">side</span> <span class="o">=</span> <span class="n">side</span><span class="p">,</span> <span class="k">at</span> <span class="o">=</span> <span class="k">at</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">,</span> <span class="p">...)</span> <span class="p">:</span>
+<span class="err">字符</span><span class="mi">0</span><span class="n">x6d</span><span class="err">不带字体宽度这样的设置</span>
+<span class="mi">2</span><span class="p">:</span> <span class="k">In</span> <span class="n">axis</span><span class="p">(</span><span class="n">side</span> <span class="o">=</span> <span class="n">side</span><span class="p">,</span> <span class="k">at</span> <span class="o">=</span> <span class="k">at</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">,</span> <span class="p">...)</span> <span class="p">:</span>
+<span class="err">字符</span><span class="mi">0</span><span class="n">x32</span><span class="err">不带字体宽度这样的设置</span>
+<span class="mi">3</span><span class="p">:</span> <span class="k">In</span> <span class="n">axis</span><span class="p">(</span><span class="n">side</span> <span class="o">=</span> <span class="n">side</span><span class="p">,</span> <span class="k">at</span> <span class="o">=</span> <span class="k">at</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">,</span> <span class="p">...)</span> <span class="p">:</span>
+<span class="err">字符</span><span class="mi">0</span><span class="n">x32</span><span class="err">不带字体宽度这样的设置</span>
+<span class="mi">4</span><span class="p">:</span> <span class="k">In</span> <span class="n">axis</span><span class="p">(</span><span class="n">side</span> <span class="o">=</span> <span class="n">side</span><span class="p">,</span> <span class="k">at</span> <span class="o">=</span> <span class="k">at</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">,</span> <span class="p">...)</span> <span class="p">:</span> <span class="err">字符</span><span class="mi">0</span><span class="n">x4d</span><span class="err">不带字体度量</span>
+<span class="o">#</span><span class="err">省略部分报警信息</span>
+<span class="o">&gt;</span> <span class="n">dev</span><span class="p">.</span><span class="k">off</span><span class="p">()</span>
+<span class="k">null</span> <span class="n">device</span> 
+      <span class="mi">1</span>
 </pre></div>
 
 
-<p><img alt="youyuan" src="http://i.imgur.com/aKruPxF.jpg" /></p>
+<p><img alt="youyuan" src="http://i.imgur.com/aKruPxF.jpg"></p>
 <p>(无法正常显示，但图片上的字符和AI打开后看到的字符一样，AI能识别这种pdf的字体，但可能编码有误）</p>
 <p>估计是extraFont包在转换.afm文件和注册字体中出了问题，因为前面提到R对构造非西文字体映射采用了<code>CIDFont()</code>，而构造映射西文的.afm字体采用<code>Type1Font()</code>， 两者之间的映射关系不相同。</p>
 <h4>利用showtext包</h4>
 <p>这个包是由最早的中文R社区“统计之都”的大神<a href="https://github.com/yixuan">yixuan</a>制作的，它能够将R图形设备中的文字符号直接“绘制”到pdf上，因此不需要考虑系统字库问题，因为此时的字体已经相当于一个图像了。
 可以在showtext的<a href="https://github.com/yixuan/showtext">github主页</a>上看到更详细的信息。</p>
 <p>安装好showtext后，使用十分简单：</p>
-<div class="highlight"><pre><span></span>&gt; font.add(&quot;lishu&quot;, &quot;SIMLI.TTF&quot;)
-&gt; pdf(&quot;lishu2.pdf&quot;)
-&gt; showtext.begin()
-&gt; plot(1:10, cex = 1.5, col = &quot;red&quot;)
-&gt; text(5, 5, &quot;测试 隶书&quot;, family = &quot;lishu&quot;, col = &quot;blue&quot;)
-&gt; showtext.end()
-&gt; dev.off()
-RStudioGD 
-    2
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="nv">font</span>.<span class="nv">add</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">lishu</span><span class="s2">&quot;</span>, <span class="s2">&quot;</span><span class="s">SIMLI.TTF</span><span class="s2">&quot;</span><span class="ss">)</span>
+<span class="o">&gt;</span> <span class="nv">pdf</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">lishu2.pdf</span><span class="s2">&quot;</span><span class="ss">)</span>
+<span class="o">&gt;</span> <span class="nv">showtext</span>.<span class="nv">begin</span><span class="ss">()</span>
+<span class="o">&gt;</span> <span class="nv">plot</span><span class="ss">(</span><span class="mi">1</span>:<span class="mi">10</span>, <span class="nv">cex</span> <span class="o">=</span> <span class="mi">1</span>.<span class="mi">5</span>, <span class="nv">col</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">red</span><span class="s2">&quot;</span><span class="ss">)</span>
+<span class="o">&gt;</span> <span class="nv">text</span><span class="ss">(</span><span class="mi">5</span>, <span class="mi">5</span>, <span class="s2">&quot;</span><span class="s">测试 隶书</span><span class="s2">&quot;</span>, <span class="nv">family</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">lishu</span><span class="s2">&quot;</span>, <span class="nv">col</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">blue</span><span class="s2">&quot;</span><span class="ss">)</span>
+<span class="o">&gt;</span> <span class="nv">showtext</span>.<span class="k">end</span><span class="ss">()</span>
+<span class="o">&gt;</span> <span class="nv">dev</span>.<span class="nv">off</span><span class="ss">()</span>
+<span class="nv">RStudioGD</span> 
+    <span class="mi">2</span>
 </pre></div>
 
 
 <p>利用<code>font.add()</code>先添加字体，这个字体是来自windows字库中的字体，第一个参数是自己指定的字体名字，后一个是字体文件名,在打开pdf图形设备后，必须出现<code>showtext.begin()</code>才能正确应用字体，在绘图结束后，必须出现<code>showtext.end()</code>， 这样，经过这几步，可以轻松得到正确字体的pdf文件：</p>
-<p><img alt="lishuceshi" src="http://i.imgur.com/rprpNQn.jpg" /></p>
+<p><img alt="lishuceshi" src="http://i.imgur.com/rprpNQn.jpg"></p>
 <p>由于showtext包其实自己定义了pdf图形设备的生成方式，它把所有字符都当做了多边形处理，所以不论什么系统都可以正常显示，也可以在AI中编辑：</p>
-<p><img alt="inai" src="http://i.imgur.com/yT6k4Vp.jpg" /></p>
+<p><img alt="inai" src="http://i.imgur.com/yT6k4Vp.jpg"></p>
 <h2>后记</h2>
 <p>写这篇经验总结花费了不少功夫，查找了网上的很多资料，在有一点原创性的基础上拼凑了一番，虽然花了一天半时间研究这些R中不太让人注意的细节，但还是感到收货颇多，再次叹服R的复杂精妙之处，也体会到了R的一点不为人知（少数的）之处吧。</p>
     </article>

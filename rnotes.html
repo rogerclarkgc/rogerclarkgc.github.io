@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>drake学习笔记</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="高效管理数据分析工作流">
+
+        <meta name="author" content="rogerclarkgc">
+
+        <meta name="tags" content="R">
+        <meta name="tags" content="notes">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="DeusExMachina">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/rogerclarkgc.html">
+	<meta property="og:url" content="/rnotes.html">
+	<meta property="og:title" content="drake学习笔记">
+	<meta property="article:published_time" content="2019-06-27 15:50:00+08:00">
+            <meta property="og:description" content="高效管理数据分析工作流">
+
+            <meta property="og:image" content="/theme/images/post-bg.jpg">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">DeusExMachina</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('/theme/images/post-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>drake学习笔记</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/rogerclarkgc.html">rogerclarkgc</a>
+                             on 周四 27 六月 2019
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <h2>例子</h2>
+<div class="highlight"><pre><span></span><span class="n">plan</span> <span class="o">&lt;-</span> <span class="nf">drake_plan</span><span class="p">(</span>
+  <span class="n">raw_data</span> <span class="o">=</span> <span class="n">readxl</span><span class="o">::</span><span class="nf">read_excel</span><span class="p">(</span><span class="nf">file_in</span><span class="p">(</span><span class="s">&quot;raw_data.xlsx&quot;</span><span class="p">)),</span>
+  <span class="n">data</span> <span class="o">=</span> <span class="n">raw_data</span> <span class="o">%&gt;%</span>
+    <span class="nf">mutate</span><span class="p">(</span><span class="n">Species</span> <span class="o">=</span> <span class="n">forcats</span><span class="o">::</span><span class="nf">fct_inorder</span><span class="p">(</span><span class="n">Species</span><span class="p">)),</span>
+  <span class="n">hist</span> <span class="o">=</span> <span class="nf">create_plot</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+  <span class="n">fit</span> <span class="o">=</span> <span class="nf">lm</span><span class="p">(</span><span class="n">Sepal.Width</span> <span class="o">~</span> <span class="n">Petal.Width</span> <span class="o">+</span> <span class="n">Species</span><span class="p">,</span> <span class="n">data</span><span class="p">),</span>
+  <span class="n">report</span> <span class="o">=</span> <span class="n">rmarkdown</span><span class="o">::</span><span class="nf">render</span><span class="p">(</span>
+    <span class="nf">knitr_in</span><span class="p">(</span><span class="s">&quot;report.Rmd&quot;</span><span class="p">),</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="nf">file_out</span><span class="p">(</span><span class="s">&quot;report.html&quot;</span><span class="p">),</span>
+    <span class="n">quiet</span> <span class="o">=</span> <span class="kc">TRUE</span>
+  <span class="p">)</span>
+<span class="p">)</span>
+<span class="n">plan</span>
+<span class="c1">#&gt; # A tibble: 5 x 2</span>
+<span class="c1">#&gt;   target   command                                                         </span>
+<span class="c1">#&gt;   &lt;chr&gt;    &lt;expr&gt;                                                          </span>
+<span class="c1">#&gt; 1 raw_data readxl::read_excel(file_in(&quot;raw_data.xlsx&quot;))                   …</span>
+<span class="c1">#&gt; 2 data     raw_data %&gt;% mutate(Species = forcats::fct_inorder(Species))   …</span>
+<span class="c1">#&gt; 3 hist     create_plot(data)                                              …</span>
+<span class="c1">#&gt; 4 fit      lm(Sepal.Width ~ Petal.Width + Species, data)                  …</span>
+<span class="c1">#&gt; 5 report   rmarkdown::render(knitr_in(&quot;report.Rmd&quot;), output_file = file_ou…</span>
+</pre></div>
+
+
+<p><code>drake_plan</code>其实是经过改造的R脚本，其实例是一个tibble数据框，一般包含<code>target</code>和相对应的<code>command</code>，<code>target</code>一般是分析过程中的变量或者数据以及输出的文件，<code>commmand</code>一般是建模、绘制等统计分析的指令。可以通过如下语句自由转换plan和一般脚本</p>
+<div class="highlight"><pre><span></span><span class="n">plan_to_code</span><span class="p">()</span> 
+<span class="n">code_to_plan</span><span class="p">()</span>
+<span class="n">plan_to_notebook</span><span class="p">()</span> <span class="o">#</span> <span class="err">转换成</span><span class="n">Rnotebooks</span>
+</pre></div>
+
+
+<p><code>drake</code>包的核心思想是减少数据分析中由于改变参数而导致所有管线组件需要重新计算的问题，利用<code>drake_plan</code>包裹数据分析的脚本，随后执行如下语句来计算整个plan：</p>
+<div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">&lt;-</span> <span class="nf">drake_config</span><span class="p">(</span><span class="n">plan</span><span class="p">)</span> <span class="c1"># 建立plan配置</span>
+<span class="nf">vis_drake_graph</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="c1"># 生成plan流程图</span>
+<span class="nf">make</span><span class="p">(</span><span class="n">plan</span><span class="p">)</span> <span class="c1"># 执行plan</span>
+</pre></div>
+
+
+<p>使用<code>drake_plan</code>做数据分析的好处在于，drake会自动分析plan的依赖关系，每次执行是只会计算整个管线中发生改变的组件，从而减少大量分析时间。 此外<code>vis_drake_graph</code>形成依赖图使分析过程更加可视化。</p>
+<h2><code>target</code>：定制的command</h2>
+<p>利用<code>target</code>来包裹<code>plan</code>的子代码，能够更好的抽象整个分析过程中的组件，此外<code>target</code>的几个参数能够方便的进行<a href="https://ropenscilabs.github.io/drake-manual/hpc.html#hpc">并行计算</a></p>
+<div class="highlight"><pre><span></span><span class="n">drake_plan</span><span class="p">(</span>
+  <span class="n">file</span> <span class="o">=</span> <span class="n">target</span><span class="p">(</span>
+    <span class="n">ggsave</span><span class="p">(</span><span class="n">file_out</span><span class="p">(</span><span class="ss">&quot;plot.png&quot;</span><span class="p">),</span> <span class="n">plot</span><span class="p">),</span>
+    <span class="n">elapsed</span> <span class="o">=</span> <span class="mi">10</span>
+  <span class="p">),</span>
+  <span class="n">create_plot</span><span class="p">(</span><span class="n">datasets</span><span class="p">::</span><span class="n">iris</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="o">#&gt;</span> <span class="o">#</span> <span class="n">A</span> <span class="n">tibble</span><span class="p">:</span> <span class="mi">2</span> <span class="n">x</span> <span class="mi">3</span>
+<span class="o">#&gt;</span>   <span class="n">target</span>         <span class="n">command</span>                            <span class="n">elapsed</span>
+<span class="o">#&gt;</span>   <span class="o">&lt;</span><span class="n">chr</span><span class="o">&gt;</span>          <span class="o">&lt;</span><span class="n">expr</span><span class="o">&gt;</span>                               <span class="o">&lt;</span><span class="n">dbl</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<blockquote>
+<p>The following columns have special meanings for make().</p>
+<p><code>elapsed</code> and <code>cpu</code>: number of seconds to wait for the target to build before timing out (elapsed for elapsed time and cpu for CPU time).</p>
+<p><code>priority</code>: for parallel computing, optionally rank the targets according to priority in the scheduler.
+resources: target-specific lists of resources for a computing cluster. See the advanced options in the parallel computing chapter for details.</p>
+<p><code>retries</code>: number of times to retry building a target in the event of an error.</p>
+<p><code>trigger</code>: rule to decide whether a target needs to run. See the trigger chapter to learn more.</p>
+</blockquote>
+<h2><code>map</code>, <code>cross</code>和<code>combine</code></h2>
+<p>数据分析中常常需要重复执行一些填入不同参数的命令，最常见的就是逐步回归中的建模，回归系数多时往往需要很多模型。这是使用以上三个命令可以极大减少<code>plan</code>的代码量，同时也可以加速运算过程。</p>
+<h3><code>map</code>：参数矩阵</h3>
+<p>例子1</p>
+<div class="highlight"><pre><span></span><span class="n">drake_plan</span><span class="p">(</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">target</span><span class="p">(</span>
+    <span class="n">simulate_data</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="k">scale</span><span class="p">),</span>
+    <span class="k">transform</span> <span class="o">=</span> <span class="k">map</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="k">c</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="k">scale</span> <span class="o">=</span> <span class="k">c</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+  <span class="p">)</span>
+<span class="p">)</span>
+<span class="o">#&gt;</span> <span class="o">#</span> <span class="n">A</span> <span class="n">tibble</span><span class="p">:</span> <span class="mi">3</span> <span class="n">x</span> <span class="mi">2</span>
+<span class="o">#&gt;</span>   <span class="n">target</span> <span class="n">command</span>            
+<span class="o">#&gt;</span>   <span class="o">&lt;</span><span class="n">chr</span><span class="o">&gt;</span>  <span class="o">&lt;</span><span class="n">expr</span><span class="o">&gt;</span>             
+<span class="o">#&gt;</span> <span class="mi">1</span> <span class="n">x_2_3</span>  <span class="n">simulate_data</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="o">#&gt;</span> <span class="mi">2</span> <span class="n">x_1_2</span>  <span class="n">simulate_data</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="o">#&gt;</span> <span class="mi">3</span> <span class="n">x_0_1</span>  <span class="n">simulate_data</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+
+<p><code>simulate_data</code>是元操作，map生成一个2*3参数矩阵，套用在这个元操作上，注意参数之间长度应该相同</p>
+<p>例子2</p>
+<div class="highlight"><pre><span></span><span class="nv">my_grid</span> <span class="o">&lt;-</span> <span class="nv">tibble</span><span class="ss">(</span>
+  <span class="nv">sim_function</span> <span class="o">=</span> <span class="nv">c</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">rnrom</span><span class="s2">&quot;</span>, <span class="s2">&quot;</span><span class="s">rt</span><span class="s2">&quot;</span>, <span class="s2">&quot;</span><span class="s">rcauchy</span><span class="s2">&quot;</span><span class="ss">)</span>,
+  <span class="nv">title</span> <span class="o">=</span> <span class="nv">c</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Normal</span><span class="s2">&quot;</span>, <span class="s2">&quot;</span><span class="s">Student t</span><span class="s2">&quot;</span>, <span class="s2">&quot;</span><span class="s">Cauchy</span><span class="s2">&quot;</span><span class="ss">)</span>
+<span class="ss">)</span>
+<span class="nv">my_grid</span>$<span class="nv">sim_function</span> <span class="o">&lt;-</span> <span class="nv">rlang</span>::<span class="nv">syms</span><span class="ss">(</span><span class="nv">my_grid</span>$<span class="nv">sim_function</span><span class="ss">)</span>
+
+<span class="nv">drake_plan</span><span class="ss">(</span>
+  <span class="nv">x</span> <span class="o">=</span> <span class="nv">target</span><span class="ss">(</span>
+    <span class="nv">simulate_data</span><span class="ss">(</span><span class="nv">sim_function</span>, <span class="nv">title</span>, <span class="nv">center</span>, <span class="nv">scale</span><span class="ss">)</span>,
+    <span class="nv">transform</span> <span class="o">=</span> <span class="nv">map</span><span class="ss">(</span>
+      <span class="nv">center</span> <span class="o">=</span> <span class="nv">c</span><span class="ss">(</span><span class="mi">2</span>, <span class="mi">1</span>, <span class="mi">0</span><span class="ss">)</span>,
+      <span class="nv">scale</span> <span class="o">=</span> <span class="nv">c</span><span class="ss">(</span><span class="mi">3</span>, <span class="mi">2</span>, <span class="mi">1</span><span class="ss">)</span>,
+      .<span class="nv">data</span> <span class="o">=</span> <span class="o">!!</span><span class="nv">my_grid</span>,
+      .<span class="nv">id</span> <span class="o">=</span> <span class="nv">sim_function</span> # <span class="k">for</span> <span class="nv">pretty</span> <span class="nv">target</span> <span class="nv">names</span>
+    <span class="ss">)</span>
+  <span class="ss">)</span>
+<span class="ss">)</span>
+#<span class="o">&gt;</span> # <span class="nv">A</span> <span class="nv">tibble</span>: <span class="mi">3</span> <span class="nv">x</span> <span class="mi">2</span>
+#<span class="o">&gt;</span>   <span class="nv">target</span>    <span class="nv">command</span>                               
+#<span class="o">&gt;</span>   <span class="o">&lt;</span><span class="nv">chr</span><span class="o">&gt;</span>     <span class="o">&lt;</span><span class="nv">expr</span><span class="o">&gt;</span>                                
+#<span class="o">&gt;</span> <span class="mi">1</span> <span class="nv">x_rnrom</span>   <span class="nv">simulate_data</span><span class="ss">(</span><span class="nv">rnrom</span>, <span class="s2">&quot;</span><span class="s">Normal</span><span class="s2">&quot;</span>, <span class="mi">2</span>, <span class="mi">3</span><span class="ss">)</span>  
+#<span class="o">&gt;</span> <span class="mi">2</span> <span class="nv">x_rt</span>      <span class="nv">simulate_data</span><span class="ss">(</span><span class="nv">rt</span>, <span class="s2">&quot;</span><span class="s">Student t</span><span class="s2">&quot;</span>, <span class="mi">1</span>, <span class="mi">2</span><span class="ss">)</span>  
+#<span class="o">&gt;</span> <span class="mi">3</span> <span class="nv">x_rcauchy</span> <span class="nv">simulate_data</span><span class="ss">(</span><span class="nv">rcauchy</span>, <span class="s2">&quot;</span><span class="s">Cauchy</span><span class="s2">&quot;</span>, <span class="mi">0</span>, <span class="mi">1</span><span class="ss">)</span>
+</pre></div>
+
+
+<p>可以自己定制参数矩阵，要注意<code>!!</code>的使用。</p>
+<p>例子3</p>
+<div class="highlight"><pre><span></span><span class="nv">drake_plan</span><span class="ss">(</span>
+  <span class="nv">x</span> <span class="o">=</span> <span class="nv">target</span><span class="ss">(</span>
+    <span class="nv">simulate_data</span><span class="ss">(</span><span class="nv">center</span><span class="ss">)</span>,
+    <span class="nv">transform</span> <span class="o">=</span> <span class="nv">map</span><span class="ss">(</span><span class="nv">center</span> <span class="o">=</span> <span class="nv">c</span><span class="ss">(</span><span class="mi">1</span>, <span class="mi">2</span><span class="ss">))</span>
+  <span class="ss">)</span>,
+  <span class="nv">y</span> <span class="o">=</span> <span class="nv">target</span><span class="ss">(</span>
+    <span class="nv">process_data</span><span class="ss">(</span><span class="nv">x</span>, <span class="nv">center</span><span class="ss">)</span>,
+    <span class="nv">transform</span> <span class="o">=</span> <span class="nv">map</span><span class="ss">(</span><span class="nv">x</span><span class="ss">)</span>
+  <span class="ss">)</span>,
+  <span class="nv">trace</span> <span class="o">=</span> <span class="nv">TRUE</span> # <span class="nv">Adds</span> <span class="nv">extra</span> <span class="nv">columns</span> <span class="k">for</span> <span class="nv">the</span> <span class="nv">grouping</span> <span class="nv">variables</span>.
+<span class="ss">)</span>
+#<span class="o">&gt;</span> # <span class="nv">A</span> <span class="nv">tibble</span>: <span class="mi">4</span> <span class="nv">x</span> <span class="mi">5</span>
+#<span class="o">&gt;</span>   <span class="nv">target</span> <span class="nv">command</span>              <span class="nv">center</span> <span class="nv">x</span>     <span class="nv">y</span>    
+#<span class="o">&gt;</span>   <span class="o">&lt;</span><span class="nv">chr</span><span class="o">&gt;</span>  <span class="o">&lt;</span><span class="nv">expr</span><span class="o">&gt;</span>               <span class="o">&lt;</span><span class="nv">chr</span><span class="o">&gt;</span>  <span class="o">&lt;</span><span class="nv">chr</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nv">chr</span><span class="o">&gt;</span>
+#<span class="o">&gt;</span> <span class="mi">1</span> <span class="nv">x_1</span>    <span class="nv">simulate_data</span><span class="ss">(</span><span class="mi">1</span><span class="ss">)</span>     <span class="mi">1</span>      <span class="nv">x_1</span>   <span class="o">&lt;</span><span class="nv">NA</span><span class="o">&gt;</span> 
+#<span class="o">&gt;</span> <span class="mi">2</span> <span class="nv">x_2</span>    <span class="nv">simulate_data</span><span class="ss">(</span><span class="mi">2</span><span class="ss">)</span>     <span class="mi">2</span>      <span class="nv">x_2</span>   <span class="o">&lt;</span><span class="nv">NA</span><span class="o">&gt;</span> 
+#<span class="o">&gt;</span> <span class="mi">3</span> <span class="nv">y_x_1</span>  <span class="nv">process_data</span><span class="ss">(</span><span class="nv">x_1</span>, <span class="mi">1</span><span class="ss">)</span> <span class="mi">1</span>      <span class="nv">x_1</span>   <span class="nv">y_x_1</span>
+#<span class="o">&gt;</span> <span class="mi">4</span> <span class="nv">y_x_2</span>  <span class="nv">process_data</span><span class="ss">(</span><span class="nv">x_2</span>, <span class="mi">2</span><span class="ss">)</span> <span class="mi">2</span>      <span class="nv">x_2</span>   <span class="nv">y_x_2</span>
+</pre></div>
+
+
+<p><code>map</code>可以嵌套使用，第一个<code>x</code>使用<code>center=c(1,2)</code>生成两条命令，第二个<code>y</code>实际利用了第一个的结果即<code>map(x=c(x_1, x_2)</code>，注意，这里<code>center</code>没有加入<code>map</code>，但却有取值，这可能跟这个代码块中的<code>center</code>变量并非参数变量，在第一个map执行完后不会销毁而继续作为<code>drake_plan</code>中的局部变量而被第二个<code>map</code>调用。</p>
+<h3><code>cross</code>：参数组合</h3>
+<p>利用<code>cross</code>可以形成参数之间的组合，也是产生一个参数矩阵，这时参数的长度可以不同</p>
+<p>例子</p>
+<div class="highlight"><pre><span></span><span class="n">drake_plan</span><span class="p">(</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">target</span><span class="p">(</span>
+    <span class="n">simulate_data</span><span class="p">(</span><span class="n">nrow</span><span class="p">,</span> <span class="n">ncol</span><span class="p">),</span>
+    <span class="k">transform</span> <span class="o">=</span> <span class="k">cross</span><span class="p">(</span><span class="n">nrow</span> <span class="o">=</span> <span class="k">c</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">ncol</span> <span class="o">=</span> <span class="k">c</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+  <span class="p">)</span>
+<span class="p">)</span>
+<span class="o">#&gt;</span> <span class="o">#</span> <span class="n">A</span> <span class="n">tibble</span><span class="p">:</span> <span class="mi">6</span> <span class="n">x</span> <span class="mi">2</span>
+<span class="o">#&gt;</span>   <span class="n">target</span> <span class="n">command</span>            
+<span class="o">#&gt;</span>   <span class="o">&lt;</span><span class="n">chr</span><span class="o">&gt;</span>  <span class="o">&lt;</span><span class="n">expr</span><span class="o">&gt;</span>             
+<span class="o">#&gt;</span> <span class="mi">1</span> <span class="n">x_1_4</span>  <span class="n">simulate_data</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="o">#&gt;</span> <span class="mi">2</span> <span class="n">x_2_4</span>  <span class="n">simulate_data</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="o">#&gt;</span> <span class="mi">3</span> <span class="n">x_3_4</span>  <span class="n">simulate_data</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="o">#&gt;</span> <span class="mi">4</span> <span class="n">x_1_5</span>  <span class="n">simulate_data</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="o">#&gt;</span> <span class="mi">5</span> <span class="n">x_2_5</span>  <span class="n">simulate_data</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="o">#&gt;</span> <span class="mi">6</span> <span class="n">x_3_5</span>  <span class="n">simulate_data</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+
+<p>这里<code>nrow</code>和<code>ncol</code>进行组合，就有3*2中参数组合，所以生成的tibble就有6行命令</p>
+<h3><code>combine</code>：整合命令</h3>
+<p>利用<code>combine</code>可以聚合多个命令成为一条命令</p>
+<p>例子1</p>
+<div class="highlight"><pre><span></span><span class="n">plan</span> <span class="o">&lt;-</span> <span class="nf">drake_plan</span><span class="p">(</span>
+  <span class="n">data</span> <span class="o">=</span> <span class="nf">target</span><span class="p">(</span>
+    <span class="nf">sim_data</span><span class="p">(</span><span class="n">mean</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">sd</span> <span class="o">=</span> <span class="n">y</span><span class="p">),</span>
+    <span class="n">transform</span> <span class="o">=</span> <span class="nf">map</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">))</span>
+  <span class="p">),</span>
+  <span class="n">larger</span> <span class="o">=</span> <span class="nf">target</span><span class="p">(</span>
+    <span class="nf">bind_rows</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">.id</span> <span class="o">=</span> <span class="s">&quot;id&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+      <span class="nf">arrange</span><span class="p">(</span><span class="n">sd</span><span class="p">)</span> <span class="o">%&gt;%</span>
+      <span class="nf">head</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="m">400</span><span class="p">),</span>
+    <span class="n">transform</span> <span class="o">=</span> <span class="nf">combine</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+  <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">plan</span>
+<span class="c1">#&gt; # A tibble: 3 x 2</span>
+<span class="c1">#&gt;   target   command                                                         </span>
+<span class="c1">#&gt;   &lt;chr&gt;    &lt;expr&gt;                                                          </span>
+<span class="c1">#&gt; 1 data_1_3 sim_data(mean = 1, sd = 3)                                     …</span>
+<span class="c1">#&gt; 2 data_2_4 sim_data(mean = 2, sd = 4)                                     …</span>
+<span class="c1">#&gt; 3 larger   bind_rows(data_1_3, data_2_4, .id = &quot;id&quot;) %&gt;% arrange(sd) %&gt;%  …</span>
+
+<span class="nf">drake_plan_source</span><span class="p">(</span><span class="n">plan</span><span class="p">)</span>
+<span class="c1">#&gt; drake_plan(</span>
+<span class="c1">#&gt;   data_1_3 = sim_data(mean = 1, sd = 3),</span>
+<span class="c1">#&gt;   data_2_4 = sim_data(mean = 2, sd = 4),</span>
+<span class="c1">#&gt;   larger = bind_rows(data_1_3, data_2_4, .id = &quot;id&quot;) %&gt;%</span>
+<span class="c1">#&gt;     arrange(sd) %&gt;%</span>
+<span class="c1">#&gt;     head(n = 400)</span>
+<span class="c1">#&gt; )</span>
+</pre></div>
+
+
+<p>这段代码中，首先第一个<code>target</code>为<code>data</code>，生成了两个命令<code>data_1_3</code>和<code>data_2_4</code>，随后在<code>larger</code>中，利用<code>combine</code>将<code>bind_rows</code>中的参数整合成一条命令</p>
+<p>例子2</p>
+<div class="highlight"><pre><span></span><span class="n">plan</span> <span class="o">&lt;-</span> <span class="nf">drake_plan</span><span class="p">(</span>
+  <span class="n">data</span> <span class="o">=</span> <span class="nf">target</span><span class="p">(</span>
+    <span class="nf">sim_data</span><span class="p">(</span><span class="n">mean</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">sd</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">skew</span> <span class="o">=</span> <span class="n">z</span><span class="p">),</span>
+    <span class="n">transform</span> <span class="o">=</span> <span class="nf">cross</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">),</span> <span class="n">z</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span> <span class="m">6</span><span class="p">))</span>
+  <span class="p">),</span>
+  <span class="n">combined</span> <span class="o">=</span> <span class="nf">target</span><span class="p">(</span>
+    <span class="nf">bind_rows</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">.id</span> <span class="o">=</span> <span class="s">&quot;id&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+      <span class="nf">arrange</span><span class="p">(</span><span class="n">sd</span><span class="p">)</span> <span class="o">%&gt;%</span>
+      <span class="nf">head</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="m">400</span><span class="p">),</span>
+    <span class="n">transform</span> <span class="o">=</span> <span class="nf">combine</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">.by</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+  <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="nf">drake_plan_source</span><span class="p">(</span><span class="n">plan</span><span class="p">)</span>
+<span class="c1">#&gt; drake_plan(</span>
+<span class="c1">#&gt;   data_1_3_5 = sim_data(mean = 1, sd = 3, skew = 5),</span>
+<span class="c1">#&gt;   data_2_3_5 = sim_data(mean = 2, sd = 3, skew = 5),</span>
+<span class="c1">#&gt;   data_1_4_5 = sim_data(mean = 1, sd = 4, skew = 5),</span>
+<span class="c1">#&gt;   data_2_4_5 = sim_data(mean = 2, sd = 4, skew = 5),</span>
+<span class="c1">#&gt;   data_1_3_6 = sim_data(mean = 1, sd = 3, skew = 6),</span>
+<span class="c1">#&gt;   data_2_3_6 = sim_data(mean = 2, sd = 3, skew = 6),</span>
+<span class="c1">#&gt;   data_1_4_6 = sim_data(mean = 1, sd = 4, skew = 6),</span>
+<span class="c1">#&gt;   data_2_4_6 = sim_data(mean = 2, sd = 4, skew = 6),</span>
+<span class="c1">#&gt;   combined_1_3 = bind_rows(data_1_3_5, data_1_3_6, .id = &quot;id&quot;) %&gt;%</span>
+<span class="c1">#&gt;     arrange(sd) %&gt;%</span>
+<span class="c1">#&gt;     head(n = 400),</span>
+<span class="c1">#&gt;   combined_2_3 = bind_rows(data_2_3_5, data_2_3_6, .id = &quot;id&quot;) %&gt;%</span>
+<span class="c1">#&gt;     arrange(sd) %&gt;%</span>
+<span class="c1">#&gt;     head(n = 400),</span>
+<span class="c1">#&gt;   combined_1_4 = bind_rows(data_1_4_5, data_1_4_6, .id = &quot;id&quot;) %&gt;%</span>
+<span class="c1">#&gt;     arrange(sd) %&gt;%</span>
+<span class="c1">#&gt;     head(n = 400),</span>
+<span class="c1">#&gt;   combined_2_4 = bind_rows(data_2_4_5, data_2_4_6, .id = &quot;id&quot;) %&gt;%</span>
+<span class="c1">#&gt;     arrange(sd) %&gt;%</span>
+<span class="c1">#&gt;     head(n = 400)</span>
+<span class="c1">#&gt; )</span>
+</pre></div>
+
+
+<p>当需要整合指定的几个参数时，用<code>combine</code>的<code>.by</code>参数。上面代码中，第一个<code>data</code>生成了六条指令，第二个<code>combined</code>进行组合时，如果不用<code>.by</code>，那么生成的命令是用<code>bind_rows</code>聚合六个命令，这是用<code>.by=c(x, y)</code>指定组合，表明以<code>x</code>和<code>y</code>两个参数为分组进行聚合。</p>
+<h1>用<code>drake</code>来Debug</h1>
+<h2>检查组件依赖关系</h2>
+<p>利用<code>vis_drake_graph</code>能检查组件间依赖关系</p>
+<p>例子</p>
+<div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">&lt;-</span> <span class="nf">drake_config</span><span class="p">(</span><span class="n">my_plan</span><span class="p">)</span>
+<span class="c1"># Hover, click, drag, zoom, and pan. See args &#39;from&#39; and &#39;to&#39;.</span>
+<span class="nf">vis_drake_graph</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="s">&quot;100%&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="s">&quot;500px&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<h2>检查指定组件</h2>
+<h3><code>deps_code()</code>按顺序展现组件依赖</h3>
+<div class="highlight"><pre><span></span><span class="nf">print</span><span class="p">(</span><span class="n">simulate</span><span class="p">)</span>
+<span class="c1">#&gt; function (n) </span>
+<span class="c1">#&gt; {</span>
+<span class="c1">#&gt;     data &lt;- random_rows(data = datasets::mtcars, n = n)</span>
+<span class="c1">#&gt;     data.frame(x = data$wt, y = data$mpg)</span>
+<span class="c1">#&gt; }</span>
+
+<span class="nf">deps_code</span><span class="p">(</span><span class="n">simulate</span><span class="p">)</span>
+<span class="c1">#&gt; # A tibble: 5 x 2</span>
+<span class="c1">#&gt;   name             type      </span>
+<span class="c1">#&gt;   &lt;chr&gt;            &lt;chr&gt;     </span>
+<span class="c1">#&gt; 1 data.frame       globals   </span>
+<span class="c1">#&gt; 2 mpg              globals   </span>
+<span class="c1">#&gt; 3 wt               globals   </span>
+<span class="c1">#&gt; 4 random_rows      globals   </span>
+<span class="c1">#&gt; 5 datasets::mtcars namespaced</span>
+</pre></div>
+
+
+<h3>deps_target() 检查指定组件内部依赖</h3>
+<div class="highlight"><pre><span></span><span class="n">deps_target</span><span class="p">(</span><span class="ss">&quot;simulate&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<span class="o">#&gt;</span> <span class="o">#</span> <span class="n">A</span> <span class="n">tibble</span><span class="p">:</span> <span class="mi">2</span> <span class="n">x</span> <span class="mi">2</span>
+<span class="o">#&gt;</span>   <span class="n">name</span>             <span class="k">type</span>      
+<span class="o">#&gt;</span>   <span class="o">&lt;</span><span class="n">chr</span><span class="o">&gt;</span>            <span class="o">&lt;</span><span class="n">chr</span><span class="o">&gt;</span>     
+<span class="o">#&gt;</span> <span class="mi">1</span> <span class="n">random_rows</span>      <span class="n">globals</span>   
+<span class="o">#&gt;</span> <span class="mi">2</span> <span class="n">datasets</span><span class="p">::</span><span class="n">mtcars</span> <span class="n">namespaced</span>
+</pre></div>
+
+
+<h3><code>outdated()</code>和<code>missed()</code></h3>
+<p>标出更新而改变的组件或丢失的组件</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/r.html">R</a>, <a href="/tag/notes.html">notes</a></p>
+        </div>
+
+<hr>
+<div class="sharing">
+</div>
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://github.com/rogerclarkgc">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://weibo.com/3090511091/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>.
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+<script type="text/javascript">
+    var disqus_shortname = 'rogerclarkgc';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+	<!-- mathjax config similar to math.stackexchange -->
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		jax: ["input/TeX", "output/HTML-CSS"],
+		tex2jax: {
+			inlineMath: [ ['$', '$)'] ],
+			displayMath: [ ['$$', '$$']],
+			processEscapes: true,
+			skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+		},
+		messageStyle: "none",
+		"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+	});
+	</script>
+	<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+
+</html>

@@ -74,7 +74,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
 
-                            <li><a href="/pages/post1.html">About Me</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -137,13 +136,13 @@
 <p>由于一开始没有考虑糖人之间的重叠问题，并且糖人之间的信息交换会极大加大问题的复杂度，所以我的模型中的糖人会重叠，糖人之间也没有任何信息交换。</p>
 <p>我采用随机初始化的方式初始糖人种群，种群用java的arrayList方法实现，这是一个动态列表，能够很方便的加入和删除列表元素，用来模拟种群最适合不过。</p>
 <p>先来看看，4种糖域的样子，这些图片都是用R脚本生成</p>
-<p><img alt="sugarscape-random" src="http://i.imgur.com/YzbTIBg.png" /></p>
+<p><img alt="sugarscape-random" src="http://i.imgur.com/YzbTIBg.png"></p>
 <p>随机分布的糖域</p>
-<p><img alt="sugarscape-unbalance" src="http://i.imgur.com/CobXkuQ.png" /></p>
+<p><img alt="sugarscape-unbalance" src="http://i.imgur.com/CobXkuQ.png"></p>
 <p>非均衡的糖域</p>
-<p><img alt="sugarscape-balance" src="http://i.imgur.com/oo9U8HU.png" /></p>
+<p><img alt="sugarscape-balance" src="http://i.imgur.com/oo9U8HU.png"></p>
 <p>均衡糖域</p>
-<p><img alt="sugarscape-biunif" src="http://i.imgur.com/q4MAqx5.png" /></p>
+<p><img alt="sugarscape-biunif" src="http://i.imgur.com/q4MAqx5.png"></p>
 <p>二元正态分布糖域</p>
 <p>在定义完了糖人和糖域后，只需要定义好运行过程，完成糖域和糖人列表的初始化后就可以完成整个模拟程序了，在一回合糖人社会中，程序按照如下模拟：</p>
 <ol>
@@ -154,84 +153,84 @@
 </ol>
 <p>在执行了多代后，部分糖人由于缺少死亡而死亡，但有一部分确活的越来越好，它们十分有效的聚集在糖域的高糖区，迅速收割产生的糖，由于没考虑糖人的堆叠，因此，糖域上会出现极端的人口分布，往往一个方格上聚集了几十个糖人。</p>
 <p>下面是某个模拟的动态过程：</p>
-<p><img alt="sugargif" src="http://i.imgur.com/UkaYKNE.gif" /></p>
+<p><img alt="sugargif" src="http://i.imgur.com/UkaYKNE.gif"></p>
 <p>这个模拟只进行了40回合，就已经出现了明显的“阶级分化”，一部分糖人死亡，活着的糖人都聚集在了糖域上的两大糖山上。如果我们延长模拟运行的时间，会有更加显著的结果</p>
 <h3>结果</h3>
 <p>通过长时间运行模型，让结果比较稳定后，使用R展现这些结果，下面是某个比较好的模拟结果。
 选用二元正态分布的糖域来进行模拟，该糖域有两个糖峰，糖峰位置是随机分布在半个窗口内。</p>
-<p><img alt="sugarmap" src="http://i.imgur.com/1oPc9mK.png" /></p>
+<p><img alt="sugarmap" src="http://i.imgur.com/1oPc9mK.png"></p>
 <p>首先来看不同阶段的人口分布：</p>
-<p><img alt="first" src="http://i.imgur.com/XYCdt7y.png" /></p>
+<p><img alt="first" src="http://i.imgur.com/XYCdt7y.png"></p>
 <p>初始阶段，第一回合的人口分布遵循随机分布的模式</p>
-<p><img alt="half" src="http://i.imgur.com/c2Evasr.png" /></p>
+<p><img alt="half" src="http://i.imgur.com/c2Evasr.png"></p>
 <p>经过一半的回合数后，人口已经开始向糖山的峰顶聚集</p>
-<p><img alt="last" src="http://i.imgur.com/vbvN87T.png" /></p>
+<p><img alt="last" src="http://i.imgur.com/vbvN87T.png"></p>
 <p>到了最后一回合，两大“财团”已经形成，它们牢牢把住了糖山的峰顶，其他区域已经没有了糖人存在。</p>
 <p>每个糖人的特征都是不同的，是否是这些特征造成了阶级的产生？同样，我们用R来展示这些结果，我编写了一个脚本，用来处理产生的日志数据，输出图形化的统计结果，来看看这次模拟的一些统计展示。</p>
-<p><img alt="feature" src="http://i.imgur.com/7468Gfn.png" /></p>
+<p><img alt="feature" src="http://i.imgur.com/7468Gfn.png"></p>
 <p>初始状态下所用糖人的特性的直方图，可以看到是一个比较均匀的分布，但是总体来看数值偏小的一类较多，它们的特点是：初始糖量少、视力差、代谢能力小、运动能力差。</p>
-<p><img alt="compare12" src="http://i.imgur.com/ZLIfT5T.png" /></p>
+<p><img alt="compare12" src="http://i.imgur.com/ZLIfT5T.png"></p>
 <p>比较第一局和最后一局中活着的糖人，可以发现，最后活着的糖人在视力上较差，代谢能力小，运动能力分布在2——4和8-10之间较多，但是与第一局的差别不大。</p>
-<p><img alt="dead" src="http://i.imgur.com/I7aHRI8.png" /></p>
+<p><img alt="dead" src="http://i.imgur.com/I7aHRI8.png"></p>
 <p>随机抽取了最后的活着的糖人和死去的一个糖人，可以看到活着的糖人似乎有很好的运气，一开始就降生在有糖的位置，并且在每次搜索中都找到了糖，而且移动到了糖越来越多的位置，而死亡的糖人一开始也有较好的运气，但是在75局左右就开始陷入了入不敷出的阶段，最后糖块消耗殆尽，饥饿而死。</p>
-<p><img alt="dis" src="http://i.imgur.com/hBAy1Yk.png" /></p>
+<p><img alt="dis" src="http://i.imgur.com/hBAy1Yk.png"></p>
 <p>最后是财富的分布，可以看到一开始大家财富分布较均衡，穷人相对较多，到了25%局，就开始了出现财富分配不均的现象，此时穷人更多了，而财富开始聚集在少部分人手中，到了最后一句，讲道理，活到这个时候的都是富翁了，但在这个“财团”里，财富同样分布十分不均，超过10000的巨富只有不到十分之一，而大部分人只是小富小贵。</p>
 <h2>疑问</h2>
 <p>这个模型比较粗糙，但已经反映了一些有趣的问题，它重现了财富分配的不均现象，在一个类似自由市场的条件下，缺乏监管和监督的经济体必然会出现少量人把持巨大财富的现象，但带给我的更多是疑问，首先，在初始化时，各个糖人的特性分布比较平均，总体是数值较小的糖人较多，但在第一局和最后一局的糖人特性对比中，却没有出现我所想的结果，按照自然选择的原理，我认为，那些<strong>视觉能力强、运动能力强、代谢能力小</strong>的个体更加容易存活，而那些<strong>视觉能力弱、运动能力差、高代谢</strong>的个体会更容易被淘汰，但比较的结果却不尽我意。似乎那些数值较小的个体相对存活的可能更大</p>
 <p>我对结果的显著性产生了怀疑，于是进行单因素方差分析，结果如下</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="kn">library</span><span class="p">(</span>multcomp<span class="p">)</span>
-<span class="o">&gt;</span> step_result <span class="o">&lt;-</span> aov<span class="p">(</span>step <span class="o">~</span> rounds<span class="p">,</span> data <span class="o">=</span> step_roundcompare<span class="p">)</span>
-<span class="o">&gt;</span> <span class="kp">summary</span><span class="p">(</span>glht<span class="p">(</span>step_result<span class="p">,</span> linfct <span class="o">=</span> mcp<span class="p">(</span>rounds <span class="o">=</span> <span class="s">&quot;Tukey&quot;</span><span class="p">)))</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="nv">library</span><span class="ss">(</span><span class="nv">multcomp</span><span class="ss">)</span>
+<span class="o">&gt;</span> <span class="nv">step_result</span> <span class="o">&lt;-</span> <span class="nv">aov</span><span class="ss">(</span><span class="nv">step</span> <span class="o">~</span> <span class="nv">rounds</span>, <span class="nv">data</span> <span class="o">=</span> <span class="nv">step_roundcompare</span><span class="ss">)</span>
+<span class="o">&gt;</span> <span class="nv">summary</span><span class="ss">(</span><span class="nv">glht</span><span class="ss">(</span><span class="nv">step_result</span>, <span class="nv">linfct</span> <span class="o">=</span> <span class="nv">mcp</span><span class="ss">(</span><span class="nv">rounds</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">Tukey</span><span class="s2">&quot;</span><span class="ss">)))</span>
 
- Simultaneous Tests <span class="kr">for</span> General Linear Hypotheses
+ <span class="nv">Simultaneous</span> <span class="nv">Tests</span> <span class="k">for</span> <span class="nv">General</span> <span class="nv">Linear</span> <span class="nv">Hypotheses</span>
 
-Multiple Comparisons of Means<span class="o">:</span> Tukey Contrasts
-Fit<span class="o">:</span> aov<span class="p">(</span>formula <span class="o">=</span> step <span class="o">~</span> rounds<span class="p">,</span> data <span class="o">=</span> step_roundcompare<span class="p">)</span>
+<span class="nv">Multiple</span> <span class="nv">Comparisons</span> <span class="nv">of</span> <span class="nv">Means</span>: <span class="nv">Tukey</span> <span class="nv">Contrasts</span>
+<span class="nv">Fit</span>: <span class="nv">aov</span><span class="ss">(</span><span class="nv">formula</span> <span class="o">=</span> <span class="nv">step</span> <span class="o">~</span> <span class="nv">rounds</span>, <span class="nv">data</span> <span class="o">=</span> <span class="nv">step_roundcompare</span><span class="ss">)</span>
 
-Linear Hypotheses<span class="o">:</span>
-         Estimate Std. Error t value Pr<span class="p">(</span><span class="o">&gt;|</span><span class="kp">t</span><span class="o">|</span><span class="p">)</span>  
-<span class="m">150</span> <span class="o">-</span> <span class="m">1</span> <span class="o">==</span> <span class="m">0</span>  <span class="m">-0.3247</span>     <span class="m">0.1322</span>  <span class="m">-2.456</span>   <span class="m">0.0142</span> <span class="o">*</span>
+<span class="nv">Linear</span> <span class="nv">Hypotheses</span>:
+         <span class="nv">Estimate</span> <span class="nv">Std</span>. <span class="nv">Error</span> <span class="nv">t</span> <span class="nv">value</span> <span class="nv">Pr</span><span class="ss">(</span><span class="o">&gt;|</span><span class="nv">t</span><span class="o">|</span><span class="ss">)</span>  
+<span class="mi">150</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">0</span>  <span class="o">-</span><span class="mi">0</span>.<span class="mi">3247</span>     <span class="mi">0</span>.<span class="mi">1322</span>  <span class="o">-</span><span class="mi">2</span>.<span class="mi">456</span>   <span class="mi">0</span>.<span class="mi">0142</span> <span class="o">*</span>
 <span class="o">---</span>
-Signif. codes<span class="o">:</span>  <span class="m">0</span> ‘<span class="o">***</span>’ <span class="m">0.001</span> ‘<span class="o">**</span>’ <span class="m">0.01</span> ‘<span class="o">*</span>’ <span class="m">0.05</span> ‘<span class="m">.</span>’ <span class="m">0.1</span> ‘ ’ <span class="m">1</span>
-<span class="p">(</span>Adjusted p values reported <span class="o">--</span> <span class="kp">single</span><span class="o">-</span>step method<span class="p">)</span>
+<span class="nv">Signif</span>. <span class="nv">codes</span>:  <span class="mi">0</span> ‘<span class="o">***</span>’ <span class="mi">0</span>.<span class="mi">001</span> ‘<span class="o">**</span>’ <span class="mi">0</span>.<span class="mi">01</span> ‘<span class="o">*</span>’ <span class="mi">0</span>.<span class="mi">05</span> ‘.’ <span class="mi">0</span>.<span class="mi">1</span> ‘ ’ <span class="mi">1</span>
+<span class="ss">(</span><span class="nv">Adjusted</span> <span class="nv">p</span> <span class="nv">values</span> <span class="nv">reported</span> <span class="o">--</span> <span class="nv">single</span><span class="o">-</span><span class="nv">step</span> <span class="nv">method</span><span class="ss">)</span>
 </pre></div>
 
 
 <p>对第一局和最后一局的运动能力方差分析显示，其显著性为0.014，并且均值上，最后一局存活糖人的运动能力要微微小于第一局的所有糖人</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;</span> vision_result <span class="o">&lt;-</span> aov<span class="p">(</span>vision <span class="o">~</span> rounds<span class="p">,</span> data <span class="o">=</span> vision_roundcompare<span class="p">)</span>
-<span class="o">&gt;</span> <span class="kp">summary</span><span class="p">(</span>glht<span class="p">(</span>vision_result<span class="p">,</span> linfct <span class="o">=</span> mcp<span class="p">(</span>rounds <span class="o">=</span> <span class="s">&quot;Tukey&quot;</span><span class="p">)))</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="nv">vision_result</span> <span class="o">&lt;-</span> <span class="nv">aov</span><span class="ss">(</span><span class="nv">vision</span> <span class="o">~</span> <span class="nv">rounds</span>, <span class="nv">data</span> <span class="o">=</span> <span class="nv">vision_roundcompare</span><span class="ss">)</span>
+<span class="o">&gt;</span> <span class="nv">summary</span><span class="ss">(</span><span class="nv">glht</span><span class="ss">(</span><span class="nv">vision_result</span>, <span class="nv">linfct</span> <span class="o">=</span> <span class="nv">mcp</span><span class="ss">(</span><span class="nv">rounds</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">Tukey</span><span class="s2">&quot;</span><span class="ss">)))</span>
 
- Simultaneous Tests <span class="kr">for</span> General Linear Hypotheses
+ <span class="nv">Simultaneous</span> <span class="nv">Tests</span> <span class="k">for</span> <span class="nv">General</span> <span class="nv">Linear</span> <span class="nv">Hypotheses</span>
 
-Multiple Comparisons of Means<span class="o">:</span> Tukey Contrasts
+<span class="nv">Multiple</span> <span class="nv">Comparisons</span> <span class="nv">of</span> <span class="nv">Means</span>: <span class="nv">Tukey</span> <span class="nv">Contrasts</span>
 
-Fit<span class="o">:</span> aov<span class="p">(</span>formula <span class="o">=</span> vision <span class="o">~</span> rounds<span class="p">,</span> data <span class="o">=</span> vision_roundcompare<span class="p">)</span>
+<span class="nv">Fit</span>: <span class="nv">aov</span><span class="ss">(</span><span class="nv">formula</span> <span class="o">=</span> <span class="nv">vision</span> <span class="o">~</span> <span class="nv">rounds</span>, <span class="nv">data</span> <span class="o">=</span> <span class="nv">vision_roundcompare</span><span class="ss">)</span>
 
-Linear Hypotheses<span class="o">:</span>
-         Estimate Std. Error t value Pr<span class="p">(</span><span class="o">&gt;|</span><span class="kp">t</span><span class="o">|</span><span class="p">)</span>    
-<span class="m">150</span> <span class="o">-</span> <span class="m">1</span> <span class="o">==</span> <span class="m">0</span>  <span class="m">-0.4957</span>     <span class="m">0.1260</span>  <span class="m">-3.933</span> <span class="m">8.73e-05</span> <span class="o">***</span>
+<span class="nv">Linear</span> <span class="nv">Hypotheses</span>:
+         <span class="nv">Estimate</span> <span class="nv">Std</span>. <span class="nv">Error</span> <span class="nv">t</span> <span class="nv">value</span> <span class="nv">Pr</span><span class="ss">(</span><span class="o">&gt;|</span><span class="nv">t</span><span class="o">|</span><span class="ss">)</span>    
+<span class="mi">150</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">0</span>  <span class="o">-</span><span class="mi">0</span>.<span class="mi">4957</span>     <span class="mi">0</span>.<span class="mi">1260</span>  <span class="o">-</span><span class="mi">3</span>.<span class="mi">933</span> <span class="mi">8</span>.<span class="mi">73</span><span class="nv">e</span><span class="o">-</span><span class="mi">05</span> <span class="o">***</span>
 <span class="o">---</span>
-Signif. codes<span class="o">:</span>  <span class="m">0</span> ‘<span class="o">***</span>’ <span class="m">0.001</span> ‘<span class="o">**</span>’ <span class="m">0.01</span> ‘<span class="o">*</span>’ <span class="m">0.05</span> ‘<span class="m">.</span>’ <span class="m">0.1</span> ‘ ’ <span class="m">1</span>
-<span class="p">(</span>Adjusted p values reported <span class="o">--</span> <span class="kp">single</span><span class="o">-</span>step method<span class="p">)</span>
+<span class="nv">Signif</span>. <span class="nv">codes</span>:  <span class="mi">0</span> ‘<span class="o">***</span>’ <span class="mi">0</span>.<span class="mi">001</span> ‘<span class="o">**</span>’ <span class="mi">0</span>.<span class="mi">01</span> ‘<span class="o">*</span>’ <span class="mi">0</span>.<span class="mi">05</span> ‘.’ <span class="mi">0</span>.<span class="mi">1</span> ‘ ’ <span class="mi">1</span>
+<span class="ss">(</span><span class="nv">Adjusted</span> <span class="nv">p</span> <span class="nv">values</span> <span class="nv">reported</span> <span class="o">--</span> <span class="nv">single</span><span class="o">-</span><span class="nv">step</span> <span class="nv">method</span><span class="ss">)</span>
 </pre></div>
 
 
 <p>对视觉能力的分析，同样存在更加显著的差距，最后一局和第一局所有糖人相比，视力稍差</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;</span> stomach_result <span class="o">&lt;-</span> aov<span class="p">(</span>stomach <span class="o">~</span> rounds<span class="p">,</span> data <span class="o">=</span> stomach_roundcompare<span class="p">)</span>
-<span class="o">&gt;</span> <span class="kp">summary</span><span class="p">(</span>glht<span class="p">(</span>stomach_result<span class="p">,</span> linfct <span class="o">=</span> mcp<span class="p">(</span>rounds <span class="o">=</span> <span class="s">&quot;Tukey&quot;</span><span class="p">)))</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="nv">stomach_result</span> <span class="o">&lt;-</span> <span class="nv">aov</span><span class="ss">(</span><span class="nv">stomach</span> <span class="o">~</span> <span class="nv">rounds</span>, <span class="nv">data</span> <span class="o">=</span> <span class="nv">stomach_roundcompare</span><span class="ss">)</span>
+<span class="o">&gt;</span> <span class="nv">summary</span><span class="ss">(</span><span class="nv">glht</span><span class="ss">(</span><span class="nv">stomach_result</span>, <span class="nv">linfct</span> <span class="o">=</span> <span class="nv">mcp</span><span class="ss">(</span><span class="nv">rounds</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">Tukey</span><span class="s2">&quot;</span><span class="ss">)))</span>
 
- Simultaneous Tests <span class="kr">for</span> General Linear Hypotheses
+ <span class="nv">Simultaneous</span> <span class="nv">Tests</span> <span class="k">for</span> <span class="nv">General</span> <span class="nv">Linear</span> <span class="nv">Hypotheses</span>
 
-Multiple Comparisons of Means<span class="o">:</span> Tukey Contrasts
+<span class="nv">Multiple</span> <span class="nv">Comparisons</span> <span class="nv">of</span> <span class="nv">Means</span>: <span class="nv">Tukey</span> <span class="nv">Contrasts</span>
 
-Fit<span class="o">:</span> aov<span class="p">(</span>formula <span class="o">=</span> stomach <span class="o">~</span> rounds<span class="p">,</span> data <span class="o">=</span> stomach_roundcompare<span class="p">)</span>
+<span class="nv">Fit</span>: <span class="nv">aov</span><span class="ss">(</span><span class="nv">formula</span> <span class="o">=</span> <span class="nv">stomach</span> <span class="o">~</span> <span class="nv">rounds</span>, <span class="nv">data</span> <span class="o">=</span> <span class="nv">stomach_roundcompare</span><span class="ss">)</span>
 
-Linear Hypotheses<span class="o">:</span>
-         Estimate Std. Error t value Pr<span class="p">(</span><span class="o">&gt;|</span><span class="kp">t</span><span class="o">|</span><span class="p">)</span>    
-<span class="m">150</span> <span class="o">-</span> <span class="m">1</span> <span class="o">==</span> <span class="m">0</span>  <span class="m">-0.7049</span>     <span class="m">0.1305</span>  <span class="m">-5.403</span> <span class="m">7.52e-08</span> <span class="o">***</span>
+<span class="nv">Linear</span> <span class="nv">Hypotheses</span>:
+         <span class="nv">Estimate</span> <span class="nv">Std</span>. <span class="nv">Error</span> <span class="nv">t</span> <span class="nv">value</span> <span class="nv">Pr</span><span class="ss">(</span><span class="o">&gt;|</span><span class="nv">t</span><span class="o">|</span><span class="ss">)</span>    
+<span class="mi">150</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">0</span>  <span class="o">-</span><span class="mi">0</span>.<span class="mi">7049</span>     <span class="mi">0</span>.<span class="mi">1305</span>  <span class="o">-</span><span class="mi">5</span>.<span class="mi">403</span> <span class="mi">7</span>.<span class="mi">52</span><span class="nv">e</span><span class="o">-</span><span class="mi">08</span> <span class="o">***</span>
 <span class="o">---</span>
-Signif. codes<span class="o">:</span>  <span class="m">0</span> ‘<span class="o">***</span>’ <span class="m">0.001</span> ‘<span class="o">**</span>’ <span class="m">0.01</span> ‘<span class="o">*</span>’ <span class="m">0.05</span> ‘<span class="m">.</span>’ <span class="m">0.1</span> ‘ ’ <span class="m">1</span>
-<span class="p">(</span>Adjusted p values reported <span class="o">--</span> <span class="kp">single</span><span class="o">-</span>step method<span class="p">)</span>
+<span class="nv">Signif</span>. <span class="nv">codes</span>:  <span class="mi">0</span> ‘<span class="o">***</span>’ <span class="mi">0</span>.<span class="mi">001</span> ‘<span class="o">**</span>’ <span class="mi">0</span>.<span class="mi">01</span> ‘<span class="o">*</span>’ <span class="mi">0</span>.<span class="mi">05</span> ‘.’ <span class="mi">0</span>.<span class="mi">1</span> ‘ ’ <span class="mi">1</span>
+<span class="ss">(</span><span class="nv">Adjusted</span> <span class="nv">p</span> <span class="nv">values</span> <span class="nv">reported</span> <span class="o">--</span> <span class="nv">single</span><span class="o">-</span><span class="nv">step</span> <span class="nv">method</span><span class="ss">)</span>
 </pre></div>
 
 
